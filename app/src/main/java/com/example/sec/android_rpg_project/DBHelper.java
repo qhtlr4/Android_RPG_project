@@ -41,6 +41,11 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨3 몬스터', 40, 8, 11);");
         sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨4 몬스터', 45, 11, 17);");
         sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨5 몬스터', 50, 16, 25);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨6 몬스터', 70, 23, 37);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨7 몬스터', 94, 31, 52);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨8 몬스터', 111, 42, 73);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨9 몬스터', 143, 53, 94);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨10 몬스터', 165, 66, 115);");
 
         //index, 아이템번호, 몬스터번호, 최소개수, 최대개수, 드롭률
         sqLiteDatabase.execSQL("CREATE TABLE DROP_ITEM (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, mob_id INTEGER, min INTEGER, max INTEGER, ratio INTEGER);");  //ratio -> 10 = 1%
@@ -98,8 +103,9 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return result;
     }
-    public Enemy get_enemy(int level){
+    public Enemy get_enemy(int min_level, int max_level){
         SQLiteDatabase db = getReadableDatabase();
+        int level = start_rand(max_level, min_level);
         Cursor cursor = db.rawQuery("SELECT * FROM MOB WHERE mob_id="+ level, null);
         Enemy enemy = new Enemy();
         while (cursor.moveToNext()) {
@@ -177,7 +183,7 @@ public class DBHelper extends SQLiteOpenHelper {
         rand_num = rand.nextInt(max) + 1;
         return rand_num;
     }
-    public int start_rand(int max, int offset) {
+    public int start_rand(int max, int offset) {        //max, min
         int rand_num;
         rand_num = rand.nextInt(max-offset) + offset;
         return rand_num;

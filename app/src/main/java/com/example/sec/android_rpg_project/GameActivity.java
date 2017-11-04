@@ -178,6 +178,34 @@ public class GameActivity extends Activity {
     public void warClick(View v) {
         Load_User user = new Load_User(level_txt.getText().toString(), exp_txt.getText().toString(), currentHp_txt.getText().toString(), maxHp_txt.getText().toString(), currentMp_txt.getText().toString(), maxMp_txt.getText().toString(), gold_txt.getText().toString(), ability_attack.getText().toString(), ability_defence.getText().toString(), ability_point.getText().toString());
         Intent intent = new Intent(this, WarActivity.class);
+        int id = v.getId();
+
+        switch (id){
+            case R.id.easy:
+                if(Integer.parseInt(user.level) - 2 <= 0 ){
+                    intent.putExtra("difficulty_min", Integer.parseInt(user.level));
+                }
+                else
+                    intent.putExtra("difficulty_min", Integer.parseInt(user.level)-2);
+                intent.putExtra("difficulty_max", Integer.parseInt(user.level)+1);
+                break;
+            case R.id.normal:
+                if(Integer.parseInt(user.level) - 1 <= 0 ){
+                    intent.putExtra("difficulty_min", Integer.parseInt(user.level));
+                }
+                else
+                    intent.putExtra("difficulty_min", Integer.parseInt(user.level)-1);
+                intent.putExtra("difficulty_max", Integer.parseInt(user.level)+3);
+                break;
+            case R.id.hard:
+                intent.putExtra("difficulty_min", Integer.parseInt(user.level));
+                intent.putExtra("difficulty_max", Integer.parseInt(user.level)+5);
+                break;
+            case R.id.boss:
+                intent.putExtra("difficulty_min", Integer.parseInt(user.level));
+                intent.putExtra("difficulty_max", Integer.parseInt(user.level));
+                break;
+        }
 
         intent.putExtra("level", user.level);
         intent.putExtra("exp", user.exp);

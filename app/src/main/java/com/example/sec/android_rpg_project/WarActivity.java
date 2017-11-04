@@ -92,7 +92,7 @@ public class WarActivity extends Activity {
         limit_exp = gameInfo.get_maxexp(Integer.parseInt(level_txt.getText().toString()));
         setExp_bar(now_exp, limit_exp);
 
-        enemy = enemy.getEnemy(dbHelper.get_enemy(Integer.parseInt(level_txt.getText().toString())));   //적 정보를 db에서 불러와서 enemy객체에 저장
+        enemy = enemy.getEnemy(dbHelper.get_enemy(intent.getIntExtra("difficulty_min", 1), intent.getIntExtra("difficulty_max", 1)));   //적 정보를 db에서 불러와서 enemy객체에 저장
 
         user_current_hp = (TextView)findViewById(R.id.user_current_hp);
         user_max_hp = (TextView)findViewById(R.id.user_max_hp);
