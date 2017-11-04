@@ -50,7 +50,7 @@ public class WarActivity extends Activity {
     GameInfo gameInfo = new GameInfo(); //게임에 설정된 최대 경험치를 가져오기위한 클래스 객체
 
     Enemy enemy = new Enemy();      //적 정보
-    ImageView enemy_image = (ImageView)findViewById(R.id.enemy_view);
+    ImageView enemy_image;
     Drawable[] drawables = new Drawable[5];
 
     @Override
@@ -91,8 +91,7 @@ public class WarActivity extends Activity {
         limit_exp = gameInfo.get_maxexp(Integer.parseInt(level_txt.getText().toString()));
         setExp_bar(now_exp, limit_exp);
 
-        enemy = enemy.getEnemy(dbHelper.get_enemy(Integer.parseInt(level_txt.getText().toString())));   //적 정보를 db에서 불러와서 저장
-        enemy.setImage(drawables);
+        enemy = enemy.getEnemy(dbHelper.get_enemy(Integer.parseInt(level_txt.getText().toString())));   //적 정보를 db에서 불러와서 enemy객체에 저장
 
         user_current_hp = (TextView)findViewById(R.id.user_current_hp);
         user_max_hp = (TextView)findViewById(R.id.user_max_hp);
@@ -117,6 +116,8 @@ public class WarActivity extends Activity {
             drawables[3] = getResources().getDrawable(R.drawable.mob_lv1);
             drawables[4] = getResources().getDrawable(R.drawable.mob_lv1);
         }
+        enemy.setImage(drawables);
+        enemy_image = (ImageView)findViewById(R.id.enemy_view);
         enemy_image.setImageDrawable(enemy.getImage());
     }
 
