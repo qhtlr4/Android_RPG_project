@@ -188,6 +188,7 @@ public class GameActivity extends Activity {
                 else
                     intent.putExtra("difficulty_min", Integer.parseInt(user.level)-2);
                 intent.putExtra("difficulty_max", Integer.parseInt(user.level)+1);
+                intent.putExtra("is_boss", 0);
                 break;
             case R.id.normal:
                 if(Integer.parseInt(user.level) - 1 <= 0 ){
@@ -196,14 +197,17 @@ public class GameActivity extends Activity {
                 else
                     intent.putExtra("difficulty_min", Integer.parseInt(user.level)-1);
                 intent.putExtra("difficulty_max", Integer.parseInt(user.level)+3);
+                intent.putExtra("is_boss", 0);
                 break;
             case R.id.hard:
                 intent.putExtra("difficulty_min", Integer.parseInt(user.level));
                 intent.putExtra("difficulty_max", Integer.parseInt(user.level)+5);
+                intent.putExtra("is_boss", 0);
                 break;
             case R.id.boss:
                 intent.putExtra("difficulty_min", Integer.parseInt(user.level));
                 intent.putExtra("difficulty_max", Integer.parseInt(user.level));
+                intent.putExtra("is_boss", 1);
                 break;
         }
 
