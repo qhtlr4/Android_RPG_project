@@ -50,6 +50,7 @@ public class WarActivity extends Activity {
     GameInfo gameInfo = new GameInfo(); //게임에 설정된 최대 경험치를 가져오기위한 클래스 객체
 
     Enemy enemy = new Enemy();      //적 정보
+    TextView enemy_name;
     ImageView enemy_image;
     Drawable[] drawables = new Drawable[5];
 
@@ -119,6 +120,8 @@ public class WarActivity extends Activity {
         enemy.setImage(drawables);
         enemy_image = (ImageView)findViewById(R.id.enemy_view);
         enemy_image.setImageDrawable(enemy.getImage());
+        enemy_name = (TextView)findViewById(R.id.enemy_name);
+        enemy_name.setText(enemy.name);
     }
 
     public int rand(int max) {
