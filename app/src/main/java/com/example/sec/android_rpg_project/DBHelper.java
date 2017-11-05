@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -86,7 +87,9 @@ public class DBHelper extends SQLiteOpenHelper {
         */
     }
 
-    public String getInventoryResult(int clas) {
+    public ArrayList<String> getInventoryResult(int clas) {
+        ArrayList<String> result_array = new ArrayList<String>();
+
         // 인벤토리 DB 열기
         SQLiteDatabase db = getReadableDatabase();
         String result = "";
@@ -94,28 +97,33 @@ public class DBHelper extends SQLiteOpenHelper {
         // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
         Cursor cursor = db.rawQuery("SELECT * FROM INVENTORY WHERE class=" + clas, null);
         while (cursor.moveToNext()) {
-            result += cursor.getInt(0) + " 번째 아이템 - "
-                    + " 아이템이름 : " + cursor.getString(2)
-                    + " 레벨제한 : " + cursor.getInt(3)
-                    + " 공격력 : " + cursor.getInt(4)
-                    + " 방어력 : " + cursor.getInt(5)
-                    + " hp회복량 : " + cursor.getInt(6)
-                    + " mp회복량 : " + cursor.getInt(7)
-                    + " 가격 : " + cursor.getInt(8);
+            if(clas == 1 || clas == 2)
+                result += "이름 : " + cursor.getString(2)
+                        + "\t\t레벨제한 : " + cursor.getInt(3)
+                        + "\n공격력 : " + cursor.getInt(4)
+                        + "\t\t\t방어력 : " + cursor.getInt(5)
+                        + "\t\t\t가격 : " + (int)(cursor.getInt(8)/2);
+            else
+                result += "이름 : " + cursor.getString(2)
+                        + "\t\t\t\tHP회복량 : " + cursor.getInt(6)
+                        + "\t\t\t\tMP회복량 : " + cursor.getInt(7)
+                        + "\n가격 : " + (int)(cursor.getInt(8)/2);
+            result_array.add(result);
+            result = "";
         }
-        return result;
+        return result_array;
     }
     public Enemy get_enemy(int min_level, int max_level, int is_boss){
         SQLiteDatabase db = getReadableDatabase();
-        int level = 1;
+        int level;
         Cursor cursor = null;
 
-        if(is_boss == 1) {
-            cursor = db.rawQuery("SELECT * FROM MOB WHERE is_boss=" + level, null);
-        }
-        else{
+        if(is_boss == 0) {
             level = start_rand(max_level, min_level);
             cursor = db.rawQuery("SELECT * FROM MOB WHERE mob_id=" + level, null);
+        }
+        else{
+            cursor = db.rawQuery("SELECT * FROM MOB WHERE is_boss=" + is_boss, null);
         }
         Enemy enemy = new Enemy();
         while (cursor.moveToNext()) {
@@ -124,6 +132,7 @@ public class DBHelper extends SQLiteOpenHelper {
             enemy.hp = cursor.getInt(2);
             enemy.damage = cursor.getInt(3);
             enemy.exp = cursor.getInt(4);
+            enemy.is_boss = cursor.getInt(5);
         }
         return enemy;
     }

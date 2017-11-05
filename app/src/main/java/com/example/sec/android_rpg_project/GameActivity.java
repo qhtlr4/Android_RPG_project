@@ -7,12 +7,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import static com.example.sec.android_rpg_project.MainActivity.GAME_SETTING;
 
@@ -31,10 +35,16 @@ public class GameActivity extends Activity {
     TextView max_mp;
 
     //inventory
+    ArrayAdapter<String> weapon_adaptor;
+    ArrayAdapter<String> armor_adaptor;
+    ArrayAdapter<String> potion_adaptor;
+    ArrayList<String> weapon_items;
+    ArrayList<String> armor_items;
+    ArrayList<String> potion_items;
     LinearLayout inventory_layout;
-    TextView weapon_view;
-    TextView armor_view;
-    TextView potion_view;
+    ListView weapon_view;
+    ListView armor_view;
+    ListView potion_view;
 
     //ability
     LinearLayout ability_layout;
@@ -46,6 +56,7 @@ public class GameActivity extends Activity {
 
     TableLayout menuBtns;
     LinearLayout war_level_Layout;
+
 
 
     @Override
@@ -90,18 +101,31 @@ public class GameActivity extends Activity {
         final DBHelper dbHelper = new DBHelper(this);
         menuBtns = (TableLayout)findViewById(R.id.menuBtns);
         inventory_layout = (LinearLayout)findViewById(R.id.inventory_layout);
-        weapon_view = (TextView)findViewById(R.id.weapon_view);
-        armor_view = (TextView)findViewById(R.id.armor_view);
-        potion_view = (TextView)findViewById(R.id.potion_view);
+        weapon_view = (ListView)findViewById(R.id.weapon_view);
+        armor_view = (ListView)findViewById(R.id.armor_view);
+        potion_view = (ListView)findViewById(R.id.potion_view);
         Button inventory = (Button)findViewById(R.id.inventory);
         inventory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 inventory_layout.setVisibility(View.VISIBLE);
                 menuBtns.setVisibility(View.INVISIBLE);
-                weapon_view.setText(dbHelper.getInventoryResult(1));
-                armor_view.setText(dbHelper.getInventoryResult(2));
-                potion_view.setText(dbHelper.getInventoryResult(3));
+
+                weapon_items = new ArrayList<String>();
+                armor_items = new ArrayList<String>();
+                potion_items = new ArrayList<String>();
+
+                weapon_items = dbHelper.getInventoryResult(1);
+                armor_items = dbHelper.getInventoryResult(2);
+                potion_items = dbHelper.getInventoryResult(3);
+
+                weapon_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, weapon_items);
+                armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, armor_items);
+                potion_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, potion_items);
+
+                weapon_view.setAdapter(weapon_adaptor);
+                armor_view.setAdapter(armor_adaptor);
+                potion_view.setAdapter(potion_adaptor);
             }
         });
 
