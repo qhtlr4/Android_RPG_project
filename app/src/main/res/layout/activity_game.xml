@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sec.android_rpg_project.GameActivity"
+    tools:context="com.example.sec.android_rpg_project.Activity.GameActivity"
     android:orientation="vertical">
 
     <LinearLayout
@@ -179,7 +179,6 @@
                 android:text="Easy"
                 android:id="@+id/easy"
                 android:onClick="warClick"/>
-
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
