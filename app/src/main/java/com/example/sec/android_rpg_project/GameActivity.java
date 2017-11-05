@@ -30,14 +30,20 @@ public class GameActivity extends Activity {
     TextView max_hp;
     TextView max_mp;
 
+    //inventory
     LinearLayout inventory_layout;
-    TextView inventory_view;
+    TextView weapon_view;
+    TextView armor_view;
+    TextView potion_view;
+
+    //ability
     LinearLayout ability_layout;
     TextView ability_attack;
     TextView ability_defence;
     TextView ability_point;
     TextView ability_hp;
     TextView ability_mp;
+
     TableLayout menuBtns;
     LinearLayout war_level_Layout;
 
@@ -83,15 +89,19 @@ public class GameActivity extends Activity {
 
         final DBHelper dbHelper = new DBHelper(this);
         menuBtns = (TableLayout)findViewById(R.id.menuBtns);
-        inventory_view = (TextView)findViewById(R.id.inventory_view);
-        inventory_layout = (LinearLayout)findViewById(R.id.inventoryLayout);
+        inventory_layout = (LinearLayout)findViewById(R.id.inventory_layout);
+        weapon_view = (TextView)findViewById(R.id.weapon_view);
+        armor_view = (TextView)findViewById(R.id.armor_view);
+        potion_view = (TextView)findViewById(R.id.potion_view);
         Button inventory = (Button)findViewById(R.id.inventory);
         inventory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 inventory_layout.setVisibility(View.VISIBLE);
                 menuBtns.setVisibility(View.INVISIBLE);
-                inventory_view.setText(dbHelper.getInventoryResult());
+                weapon_view.setText(dbHelper.getInventoryResult(1));
+                armor_view.setText(dbHelper.getInventoryResult(2));
+                potion_view.setText(dbHelper.getInventoryResult(3));
             }
         });
 
@@ -140,6 +150,25 @@ public class GameActivity extends Activity {
         });
     }
 
+    public void itemclass(View v){
+        switch (v.getId()){
+            case R.id.weapon_btn:
+                weapon_view.setVisibility(View.VISIBLE);
+                armor_view.setVisibility(View.INVISIBLE);
+                potion_view.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.armor_btn:
+                weapon_view.setVisibility(View.INVISIBLE);
+                armor_view.setVisibility(View.VISIBLE);
+                potion_view.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.potion_btn:
+                weapon_view.setVisibility(View.INVISIBLE);
+                armor_view.setVisibility(View.INVISIBLE);
+                potion_view.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
 
     public void ability_up(View v){
         if(Integer.parseInt(ability_point.getText().toString()) == 0){

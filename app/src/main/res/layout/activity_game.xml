@@ -98,15 +98,70 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
             android:visibility="invisible"
-            android:background="#ffffff"
-            android:id="@+id/inventoryLayout">
-            <TextView
+            android:id="@+id/inventory_layout">
+
+            <!-- 인벤토리에서 보여줄 항목을 표시 무기 방어구 포션 3개의 layout이 프레임에 들어감 -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/inventory_view"/>
+                android:orientation="vertical"
+                android:layout_weight="7"
+                android:id="@+id/inventory_button_layout">
+
+                <Button
+                    android:id="@+id/weapon_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="무기"
+                    android:layout_weight="1"
+                    android:onClick="itemclass" />
+
+                <Button
+                    android:id="@+id/armor_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="방어구"
+                    android:onClick="itemclass" />
+
+                <Button
+                    android:id="@+id/potion_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="포션"
+                    android:layout_weight="1"
+                    android:onClick="itemclass" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <!-- 무기 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:id="@+id/weapon_view"/>
+
+                <!-- 방어구 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"
+                    android:id="@+id/armor_view"/>
+
+                <!-- 포션 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"
+                    android:id="@+id/potion_view"/>
+            </FrameLayout>
         </LinearLayout>
 
         <LinearLayout

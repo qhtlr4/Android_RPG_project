@@ -21,19 +21,20 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        //아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격
+        //아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
         //item_id = 1부터 시작
-        sqLiteDatabase.execSQL("CREATE TABLE ITEM (item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name TEXT, use_level INTEGER, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '골드', 0, 0, 0, 0, 0, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '목검', 5, 5, 0, 0, 0, 500);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '청동검', 7, 7, 0, 0, 0, 5000);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '강철검', 9, 9, 0, 0, 0, 50000);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '다이아몬드검', 11, 11, 0, 0, 0, 500000);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '헌 가죽 옷', 0, 0, 5, 0, 0, 500);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '가죽 옷', 0, 0, 7, 0, 0, 5000);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '청동 갑옷', 0, 0, 9, 0, 0, 50000);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '가벼운 강철 갑옷', 0, 0, 11, 0, 0, 500000);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '무적갑옷', 10, 0, 9999, 0, 0, 5000000);");
+        sqLiteDatabase.execSQL("CREATE TABLE ITEM (item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name TEXT, use_level INTEGER, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, class INTEGER);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '골드', 0, 0, 0, 0, 0, 0, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '목검', 5, 5, 0, 0, 0, 500, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '청동검', 7, 7, 0, 0, 0, 5000, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '강철검', 9, 9, 0, 0, 0, 50000, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '다이아몬드검', 11, 11, 0, 0, 0, 500000, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '헌 가죽 옷', 0, 0, 5, 0, 0, 500, 2);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '가죽 옷', 0, 0, 7, 0, 0, 5000, 2);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '청동 갑옷', 0, 0, 9, 0, 0, 50000, 2);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '가벼운 강철 갑옷', 0, 0, 11, 0, 0, 500000, 2);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '무적갑옷', 10, 0, 9999, 0, 0, 5000000, 2);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, 'HP 포션', 0, 0, 0, 30, 0, 500, 3);");
 
         sqLiteDatabase.execSQL("CREATE TABLE MOB (mob_id INTEGER PRIMARY KEY AUTOINCREMENT, mob_name TEXT, hp INTEGER, damage INTEGER, exp INTEGER, is_boss INTEGER);");  //
         sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨1 몬스터', 20, 3, 3, 0);");
@@ -62,10 +63,12 @@ public class DBHelper extends SQLiteOpenHelper {
         // 샵위치아이템번호, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격
         sqLiteDatabase.execSQL("CREATE TABLE SHOP (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, item_name TEXT, use_level INTEGER, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER);");
         // 아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
-        sqLiteDatabase.execSQL("CREATE TABLE INVENTORY (slot INTEGER PRIMARY KEY, item_id INTEGER, item_name TEXT, use_level INTEGER, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
+        sqLiteDatabase.execSQL("CREATE TABLE INVENTORY (slot INTEGER PRIMARY KEY, item_id INTEGER, item_name TEXT, use_level INTEGER, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, is_equip INTEGER, class INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
 
         //test value
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY VALUES(null, 8, '무적갑옷', 10, 0, 9999, 0, 0, 5000000, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY VALUES(null, 8, '무적갑옷', 10, 0, 9999, 0, 0, 5000000, 0, 2);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY VALUES(null, 2, '목검', 10, 5, 0, 0, 0, 5000000, 0, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY VALUES(null, 9, 'HP 포션', 0, 0, 0, 30, 0, 500, 0, 3);");
     }
 
     @Override
@@ -83,24 +86,22 @@ public class DBHelper extends SQLiteOpenHelper {
         */
     }
 
-    public String getInventoryResult() {
+    public String getInventoryResult(int clas) {
         // 인벤토리 DB 열기
         SQLiteDatabase db = getReadableDatabase();
         String result = "";
 
         // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
-        Cursor cursor = db.rawQuery("SELECT * FROM INVENTORY", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM INVENTORY WHERE class=" + clas, null);
         while (cursor.moveToNext()) {
-            result += cursor.getInt(0)
-                    + " 번째 아이템 - "
-                    + "아이템이름 : "
-                    + cursor.getString(2)
-                    + " 레벨제한 : "
-                    + cursor.getInt(3)
-                    + " 공격력 : " + cursor.getInt(4) + " 방어력 : "
-                    + cursor.getInt(5) + " hp회복량 : " + cursor.getInt(6) + " mp회복량 : "
-                    + cursor.getInt(7) + " 가격 : "
-                    + cursor.getInt(8);
+            result += cursor.getInt(0) + " 번째 아이템 - "
+                    + " 아이템이름 : " + cursor.getString(2)
+                    + " 레벨제한 : " + cursor.getInt(3)
+                    + " 공격력 : " + cursor.getInt(4)
+                    + " 방어력 : " + cursor.getInt(5)
+                    + " hp회복량 : " + cursor.getInt(6)
+                    + " mp회복량 : " + cursor.getInt(7)
+                    + " 가격 : " + cursor.getInt(8);
         }
         return result;
     }
@@ -183,7 +184,8 @@ public class DBHelper extends SQLiteOpenHelper {
             int hp = cursor.getInt(5);
             int mp = cursor.getInt(6);
             int cost = cursor.getInt(7);
-            db2.execSQL("INSERT INTO INVENTORY VALUES(null, "+ (item_id) + ", '" + item_name + "', " + limit_level + ", " + attack + ", " + defence + ", " + hp + ", " + mp + ", " + cost + ", 0);");
+            int clas = cursor.getInt(8);
+            db2.execSQL("INSERT INTO INVENTORY VALUES(null, "+ (item_id) + ", '" + item_name + "', " + limit_level + ", " + attack + ", " + defence + ", " + hp + ", " + mp + ", " + cost + ", 0, " + clas + ");");
         }
     }
 
