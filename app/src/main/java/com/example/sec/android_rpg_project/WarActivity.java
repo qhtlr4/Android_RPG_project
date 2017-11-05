@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -52,7 +54,7 @@ public class WarActivity extends Activity {
     Enemy enemy = new Enemy();      //적 정보
     TextView enemy_name;
     ImageView enemy_image;
-    Drawable[] drawables = new Drawable[5];
+    Drawable[] drawables = new Drawable[11];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,18 +106,30 @@ public class WarActivity extends Activity {
         enemy_current_hp.setText(String.valueOf(enemy.hp));
         enemy_max_hp.setText(String.valueOf(enemy.hp));
 
-        if(SDK_INT >=22) {
+        if(SDK_INT >= 22) {
             drawables[0] = getResources().getDrawable(R.drawable.mob_lv1, null);
             drawables[1] = getResources().getDrawable(R.drawable.mob_lv2, null);
-            drawables[2] = getResources().getDrawable(R.drawable.mob_lv1, null);
-            drawables[3] = getResources().getDrawable(R.drawable.mob_lv1, null);
-            drawables[4] = getResources().getDrawable(R.drawable.mob_lv1, null);
+            drawables[2] = getResources().getDrawable(R.drawable.mob_lv3, null);
+            drawables[3] = getResources().getDrawable(R.drawable.mob_lv4, null);
+            drawables[4] = getResources().getDrawable(R.drawable.mob_lv2, null);
+            drawables[5] = getResources().getDrawable(R.drawable.mob_lv4, null);
+            drawables[6] = getResources().getDrawable(R.drawable.mob_lv2, null);
+            drawables[7] = getResources().getDrawable(R.drawable.mob_lv4, null);
+            drawables[8] = getResources().getDrawable(R.drawable.mob_lv2, null);
+            drawables[9] = getResources().getDrawable(R.drawable.mob_lv4, null);
+            drawables[10] = getResources().getDrawable(R.drawable.boss_1, null);
         } else {
             drawables[0] = getResources().getDrawable(R.drawable.mob_lv1);
             drawables[1] = getResources().getDrawable(R.drawable.mob_lv2);
-            drawables[2] = getResources().getDrawable(R.drawable.mob_lv1);
-            drawables[3] = getResources().getDrawable(R.drawable.mob_lv1);
+            drawables[2] = getResources().getDrawable(R.drawable.mob_lv3);
+            drawables[3] = getResources().getDrawable(R.drawable.mob_lv4);
             drawables[4] = getResources().getDrawable(R.drawable.mob_lv1);
+            drawables[5] = getResources().getDrawable(R.drawable.mob_lv4);
+            drawables[6] = getResources().getDrawable(R.drawable.mob_lv2);
+            drawables[7] = getResources().getDrawable(R.drawable.mob_lv4);
+            drawables[8] = getResources().getDrawable(R.drawable.mob_lv2);
+            drawables[9] = getResources().getDrawable(R.drawable.mob_lv4);
+            drawables[10] = getResources().getDrawable(R.drawable.boss_1);
         }
         enemy.setImage(drawables);
         enemy_image = (ImageView)findViewById(R.id.enemy_view);
@@ -150,6 +164,7 @@ public class WarActivity extends Activity {
                 finish();
                 break;
             case R.id.potion:
+
                 break;
             case R.id.skill:
                 break;
@@ -178,11 +193,19 @@ public class WarActivity extends Activity {
             currentHp_txt.setText(String.valueOf(Integer.parseInt(currentHp_txt.getText().toString()) - (enemy.damage-Integer.parseInt(defence_txt.getText().toString()))));
             user_current_hp.setText(currentHp_txt.getText().toString());
             if(Integer.parseInt(user_current_hp.getText().toString()) <= 0){
-                int minus_exp = (int)(limit_exp * 0.5);
+                str = "사망하였습니다.";
+                make_toast(str);
+                int minus_exp = (int)(limit_exp * 0.1);
                 exp_txt.setText(String.valueOf(Integer.parseInt(exp_txt.getText().toString())-minus_exp));
                 if(Integer.parseInt(exp_txt.getText().toString()) < 0){
+                    str = "경험치 " + (Integer.parseInt(exp_txt.getText().toString()) * (-1)) + "\n";
                     exp_txt.setText("0");
                 }
+                else
+                    str = "경험치 " + (minus_exp * (-1)) + "\n";
+
+                str += String.valueOf((int)(Integer.parseInt(gold_txt.getText().toString())*0.4)) + "골드를 잃었습니다.";
+                make_toast(str);
                 user_current_hp.setText("0");
                 currentHp_txt.setText("10");        //사망시 hp10으로 복구
                 //GameActivity로 이동
@@ -247,4 +270,14 @@ public class WarActivity extends Activity {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Button escape = (Button)findViewById(R.id.escape);
+            battle_action(escape);
+            moveActivity();
+        }
+        return super.onKeyDown(keyCode, event);
+        //KEYCODE_BACK이 아니면 액티비티에서 조작
+    }
 }

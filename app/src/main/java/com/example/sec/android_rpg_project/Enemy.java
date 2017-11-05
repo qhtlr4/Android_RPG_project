@@ -14,6 +14,7 @@ public class Enemy {
     int hp;
     int damage;
     int exp;
+    int is_boss;
     Drawable image;
 
     public Drawable getImage() {
@@ -21,20 +22,38 @@ public class Enemy {
     }
 
     public void setImage(Drawable[] drawable) {
-        if(mob_num == 1){
+        if(mob_num == 1 && is_boss == 0){
             image = drawable[0];
         }
-        if(mob_num == 2){
+        if(mob_num == 2 && is_boss == 0){
             image = drawable[1];
         }
-        if(mob_num == 3){
+        if(mob_num == 3 && is_boss == 0){
             image = drawable[2];
         }
-        if(mob_num == 4){
+        if(mob_num == 4 && is_boss == 0){
             image = drawable[3];
         }
-        if(mob_num == 5){
+        if(mob_num == 5 && is_boss == 0){
             image = drawable[4];
+        }
+        if(mob_num == 6 && is_boss == 0){
+            image = drawable[5];
+        }
+        if(mob_num == 7 && is_boss == 0){
+            image = drawable[6];
+        }
+        if(mob_num == 8 && is_boss == 0){
+            image = drawable[7];
+        }
+        if(mob_num == 9 && is_boss == 0){
+            image = drawable[8];
+        }
+        if(mob_num == 10 && is_boss == 0){
+            image = drawable[9];
+        }
+        if(is_boss == 1){
+            image = drawable[10];
         }
     }
 
