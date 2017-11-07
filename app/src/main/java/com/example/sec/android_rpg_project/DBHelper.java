@@ -198,6 +198,51 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public HashMap<String, Integer> change_equipment_item(int a_itemid, int b_itemid){
+        SQLiteDatabase db = getWritableDatabase();  //장착변수 변경
+        SQLiteDatabase db2 = getReadableDatabase();  //전 아이템의 능력치
+        SQLiteDatabase db3 = getReadableDatabase();  //사용할 아이템의 능력치
+
+        //리턴할 hashmap (변경 공격력, 방어력 정보가 있음)
+        int attack;
+        int defence;
+        HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
+
+        String str="";
+        Cursor cursor2 = null;
+        Cursor cursor3;
+
+        if(a_itemid != 0){
+            str = "SELECT attack, defence FROM INVENTORY WHERE slot=" + a_itemid +";";
+            cursor2 = db.rawQuery(str, null);
+        }
+        str = "SELECT attack, defence FROM INVENTORY WHERE slot=" + b_itemid + ";";
+        cursor3 = db.rawQuery(str, null);
+
+        if(cursor2 != null) {
+            attack = cursor3.getInt(0) - cursor2.getInt(0);
+            defence = cursor3.getInt(1) - cursor2.getInt(1);
+        }
+        else {
+            attack = cursor3.getInt(0);
+            defence = cursor3.getInt(1);
+        }
+
+        if(a_itemid != 0) {
+            //이전에 쓰던 아이템 장착 해제 1->0
+            str = "UPDATE INVENTORY SET is_equip=0 WHERE slot=" + a_itemid + ";";
+            db.execSQL(str);
+        }
+        //새로 쓸 아이템 장착 0->1
+        str = "UPDATE INVENTORY SET is_equip=1 WHERE slot=" + b_itemid + ";";
+        db.execSQL(str);
+
+        hashMap.put("attack", attack);
+        hashMap.put("defence", defence);
+
+        return hashMap;
+    }
+
     public int start_rand(int max) {
         int rand_num;
         rand_num = rand.nextInt(max) + 1;
