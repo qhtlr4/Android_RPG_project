@@ -2,21 +2,16 @@ package com.example.sec.android_rpg_project;
 
 import android.app.Activity;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,8 +56,6 @@ public class GameActivity extends Activity {
 
     TableLayout menuBtns;
     LinearLayout war_level_Layout;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,10 +123,15 @@ public class GameActivity extends Activity {
 
                 weapon_view.setAdapter(weapon_adaptor);
                 weapon_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                if(dbHelper.equipment_item(1) != -1) {
+                    weapon_view.setItemChecked(dbHelper.equipment_item(1) - 1, true);
+                }
                 armor_view.setAdapter(armor_adaptor);
                 armor_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                if(dbHelper.equipment_item(2) != -1) {
+                    armor_view.setItemChecked(dbHelper.equipment_item(2)-1, true);
+                }
                 potion_view.setAdapter(potion_adaptor);
-                potion_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             }
         });
 
@@ -319,71 +317,5 @@ public class GameActivity extends Activity {
         }
         return super.onKeyDown(keyCode, event);
         //KEYCODE_BACK이 아니면 액티비티에서 조작
-    }
-}
-
-class Inventory_listitem{
-    String str;
-    RadioButton radioButton;
-    Button sell_btn;
-
-    Inventory_listitem(String str, RadioButton radioButton, Button sell_btn){
-        this.str = str;
-        this.radioButton = radioButton;
-        this.sell_btn = sell_btn;
-    }
-}
-
-class Inventory_listAdapter extends BaseAdapter{
-    Context context;
-    LayoutInflater inflater;
-    ArrayList<Inventory_listitem> items;
-    int layout;
-
-    public Inventory_listAdapter(Context context, int layout, ArrayList<Inventory_listitem> items){
-        this.context = context;
-        inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.items = items;
-        this.layout = layout;
-    }
-
-
-    @Override
-    public int getCount() {
-        return 0;
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view == null){
-            view = inflater.inflate(layout, viewGroup, false);
-        }
-       // TextView txt = (TextView)view.findViewById(R.id);
-      //  txt.setText("");
-
-       // RadioButton radioButton = (RadioButton)view.findViewById(R.id.);
-       // radioButton.setChecked(true);
-
-       // Button sell_btn = (Button)view.findViewById(R.id.);
-        /*
-        sell_btn.setOnClickListener(new Button.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                String str = arSrc.get(pos).name + "를 주문합니다";
-                Toast.makeText(maincon, str, Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
-        return view;
     }
 }
