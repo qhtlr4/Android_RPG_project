@@ -16,8 +16,10 @@ import java.util.Random;
 public class DBHelper extends SQLiteOpenHelper {
     Random rand = new Random();
 
+    public static int DATABASE_VERSION = 1;
+
     public DBHelper(Context context){
-        super(context, "MyDB.db", null, 1);
+        super(context, "MyDB.db", null, DATABASE_VERSION);
     }
 
     @Override
@@ -81,17 +83,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        /*
-        String query = "DROP TABLE IF EXISTS ITEM";
-        sqLiteDatabase.execSQL(query);
-        query = "DROP TABLE IF EXISTS MOB";
-        sqLiteDatabase.execSQL(query);
-        query = "DROP TABLE IF EXISTS DROP_ITEM";
-        sqLiteDatabase.execSQL(query);
-        query = "DROP TABLE IF EXISTS INVENTORY";
-        sqLiteDatabase.execSQL(query);
-        onCreate(sqLiteDatabase);
-        */
+    }
+
+    public void init_db(){
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS ITEM");
+        db.execSQL("DROP TABLE IF EXISTS MOB");
+        db.execSQL("DROP TABLE IF EXISTS DROP_ITEM");
+        db.execSQL("DROP TABLE IF EXISTS SHOP");
+        db.execSQL("DROP TABLE IF EXISTS INVENTORY_1");
+        db.execSQL("DROP TABLE IF EXISTS INVENTORY_2");
+        db.execSQL("DROP TABLE IF EXISTS INVENTORY_3");
+        onCreate(db);
     }
 
     public ArrayList<String> getInventoryResult(int clas) {
