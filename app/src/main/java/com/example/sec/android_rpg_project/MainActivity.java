@@ -17,7 +17,6 @@ public class MainActivity extends Activity {
     DBHelper dbHelper;
     Intent intent;
     String str;
-    SQLiteDatabase sqLiteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

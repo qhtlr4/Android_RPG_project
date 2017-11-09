@@ -202,10 +202,12 @@ public class GameActivity extends Activity {
         shop_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(Integer.parseInt(gold_txt.getText().toString()) >= dbHelper.getcost(i)+1) {
+                final int cost = dbHelper.getcost(i+1);
+                final int index = i+1;
+                if(Integer.parseInt(gold_txt.getText().toString()) >= cost) {
                     new AlertDialog.Builder(GameActivity.this)
                             .setTitle("알림")
-                            .setMessage("저장된 데이터가 있습니다.\n데이터를 삭제하고 다시 하겠습니까?")
+                            .setMessage("선택된 아이템을 구매하겠습니까?")
                             .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -215,11 +217,14 @@ public class GameActivity extends Activity {
                             .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    gold_txt.setText(Integer.parseInt(gold_txt.getText().toString())-dbHelper.getcost(i));
-                                    dbHelper.insert_item(i, "buy");
+                                    gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString()) - cost));
+                                    dbHelper.insert_item(index, "buy");
                                     make_toast("정상적으로 구매하였습니다.");
                                 }
-                            });
+                            }).show();
+                }
+                else{
+                    make_toast("금액이 부족합니다.");
                 }
             }
         });

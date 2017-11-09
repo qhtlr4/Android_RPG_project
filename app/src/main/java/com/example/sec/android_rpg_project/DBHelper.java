@@ -117,12 +117,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 result += "이름 : " + cursor.getString(2)
                         + "\n공격력 : " + cursor.getInt(3)
                         + "\t\t\t방어력 : " + cursor.getInt(4)
-                        + "\t\t\t가격 : " + (int)(cursor.getInt(7)/2);
+                        + "\t\t\t가격 : " + cursor.getInt(7);
             else
                 result += "이름 : " + cursor.getString(2)
                         + "\t\t\t\tHP회복량 : " + cursor.getInt(5)
                         + "\t\t\t\tMP회복량 : " + cursor.getInt(6)
-                        + "\n가격 : " + (int)(cursor.getInt(7)/2);
+                        + "\n가격 : " + cursor.getInt(7);
             result_array.add(result);
             result = "";
         }
@@ -133,8 +133,14 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT cost FROM SHOP WHERE idx=" +idx + ";", null);
 
-        cursor.moveToFirst();
-        return cursor.getInt(0);
+        if(cursor.moveToFirst() != false) {
+            cursor.moveToFirst();
+            int cost = cursor.getInt(0);
+            cursor.close();
+            return cost;
+        }
+        else
+            return 99999;
     }
 
     //아이템 종류에 따라 인벤토리 1, 2, 3 항목을 return
