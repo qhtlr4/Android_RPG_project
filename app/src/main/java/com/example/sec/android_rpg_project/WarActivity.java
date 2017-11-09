@@ -20,6 +20,9 @@ import static com.example.sec.android_rpg_project.MainActivity.GAME_SETTING;
 
 public class WarActivity extends Activity {
 
+    int add_attack;
+    int add_defence;
+
     DBHelper dbHelper;
     TextView level_txt;
     TextView exp_txt;
@@ -61,6 +64,9 @@ public class WarActivity extends Activity {
         super.onCreate(savedInstanceState);
         dbHelper = new DBHelper(this);
         setContentView(R.layout.activity_war);
+
+        add_attack = dbHelper.change_equipment_item(1, -1, dbHelper.equipment_item(1)).get("attack");
+        add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
 
         level_txt = (TextView)findViewById(R.id.level);
         exp_txt = (TextView)findViewById(R.id.exp);
@@ -245,7 +251,7 @@ public class WarActivity extends Activity {
     }
 
     public void moveActivity(){
-        Load_User user = new Load_User(level_txt.getText().toString(), exp_txt.getText().toString(), currentHp_txt.getText().toString(), maxHp_txt.getText().toString(), currentMp_txt.getText().toString(), maxMp_txt.getText().toString(), gold_txt.getText().toString(), attack_txt.getText().toString(), defence_txt.getText().toString(), addpoint_txt.getText().toString());
+        Load_User user = new Load_User(level_txt.getText().toString(), exp_txt.getText().toString(), currentHp_txt.getText().toString(), maxHp_txt.getText().toString(), currentMp_txt.getText().toString(), maxMp_txt.getText().toString(), gold_txt.getText().toString(), String.valueOf(Integer.parseInt(attack_txt.getText().toString())-add_attack), String.valueOf(Integer.parseInt(defence_txt.getText().toString())-add_defence), addpoint_txt.getText().toString());
         Intent intent = new Intent(this, GameActivity.class);
 
         intent.putExtra("level", user.level);
