@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.example.sec.android_rpg_project.MainActivity.GAME_SETTING;
 
@@ -137,6 +139,42 @@ public class GameActivity extends Activity {
                     armor_view.setItemChecked(dbHelper.equipment_item(2)-1, true);
                 }
                 potion_view.setAdapter(potion_adaptor);
+            }
+        });
+
+        weapon_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
+                if(dbHelper.equipment_item(1) != -1) {
+                    hashMap = dbHelper.change_equipment_item(1, dbHelper.equipment_item(1), i + 1);
+                    ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
+                    ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
+                }
+                else{
+                    hashMap = dbHelper.change_equipment_item(1,-1,i+1);
+                    ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
+                    ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
+                }
+                make_toast("attack " + hashMap.get("attack") + "\ndefence" + hashMap.get("defence"));
+            }
+        });
+
+        armor_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
+                if(dbHelper.equipment_item(2) != -1) {
+                    hashMap = dbHelper.change_equipment_item(2, dbHelper.equipment_item(2), i + 1);
+                    ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
+                    ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
+                }
+                else{
+                    hashMap = dbHelper.change_equipment_item(2,-1,i+1);
+                    ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
+                    ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
+                }
+                make_toast("attack " + hashMap.get("attack") + "\ndefence " + hashMap.get("defence"));
             }
         });
 

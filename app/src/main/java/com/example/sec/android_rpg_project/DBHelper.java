@@ -70,6 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         //test value
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 8, '무적갑옷', 0, 9999, 5000000, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 4, '헌 가죽 옷', 0, 10, 5000, 0);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 2, '목검', 5, 0, 5000000, 0);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 2, '목검', 5, 0, 5000000, 0);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 2, '목검', 5, 0, 5000000, 1);");
