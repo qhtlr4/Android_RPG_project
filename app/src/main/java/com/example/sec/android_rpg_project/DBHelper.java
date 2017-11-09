@@ -245,32 +245,34 @@ public class DBHelper extends SQLiteOpenHelper {
         HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
 
         String str="";
+        String str1;    //db테이블 검색
         Cursor cursor2 = null;
         Cursor cursor3;
-
-        if(a_itemslot != -1){
-            str = "SELECT attack, defence FROM INVENTORY WHERE slot=" + a_itemslot +";";
-            cursor2 = db2.rawQuery(str, null);
-        }
-        str = "SELECT attack, defence FROM INVENTORY WHERE slot=" + b_itemslot + ";";
-        cursor3 = db3.rawQuery(str, null);
-
-        if(cursor2 != null) {
-            attack = cursor3.getInt(0) - cursor2.getInt(0);
-            defence = cursor3.getInt(1) - cursor2.getInt(1);
-        }
-        else {
-            attack = cursor3.getInt(0);
-            defence = cursor3.getInt(1);
-        }
-
-        String str1;
 
         if(clas == 1){
             str1 = "_1";
         }
         else{
             str1 = "_2";
+        }
+
+        if(a_itemslot != -1){
+            str = "SELECT attack, defence FROM INVENTORY" + str1 + " WHERE slot=" + a_itemslot +";";
+            cursor2 = db2.rawQuery(str, null);
+        }
+        str = "SELECT attack, defence FROM INVENTORY" + str1 + " WHERE slot=" + b_itemslot + ";";
+        cursor3 = db3.rawQuery(str, null);
+
+        if(cursor2 != null) {
+            cursor2.moveToFirst();
+            cursor3.moveToFirst();
+            attack = cursor3.getInt(0) - cursor2.getInt(0);
+            defence = cursor3.getInt(1) - cursor2.getInt(1);
+        }
+        else {
+            cursor3.moveToFirst();
+            attack = cursor3.getInt(0);
+            defence = cursor3.getInt(1);
         }
 
         if (a_itemslot != 0) {

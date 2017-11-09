@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import static com.example.sec.android_rpg_project.MainActivity.GAME_SETTING;
 
 public class GameActivity extends Activity {
+    final DBHelper dbHelper = new DBHelper(this);
+
     TextView level_txt;
     TextView exp_txt;
     TextView currentHp_txt;
@@ -49,7 +51,9 @@ public class GameActivity extends Activity {
     //ability
     LinearLayout ability_layout;
     TextView ability_attack;
+    int add_attack;
     TextView ability_defence;
+    int add_defence;
     TextView ability_point;
     TextView ability_hp;
     TextView ability_mp;
@@ -88,15 +92,16 @@ public class GameActivity extends Activity {
         gold_txt.setText(intent.getStringExtra("gold"));
         ability_hp.setText(maxHp_txt.getText());
         ability_mp.setText(maxMp_txt.getText());
-        ability_attack.setText(intent.getStringExtra("attack"));
-        ability_defence.setText(intent.getStringExtra("defence"));
+        add_attack = dbHelper.change_equipment_item(1, -1, dbHelper.equipment_item(1)).get("attack");
+        ability_attack.setText(String.valueOf(Integer.parseInt(intent.getStringExtra("attack")) + add_attack));
+        add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
+        ability_defence.setText(String.valueOf(Integer.parseInt(intent.getStringExtra("defence")) + add_defence));
         ability_point.setText(intent.getStringExtra("addpoint"));
         now_exp = Integer.parseInt(exp_txt.getText().toString());
         GameInfo gameInfo = new GameInfo();
         limit_exp = gameInfo.get_maxexp(Integer.parseInt(level_txt.getText().toString()));
         setExp_bar(now_exp, limit_exp);
 
-        final DBHelper dbHelper = new DBHelper(this);
         menuBtns = (TableLayout)findViewById(R.id.menuBtns);
         inventory_layout = (LinearLayout)findViewById(R.id.inventory_layout);
         weapon_view = (ListView)findViewById(R.id.weapon_view);
@@ -158,8 +163,8 @@ public class GameActivity extends Activity {
                 String currentMp = currentMp_txt.getText().toString();
                 String maxMp = maxMp_txt.getText().toString();
                 String gold = gold_txt.getText().toString();
-                String attack = ability_attack.getText().toString();
-                String defence = ability_defence.getText().toString();
+                String attack = String.valueOf(Integer.parseInt(ability_attack.getText().toString()) - add_attack);
+                String defence = String.valueOf(Integer.parseInt(ability_defence.getText().toString()) - add_defence);
                 String addpoint = ability_point.getText().toString();
 
                 edit.putString("level", level);
