@@ -63,8 +63,12 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 1, 0, 1, 900);");  //목검
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 2, 0, 1, 900);");  //목검
 
-        // 샵위치아이템번호, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격
-        sqLiteDatabase.execSQL("CREATE TABLE SHOP (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, item_name TEXT, use_level INTEGER, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER);");
+        // 샵위치아이템번호, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 종류
+        sqLiteDatabase.execSQL("CREATE TABLE SHOP (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, class INTEGER);");
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 2, '청동검', 7, 0, 0, 0, 5000, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 2, '청동검', 7, 0, 0, 0, 5000, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 11, 'HP 포션', 0, 0, 30, 0, 500, 3);");
+
         // 아이템이위치한칸, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
         sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_1 (slot INTEGER PRIMARY KEY, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
         sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_2 (slot INTEGER PRIMARY KEY, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
@@ -95,6 +99,30 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS INVENTORY_2");
         db.execSQL("DROP TABLE IF EXISTS INVENTORY_3");
         onCreate(db);
+    }
+
+    public  ArrayList<String> getShopInfo(){
+        ArrayList<String> result_array = new ArrayList<String>();
+        SQLiteDatabase db = getReadableDatabase();
+        String result = "";
+
+        // 샵위치아이템번호, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 종류
+        Cursor cursor = db.rawQuery("SELECT * FROM SHOP;", null);
+        while (cursor.moveToNext()) {
+            if(cursor.getInt(8) == 1 || cursor.getInt(8) == 2)
+                result += "이름 : " + cursor.getString(2)
+                        + "\n공격력 : " + cursor.getInt(3)
+                        + "\t\t\t방어력 : " + cursor.getInt(4)
+                        + "\t\t\t가격 : " + (int)(cursor.getInt(7)/2);
+            else
+                result += "이름 : " + cursor.getString(2)
+                        + "\t\t\t\tHP회복량 : " + cursor.getInt(5)
+                        + "\t\t\t\tMP회복량 : " + cursor.getInt(6)
+                        + "\n가격 : " + (int)(cursor.getInt(7)/2);
+            result_array.add(result);
+            result = "";
+        }
+        return result_array;
     }
 
     public ArrayList<String> getInventoryResult(int clas) {

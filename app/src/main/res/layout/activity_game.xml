@@ -359,6 +359,12 @@
                 android:text="저장"
                 android:layout_weight="1"/>
         </TableLayout>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:id="@+id/shop_view">
+        </ListView>
     </FrameLayout>
 
 </LinearLayout>

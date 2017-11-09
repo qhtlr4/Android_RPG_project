@@ -50,6 +50,11 @@ public class GameActivity extends Activity {
     ListView armor_view;
     ListView potion_view;
 
+    //shop
+    ArrayAdapter<String> shop_adaptor;
+    ArrayList<String> shop_items;
+    ListView shop_view;
+
     //ability
     LinearLayout ability_layout;
     TextView ability_attack;
@@ -177,6 +182,21 @@ public class GameActivity extends Activity {
                 make_toast("attack " + hashMap.get("attack") + "\ndefence " + hashMap.get("defence"));
             }
         });
+
+        shop_view = (ListView)findViewById(R.id.shop_view);
+        Button shop = (Button)findViewById(R.id.shop);
+        shop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shop_view.setVisibility(View.VISIBLE);
+                menuBtns.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        shop_items = new ArrayList<String>();
+        shop_items = dbHelper.getShopInfo();
+        shop_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_1, shop_items);
+        shop_view.setAdapter(shop_adaptor);
 
         ability_layout = (LinearLayout)findViewById(R.id.abilityLayout);
         Button ability = (Button)findViewById(R.id.ability);
@@ -350,6 +370,10 @@ public class GameActivity extends Activity {
             }
             else if (war_level_Layout.getVisibility() == View.VISIBLE){
                 war_level_Layout.setVisibility(View.INVISIBLE);
+                menuBtns.setVisibility(View.VISIBLE);
+            }
+            else if (shop_view.getVisibility() == View.VISIBLE){
+                shop_view.setVisibility(View.INVISIBLE);
                 menuBtns.setVisibility(View.VISIBLE);
             }
             else{
