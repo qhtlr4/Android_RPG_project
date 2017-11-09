@@ -1,7 +1,9 @@
 package com.example.sec.android_rpg_project;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,8 +37,6 @@ public class GameActivity extends Activity {
     int now_exp;
     int limit_exp;
     ProgressBar exp_bar;
-    TextView max_hp;
-    TextView max_mp;
 
     //inventory
     ArrayAdapter<String> weapon_adaptor;
@@ -141,7 +141,7 @@ public class GameActivity extends Activity {
                 armor_view.setAdapter(armor_adaptor);
                 armor_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                 if(dbHelper.equipment_item(2) != -1) {
-                    armor_view.setItemChecked(dbHelper.equipment_item(2)-1, true);
+                    armor_view.setItemChecked(dbHelper.equipment_item(2) - 1, true);
                 }
                 potion_view.setAdapter(potion_adaptor);
             }
@@ -151,17 +151,17 @@ public class GameActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
-                if(dbHelper.equipment_item(1) != -1) {
-                    hashMap = dbHelper.change_equipment_item(1, dbHelper.equipment_item(1), i + 1);
+                if(dbHelper.equipment_item(1) != -1) {  //착용체크가 있었을때
+                    hashMap = dbHelper.change_equipment_item(1, dbHelper.equipment_item(1), i+1);
                     ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
-                else{
-                    hashMap = dbHelper.change_equipment_item(1,-1,i+1);
+                else{   //착용체크가 없었을때
+                    hashMap = dbHelper.change_equipment_item(1, -1, i+1);
                     ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
-                make_toast("attack " + hashMap.get("attack") + "\ndefence" + hashMap.get("defence"));
+                make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
             }
         });
 
@@ -170,16 +170,16 @@ public class GameActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
                 if(dbHelper.equipment_item(2) != -1) {
-                    hashMap = dbHelper.change_equipment_item(2, dbHelper.equipment_item(2), i + 1);
+                    hashMap = dbHelper.change_equipment_item(2, dbHelper.equipment_item(2), i+1);
                     ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
                 else{
-                    hashMap = dbHelper.change_equipment_item(2,-1,i+1);
+                    hashMap = dbHelper.change_equipment_item(2, -1, i+1);
                     ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
-                make_toast("attack " + hashMap.get("attack") + "\ndefence " + hashMap.get("defence"));
+                make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
             }
         });
 
@@ -195,8 +195,34 @@ public class GameActivity extends Activity {
 
         shop_items = new ArrayList<String>();
         shop_items = dbHelper.getShopInfo();
-        shop_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_1, shop_items);
+        shop_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, shop_items);
         shop_view.setAdapter(shop_adaptor);
+        shop_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        shop_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(Integer.parseInt(gold_txt.getText().toString()) >= dbHelper.getcost(i)+1) {
+                    new AlertDialog.Builder(GameActivity.this)
+                            .setTitle("알림")
+                            .setMessage("저장된 데이터가 있습니다.\n데이터를 삭제하고 다시 하겠습니까?")
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    return;
+                                }
+                            })
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    gold_txt.setText(Integer.parseInt(gold_txt.getText().toString())-dbHelper.getcost(i));
+                                    dbHelper.insert_item(i, "buy");
+                                    make_toast("정상적으로 구매하였습니다.");
+                                }
+                            });
+                }
+            }
+        });
 
         ability_layout = (LinearLayout)findViewById(R.id.abilityLayout);
         Button ability = (Button)findViewById(R.id.ability);

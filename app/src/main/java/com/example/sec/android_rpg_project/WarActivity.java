@@ -210,7 +210,9 @@ public class WarActivity extends Activity {
                 else
                     str = "경험치 " + (minus_exp * (-1)) + "\n";
 
-                str += String.valueOf((int)(Integer.parseInt(gold_txt.getText().toString())*0.4)) + "골드를 잃었습니다.";
+                int minus_gold = (int)(Integer.parseInt(gold_txt.getText().toString())*0.4);
+                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString())-minus_gold));
+                str += String.valueOf(minus_gold) + "골드를 잃었습니다.";
                 make_toast(str);
                 user_current_hp.setText("0");
                 currentHp_txt.setText("10");        //사망시 hp10으로 복구
