@@ -373,6 +373,39 @@ public class DBHelper extends SQLiteOpenHelper {
         return hashMap;
     }
 
+    //아이템 판매 처리함수 (판매아이템가격, 장착된 아이템일시 능력치 감소량 리턴)
+    public HashMap<String, Integer> sell_item(int idx, int clas){
+        HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
+        String a;
+        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db2 = getWritableDatabase();
+
+        if(clas == 1){
+            a = "_1";
+        }
+        else if(clas == 2){
+            a = "_2";
+        }
+        else{
+            a = "_3";
+        }
+        Cursor cursor = db.rawQuery("SELECT attack, defence, cost, is_equip FROM INVENTORY" + a + " WHERE slot=" + idx + ";", null);
+        cursor.moveToFirst();
+        if(cursor.getInt(3) == 1) {
+            hashMap.put("attack", cursor.getInt(0));
+            hashMap.put("defence", cursor.getInt(1));
+            hashMap.put("cost", cursor.getInt(2) / 2);
+        }
+        else{
+            hashMap.put("attack", 0);
+            hashMap.put("defence", 0);
+            hashMap.put("cost", cursor.getInt(2) / 2);
+        }
+        db2.execSQL("DELETE FROM INVENTORY" + a + " WHERE slot=" + idx + ";");
+
+        return hashMap;
+    }
+
     //random
     public int start_rand(int max) {
         int rand_num;

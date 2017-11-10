@@ -165,6 +165,29 @@ public class GameActivity extends Activity {
             }
         });
 
+        weapon_view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final int index = i+1;
+                new AlertDialog.Builder(GameActivity.this)
+                        .setTitle("판매알림")
+                        .setMessage("선택된 아이템을 판매하겠습니까?")
+                        .setNegativeButton("아니오",null)
+                        .setPositiveButton("예", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 1);
+                                ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
+                                ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
+                                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
+                                weapon_adaptor.notifyDataSetChanged();
+                            }
+                        })
+                        .show();
+                return false;
+            }
+        });
+
         armor_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -180,6 +203,29 @@ public class GameActivity extends Activity {
                     ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
                 make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
+            }
+        });
+
+        weapon_view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final int index = i+1;
+                new AlertDialog.Builder(GameActivity.this)
+                        .setTitle("판매알림")
+                        .setMessage("선택된 아이템을 판매하겠습니까?")
+                        .setNegativeButton("아니오",null)
+                        .setPositiveButton("예", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 1);
+                                ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
+                                ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
+                                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
+                                armor_adaptor.notifyDataSetChanged();
+                            }
+                        })
+                        .show();
+                return false;
             }
         });
 
