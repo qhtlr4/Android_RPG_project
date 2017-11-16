@@ -68,6 +68,9 @@ public class GameActivity extends Activity {
     TableLayout menuBtns;
     LinearLayout war_level_Layout;
 
+    User user = new User();
+    GameInfo gameInfo = new GameInfo();     //최대 경험치 정보를 읽을 수 있는 class
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,23 +92,23 @@ public class GameActivity extends Activity {
         war_level_Layout = (LinearLayout)findViewById(R.id.war_level_Layout);
 
         Intent intent = getIntent();
+        user = (User)intent.getSerializableExtra("user");
 
-        level_txt.setText(intent.getStringExtra("level"));
-        exp_txt.setText(intent.getStringExtra("exp"));
-        currentHp_txt.setText(intent.getStringExtra("currentHp"));
-        maxHp_txt.setText(intent.getStringExtra("maxHp"));
-        currentMp_txt.setText(intent.getStringExtra("currentMp"));
-        maxMp_txt.setText(intent.getStringExtra("maxMp"));
-        gold_txt.setText(intent.getStringExtra("gold"));
+        level_txt.setText(user.level);
+        exp_txt.setText(user.exp);
+        currentHp_txt.setText(user.currentHp);
+        maxHp_txt.setText(user.maxHp);
+        currentMp_txt.setText(user.currentMp);
+        maxMp_txt.setText(user.maxMp);
+        gold_txt.setText(user.gold);
         ability_hp.setText(maxHp_txt.getText());
         ability_mp.setText(maxMp_txt.getText());
         add_attack = dbHelper.change_equipment_item(1, -1, dbHelper.equipment_item(1)).get("attack");
-        ability_attack.setText(String.valueOf(Integer.parseInt(intent.getStringExtra("attack")) + add_attack));
+        ability_attack.setText(String.valueOf(Integer.parseInt(user.attack) + add_attack));
         add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
-        ability_defence.setText(String.valueOf(Integer.parseInt(intent.getStringExtra("defence")) + add_defence));
-        ability_point.setText(intent.getStringExtra("addpoint"));
+        ability_defence.setText(String.valueOf(Integer.parseInt(user.defence) + add_defence));
+        ability_point.setText(user.addpoint);
         now_exp = Integer.parseInt(exp_txt.getText().toString());
-        GameInfo gameInfo = new GameInfo();
         limit_exp = gameInfo.get_maxexp(Integer.parseInt(level_txt.getText().toString()));
         setExp_bar(now_exp, limit_exp);
 
@@ -289,8 +292,6 @@ public class GameActivity extends Activity {
         savebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences user_status = getSharedPreferences("user_status", Service.MODE_PRIVATE);
-                SharedPreferences.Editor edit = user_status.edit();
                 String level = level_txt.getText().toString();
                 String exp = exp_txt.getText().toString();
                 String currentHp = currentHp_txt.getText().toString();
@@ -302,22 +303,31 @@ public class GameActivity extends Activity {
                 String defence = String.valueOf(Integer.parseInt(ability_defence.getText().toString()) - add_defence);
                 String addpoint = ability_point.getText().toString();
 
-                edit.putString("level", level);
-                edit.putString("exp", exp);
-                edit.putString("currentHp", currentHp);
-                edit.putString("currentMp", currentMp);
-                edit.putString("maxHp", maxHp);
-                edit.putString("maxMp", maxMp);
-                edit.putString("gold", gold);
-                edit.putString("attack", attack);
-                edit.putString("defence", defence);
-                edit.putString("addpoint", addpoint);
-                edit.putBoolean("exist_data", true);
-                edit.commit();
-                String str = "저장되었습니다.";
-                make_toast(str);
+                saveStatus(level, exp, currentHp, maxHp, currentMp, maxMp, gold, attack, defence, addpoint);
             }
         });
+    }
+
+    public void saveStatus(String level, String exp, String currentHp, String maxHp, String currentMp, String maxMp, String gold, String attack, String defence, String addpoint){
+
+        SharedPreferences user_status = getSharedPreferences("user_status", Service.MODE_PRIVATE);
+        SharedPreferences.Editor edit = user_status.edit();
+
+        edit.putString("level", level);
+        edit.putString("exp", exp);
+        edit.putString("currentHp", currentHp);
+        edit.putString("currentMp", currentMp);
+        edit.putString("maxHp", maxHp);
+        edit.putString("maxMp", maxMp);
+        edit.putString("gold", gold);
+        edit.putString("attack", attack);
+        edit.putString("defence", defence);
+        edit.putString("addpoint", addpoint);
+        edit.putBoolean("exist_data", true);
+        edit.commit();
+
+        String str = "저장되었습니다.";
+        make_toast(str);
     }
 
     public void itemclass(View v){
@@ -375,8 +385,10 @@ public class GameActivity extends Activity {
     }
 
     public void warClick(View v) {
-        Load_User user = new Load_User(level_txt.getText().toString(), exp_txt.getText().toString(), currentHp_txt.getText().toString(), maxHp_txt.getText().toString(), currentMp_txt.getText().toString(), maxMp_txt.getText().toString(), gold_txt.getText().toString(), ability_attack.getText().toString(), ability_defence.getText().toString(), ability_point.getText().toString());
+        User user = new User(level_txt.getText().toString(), exp_txt.getText().toString(), currentHp_txt.getText().toString(), maxHp_txt.getText().toString(), currentMp_txt.getText().toString(), maxMp_txt.getText().toString(), gold_txt.getText().toString(), ability_attack.getText().toString(), ability_defence.getText().toString(), ability_point.getText().toString());
         Intent intent = new Intent(this, WarActivity.class);
+        war_level_Layout.setVisibility(View.INVISIBLE);
+        menuBtns.setVisibility(View.VISIBLE);
         int id = v.getId();
 
         switch (id){
@@ -410,6 +422,9 @@ public class GameActivity extends Activity {
                 break;
         }
 
+        intent.putExtra("user", user);
+
+        /*
         intent.putExtra("level", user.level);
         intent.putExtra("exp", user.exp);
         intent.putExtra("currentHp", user.currentHp);
@@ -420,9 +435,33 @@ public class GameActivity extends Activity {
         intent.putExtra("attack", user.attack);
         intent.putExtra("defence", user.defence);
         intent.putExtra("addpoint", user.addpoint);
+        */
 
         startActivityForResult(intent, GAME_SETTING);
-        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        user = (User)data.getSerializableExtra("user");
+        level_txt.setText(user.level);
+        exp_txt.setText(user.exp);
+        currentHp_txt.setText(user.currentHp);
+        maxHp_txt.setText(user.maxHp);
+        currentMp_txt.setText(user.currentMp);
+        maxMp_txt.setText(user.maxMp);
+        gold_txt.setText(user.gold);
+        ability_hp.setText(maxHp_txt.getText());
+        ability_mp.setText(maxMp_txt.getText());
+        add_attack = dbHelper.change_equipment_item(1, -1, dbHelper.equipment_item(1)).get("attack");
+        ability_attack.setText(String.valueOf(Integer.parseInt(user.attack) + add_attack));
+        add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
+        ability_defence.setText(String.valueOf(Integer.parseInt(user.defence) + add_defence));
+        ability_point.setText(user.addpoint);
+        now_exp = Integer.parseInt(exp_txt.getText().toString());
+        limit_exp = gameInfo.get_maxexp(Integer.parseInt(level_txt.getText().toString()));
+        setExp_bar(now_exp, limit_exp);
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void setExp_bar(int current_exp, int max_exp){
