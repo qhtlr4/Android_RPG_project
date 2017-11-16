@@ -6,7 +6,6 @@ import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -41,18 +40,8 @@ public class MainActivity extends Activity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dbHelper.init_db();
-                            Init_User user = new Init_User();
-
-                            intent.putExtra("level", user.level);
-                            intent.putExtra("exp", user.exp);
-                            intent.putExtra("currentHp", user.currentHp);
-                            intent.putExtra("maxHp", user.maxHp);
-                            intent.putExtra("currentMp", user.currentMp);
-                            intent.putExtra("maxMp", user.maxMp);
-                            intent.putExtra("gold", user.gold);
-                            intent.putExtra("attack", user.attack);
-                            intent.putExtra("defence", user.defence);
-                            intent.putExtra("addpoint", user.addpoint);
+                            User user = new User();
+                            intent.putExtra("user", user);
 
                             SharedPreferences user_status = getSharedPreferences("user_status", Service.MODE_PRIVATE);
                             SharedPreferences.Editor edit = user_status.edit();
@@ -73,29 +62,19 @@ public class MainActivity extends Activity {
                             make_toast(str);
                             str = "새 게임을 시작합니다.";
                             make_toast(str);
-                            startActivityForResult(intent, GAME_SETTING);
+                            startActivity(intent);
                             //finish();
                             onPause();
                         }
                     }).show();
         }
         else{
-            Init_User user = new Init_User();
-
-            intent.putExtra("level", user.level);
-            intent.putExtra("exp", user.exp);
-            intent.putExtra("currentHp", user.currentHp);
-            intent.putExtra("maxHp", user.maxHp);
-            intent.putExtra("currentMp", user.currentMp);
-            intent.putExtra("maxMp", user.maxMp);
-            intent.putExtra("gold", user.gold);
-            intent.putExtra("attack", user.attack);
-            intent.putExtra("defence", user.defence);
-            intent.putExtra("addpoint", user.addpoint);
+            User user = new User();
+            intent.putExtra("user", user);
 
             str = "새 게임을 시작합니다.";
             make_toast(str);
-            startActivityForResult(intent, GAME_SETTING);
+            startActivity(intent);
             //finish();
             onPause();
         }
@@ -108,25 +87,14 @@ public class MainActivity extends Activity {
             make_toast(str);
             return;
         }
-        Load_User user = new Load_User(user_status);
-        Intent intent = new Intent(this, GameActivity.class);
-
-        intent.putExtra("level", user.level);
-        intent.putExtra("exp", user.exp);
-        intent.putExtra("currentHp", user.currentHp);
-        intent.putExtra("maxHp", user.maxHp);
-        intent.putExtra("currentMp", user.currentMp);
-        intent.putExtra("maxMp", user.maxMp);
-        intent.putExtra("gold", user.gold);
-        intent.putExtra("attack", user.attack);
-        intent.putExtra("defence", user.defence);
-        intent.putExtra("addpoint", user.addpoint);
-
+        User user = new User(user_status);
+        intent = new Intent(this, GameActivity.class);
+        intent.putExtra("user", user);
         str = "정상적으로 불러왔습니다.";
         make_toast(str);
 
         onPause();
-        startActivityForResult(intent, GAME_SETTING);
+        startActivity(intent);
     }
     public void make_toast(String str){
         Toast.makeText(this, str, Toast.LENGTH_LONG).show();

@@ -2,11 +2,13 @@ package com.example.sec.android_rpg_project;
 
 import android.content.SharedPreferences;
 
+import java.io.Serializable;
+
 /**
- * Created by USER on 2017-11-01.
+ * Created by USER on 2017-11-16.
  */
 
-public class Load_User{
+public class User implements Serializable{
     String level;
     String exp;
     String currentHp;
@@ -18,7 +20,20 @@ public class Load_User{
     String defence;
     String addpoint;
 
-    public Load_User(SharedPreferences sp){
+    public User(){
+        level = "1";
+        exp = "0";
+        currentHp = "50";
+        maxHp = "50";
+        currentMp = "30";
+        maxMp = "30";
+        gold = "200";
+        attack = "3";
+        defence = "0";
+        addpoint = "5";
+    }
+
+    public User(SharedPreferences sp){
         level = sp.getString("level", "0");
         exp = sp.getString("exp","0");
         currentHp = sp.getString("currentHp", "0");
@@ -30,7 +45,7 @@ public class Load_User{
         defence = sp.getString("defence", "0");
         addpoint = sp.getString("addpoint", "0");
     }
-    public Load_User(String level, String exp, String currentHp, String maxHp, String currentMp, String maxMp, String gold, String attack, String defence, String addpoint){
+    public User(String level, String exp, String currentHp, String maxHp, String currentMp, String maxMp, String gold, String attack, String defence, String addpoint){
         this.level = level;
         this.exp = exp;
         this.currentHp = currentHp;

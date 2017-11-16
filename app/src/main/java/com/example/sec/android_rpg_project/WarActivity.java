@@ -43,6 +43,8 @@ public class WarActivity extends Activity {
 
     TextView user_current_hp;
     TextView user_max_hp;
+    TextView user_current_mp;
+    TextView user_max_mp;
     TextView enemy_current_hp;      //몬스터 실시간 체력바 정보
     TextView enemy_max_hp;
 
@@ -82,16 +84,18 @@ public class WarActivity extends Activity {
 
         Intent intent = getIntent();
 
-        level_txt.setText(intent.getStringExtra("level"));
-        exp_txt.setText(intent.getStringExtra("exp"));
-        currentHp_txt.setText(intent.getStringExtra("currentHp"));
-        maxHp_txt.setText(intent.getStringExtra("maxHp"));
-        currentMp_txt.setText(intent.getStringExtra("currentMp"));
-        maxMp_txt.setText(intent.getStringExtra("maxMp"));
-        gold_txt.setText(intent.getStringExtra("gold"));
-        attack_txt.setText(intent.getStringExtra("attack"));
-        defence_txt.setText(intent.getStringExtra("defence"));
-        addpoint_txt.setText(intent.getStringExtra("addpoint"));
+        User user = (User)intent.getSerializableExtra("user");
+
+        level_txt.setText(user.level);
+        exp_txt.setText(user.exp);
+        currentHp_txt.setText(user.currentHp);
+        maxHp_txt.setText(user.maxHp);
+        currentMp_txt.setText(user.currentMp);
+        maxMp_txt.setText(user.maxMp);
+        gold_txt.setText(user.gold);
+        attack_txt.setText(user.attack);
+        defence_txt.setText(user.defence);
+        addpoint_txt.setText(user.addpoint);
         attack = Integer.parseInt(attack_txt.getText().toString());
         defence = Integer.parseInt(defence_txt.getText().toString());
         addpoint = Integer.parseInt(addpoint_txt.getText().toString());
@@ -104,6 +108,8 @@ public class WarActivity extends Activity {
 
         user_current_hp = (TextView)findViewById(R.id.user_current_hp);
         user_max_hp = (TextView)findViewById(R.id.user_max_hp);
+        user_current_mp = (TextView)findViewById(R.id.user_current_mp);
+        user_max_mp = (TextView)findViewById(R.id.user_max_mp);
         enemy_current_hp = (TextView)findViewById(R.id.enemy_current_hp);
         enemy_max_hp = (TextView)findViewById(R.id.enemy_max_hp);
 
@@ -253,21 +259,11 @@ public class WarActivity extends Activity {
     }
 
     public void moveActivity(){
-        Load_User user = new Load_User(level_txt.getText().toString(), exp_txt.getText().toString(), currentHp_txt.getText().toString(), maxHp_txt.getText().toString(), currentMp_txt.getText().toString(), maxMp_txt.getText().toString(), gold_txt.getText().toString(), String.valueOf(Integer.parseInt(attack_txt.getText().toString())-add_attack), String.valueOf(Integer.parseInt(defence_txt.getText().toString())-add_defence), addpoint_txt.getText().toString());
-        Intent intent = new Intent(this, GameActivity.class);
+        User user = new User(level_txt.getText().toString(), exp_txt.getText().toString(), currentHp_txt.getText().toString(), maxHp_txt.getText().toString(), currentMp_txt.getText().toString(), maxMp_txt.getText().toString(), gold_txt.getText().toString(), String.valueOf(Integer.parseInt(attack_txt.getText().toString())-add_attack), String.valueOf(Integer.parseInt(defence_txt.getText().toString())-add_defence), addpoint_txt.getText().toString());
+        Intent intent = getIntent();
+        intent.putExtra("user", user);
 
-        intent.putExtra("level", user.level);
-        intent.putExtra("exp", user.exp);
-        intent.putExtra("currentHp", user.currentHp);
-        intent.putExtra("maxHp", user.maxHp);
-        intent.putExtra("currentMp", user.currentMp);
-        intent.putExtra("maxMp", user.maxMp);
-        intent.putExtra("gold", user.gold);
-        intent.putExtra("attack", user.attack);
-        intent.putExtra("defence", user.defence);
-        intent.putExtra("addpoint", user.addpoint);
-
-        startActivityForResult(intent, GAME_SETTING);
+        setResult(GAME_SETTING, intent);
         finish();
     }
     public void setExp_bar(int current_exp, int max_exp){

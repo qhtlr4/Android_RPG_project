@@ -175,7 +175,7 @@
                     android:text="MP " />
 
                 <TextView
-                    android:id="@id/current_mp"
+                    android:id="@+id/user_current_mp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -187,7 +187,7 @@
                     android:text="/" />
 
                 <TextView
-                    android:id="@id/max_mp"
+                    android:id="@+id/user_max_mp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
