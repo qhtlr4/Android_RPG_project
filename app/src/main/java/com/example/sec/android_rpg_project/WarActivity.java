@@ -115,6 +115,8 @@ public class WarActivity extends Activity {
 
         user_current_hp.setText(currentHp_txt.getText().toString());
         user_max_hp.setText(maxHp_txt.getText().toString());
+        user_current_mp.setText(currentMp_txt.getText().toString());
+        user_max_mp.setText(maxMp_txt.getText().toString());
         enemy_current_hp.setText(String.valueOf(enemy.hp));
         enemy_max_hp.setText(String.valueOf(enemy.hp));
 
