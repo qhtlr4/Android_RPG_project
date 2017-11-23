@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.example.sec.android_rpg_project.MainActivity.GAME_SETTING;
+import static com.example.sec.android_rpg_project.R.id.exp;
+import static java.lang.Integer.parseInt;
 
 public class GameActivity extends Activity {
     final DBHelper dbHelper = new DBHelper(this);
@@ -69,7 +71,6 @@ public class GameActivity extends Activity {
     LinearLayout war_level_Layout;
 
     User user = new User();
-    GameInfo gameInfo = new GameInfo();     //최대 경험치 정보를 읽을 수 있는 class
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         level_txt = (TextView)findViewById(R.id.level);
-        exp_txt = (TextView)findViewById(R.id.exp);
+        exp_txt = (TextView)findViewById(exp);
         currentHp_txt = (TextView)findViewById(R.id.current_hp);
         currentMp_txt = (TextView)findViewById(R.id.current_mp);
         maxHp_txt = (TextView)findViewById(R.id.max_hp);
@@ -94,22 +95,22 @@ public class GameActivity extends Activity {
         Intent intent = getIntent();
         user = (User)intent.getSerializableExtra("user");
 
-        level_txt.setText(user.level);
-        exp_txt.setText(user.exp);
-        currentHp_txt.setText(user.currentHp);
-        maxHp_txt.setText(user.maxHp);
-        currentMp_txt.setText(user.currentMp);
-        maxMp_txt.setText(user.maxMp);
-        gold_txt.setText(user.gold);
-        ability_hp.setText(maxHp_txt.getText());
-        ability_mp.setText(maxMp_txt.getText());
+        level_txt.setText(String.valueOf(user.level));
+        exp_txt.setText(String.valueOf(user.exp));
+        currentHp_txt.setText(String.valueOf(user.currentHp));
+        maxHp_txt.setText(String.valueOf(user.maxHp));
+        currentMp_txt.setText(String.valueOf(user.currentMp));
+        maxMp_txt.setText(String.valueOf(user.maxMp));
+        gold_txt.setText(String.valueOf(user.gold));
+        ability_hp.setText(String.valueOf(maxHp_txt.getText()));
+        ability_mp.setText(String.valueOf(maxMp_txt.getText()));
         add_attack = dbHelper.change_equipment_item(1, -1, dbHelper.equipment_item(1)).get("attack");
-        ability_attack.setText(String.valueOf(Integer.parseInt(user.attack) + add_attack));
+        ability_attack.setText(String.valueOf(user.attack + add_attack));
         add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
-        ability_defence.setText(String.valueOf(Integer.parseInt(user.defence) + add_defence));
-        ability_point.setText(user.addpoint);
-        now_exp = Integer.parseInt(exp_txt.getText().toString());
-        limit_exp = gameInfo.get_maxexp(Integer.parseInt(level_txt.getText().toString()));
+        ability_defence.setText(String.valueOf(user.defence + add_defence));
+        ability_point.setText(String.valueOf(user.addpoint));
+        now_exp = parseInt(exp_txt.getText().toString());
+        limit_exp = user.get_maxexp();
         setExp_bar(now_exp, limit_exp);
 
         menuBtns = (TableLayout)findViewById(R.id.menuBtns);
@@ -156,13 +157,13 @@ public class GameActivity extends Activity {
                 HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
                 if(dbHelper.equipment_item(1) != -1) {  //착용체크가 있었을때
                     hashMap = dbHelper.change_equipment_item(1, dbHelper.equipment_item(1), i+1);
-                    ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
-                    ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
+                    ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
+                    ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
                 else{   //착용체크가 없었을때
                     hashMap = dbHelper.change_equipment_item(1, -1, i+1);
-                    ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
-                    ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
+                    ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
+                    ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
                 make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
             }
@@ -180,9 +181,9 @@ public class GameActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 1);
-                                ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
-                                ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
-                                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
+                                ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
+                                ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
+                                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
                                 weapon_adaptor.notifyDataSetChanged();
                             }
                         })
@@ -197,13 +198,13 @@ public class GameActivity extends Activity {
                 HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
                 if(dbHelper.equipment_item(2) != -1) {
                     hashMap = dbHelper.change_equipment_item(2, dbHelper.equipment_item(2), i+1);
-                    ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
-                    ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
+                    ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
+                    ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
                 else{
                     hashMap = dbHelper.change_equipment_item(2, -1, i+1);
-                    ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
-                    ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
+                    ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
+                    ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
                 make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
             }
@@ -221,9 +222,9 @@ public class GameActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 1);
-                                ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
-                                ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
-                                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
+                                ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
+                                ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
+                                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
                                 armor_adaptor.notifyDataSetChanged();
                             }
                         })
@@ -253,7 +254,7 @@ public class GameActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final int cost = dbHelper.getcost(i+1);
                 final int index = i+1;
-                if(Integer.parseInt(gold_txt.getText().toString()) >= cost) {
+                if(parseInt(gold_txt.getText().toString()) >= cost) {
                     new AlertDialog.Builder(GameActivity.this)
                             .setTitle("알림")
                             .setMessage("선택된 아이템을 구매하겠습니까?")
@@ -266,7 +267,7 @@ public class GameActivity extends Activity {
                             .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString()) - cost));
+                                    gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
                                     dbHelper.insert_item(index, "buy");
                                     make_toast("정상적으로 구매하였습니다.");
                                 }
@@ -292,37 +293,37 @@ public class GameActivity extends Activity {
         savebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String level = level_txt.getText().toString();
-                String exp = exp_txt.getText().toString();
-                String currentHp = currentHp_txt.getText().toString();
-                String maxHp = maxHp_txt.getText().toString();
-                String currentMp = currentMp_txt.getText().toString();
-                String maxMp = maxMp_txt.getText().toString();
-                String gold = gold_txt.getText().toString();
-                String attack = String.valueOf(Integer.parseInt(ability_attack.getText().toString()) - add_attack);
-                String defence = String.valueOf(Integer.parseInt(ability_defence.getText().toString()) - add_defence);
-                String addpoint = ability_point.getText().toString();
+                int level = parseInt(level_txt.getText().toString());
+                int exp = Integer.parseInt(exp_txt.getText().toString());
+                int currentHp = Integer.parseInt(currentHp_txt.getText().toString());
+                int maxHp = Integer.parseInt(maxHp_txt.getText().toString());
+                int currentMp = Integer.parseInt(currentMp_txt.getText().toString());
+                int maxMp = Integer.parseInt(maxMp_txt.getText().toString());
+                int gold = Integer.parseInt(gold_txt.getText().toString());
+                int attack = Integer.parseInt(ability_attack.getText().toString()) - add_attack;
+                int defence = Integer.parseInt(ability_defence.getText().toString()) - add_defence;
+                int addpoint = Integer.parseInt(ability_point.getText().toString());
 
                 saveStatus(level, exp, currentHp, maxHp, currentMp, maxMp, gold, attack, defence, addpoint);
             }
         });
     }
 
-    public void saveStatus(String level, String exp, String currentHp, String maxHp, String currentMp, String maxMp, String gold, String attack, String defence, String addpoint){
+    public void saveStatus(int level, int exp, int currentHp, int maxHp, int currentMp, int maxMp, int gold, int attack, int defence, int addpoint){
 
         SharedPreferences user_status = getSharedPreferences("user_status", Service.MODE_PRIVATE);
         SharedPreferences.Editor edit = user_status.edit();
 
-        edit.putString("level", level);
-        edit.putString("exp", exp);
-        edit.putString("currentHp", currentHp);
-        edit.putString("currentMp", currentMp);
-        edit.putString("maxHp", maxHp);
-        edit.putString("maxMp", maxMp);
-        edit.putString("gold", gold);
-        edit.putString("attack", attack);
-        edit.putString("defence", defence);
-        edit.putString("addpoint", addpoint);
+        edit.putInt("level", level);
+        edit.putInt("exp", exp);
+        edit.putInt("currentHp", currentHp);
+        edit.putInt("currentMp", currentMp);
+        edit.putInt("maxHp", maxHp);
+        edit.putInt("maxMp", maxMp);
+        edit.putInt("gold", gold);
+        edit.putInt("attack", attack);
+        edit.putInt("defence", defence);
+        edit.putInt("addpoint", addpoint);
         edit.putBoolean("exist_data", true);
         edit.commit();
 
@@ -351,29 +352,29 @@ public class GameActivity extends Activity {
     }
 
     public void ability_up(View v){
-        if(Integer.parseInt(ability_point.getText().toString()) == 0){
+        if(parseInt(ability_point.getText().toString()) == 0){
             make_toast("더이상 남은 포인트가 없습니다.");
             return;
         }
         else{
             switch (v.getId()){
                 case R.id.add_attack:
-                    ability_attack.setText(String.valueOf(Integer.parseInt(ability_attack.getText().toString())+1));
-                    ability_point.setText(String.valueOf(Integer.parseInt(ability_point.getText().toString())-1));
+                    ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString())+1));
+                    ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
                 case R.id.add_defence:
-                    ability_defence.setText(String.valueOf(Integer.parseInt(ability_defence.getText().toString())+1));
-                    ability_point.setText(String.valueOf(Integer.parseInt(ability_point.getText().toString())-1));
+                    ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString())+1));
+                    ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
                 case R.id.add_hp:
-                    maxHp_txt.setText(String.valueOf(Integer.parseInt(maxHp_txt.getText().toString())+5));
+                    maxHp_txt.setText(String.valueOf(parseInt(maxHp_txt.getText().toString())+5));
                     ability_hp.setText(maxHp_txt.getText());
-                    ability_point.setText(String.valueOf(Integer.parseInt(ability_point.getText().toString())-1));
+                    ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
                 case R.id.add_mp:
-                    maxMp_txt.setText(String.valueOf(Integer.parseInt(maxMp_txt.getText().toString())+3));
+                    maxMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString())+3));
                     ability_mp.setText(maxMp_txt.getText());
-                    ability_point.setText(String.valueOf(Integer.parseInt(ability_point.getText().toString())-1));
+                    ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
             }
         }
@@ -385,7 +386,9 @@ public class GameActivity extends Activity {
     }
 
     public void warClick(View v) {
-        User user = new User(level_txt.getText().toString(), exp_txt.getText().toString(), currentHp_txt.getText().toString(), maxHp_txt.getText().toString(), currentMp_txt.getText().toString(), maxMp_txt.getText().toString(), gold_txt.getText().toString(), ability_attack.getText().toString(), ability_defence.getText().toString(), ability_point.getText().toString());
+        User user = new User(parseInt(level_txt.getText().toString()), parseInt(exp_txt.getText().toString()), parseInt(currentHp_txt.getText().toString()),
+                parseInt(maxHp_txt.getText().toString()), parseInt(currentMp_txt.getText().toString()), parseInt(maxMp_txt.getText().toString()),
+                parseInt(gold_txt.getText().toString()), parseInt(ability_attack.getText().toString()), parseInt(ability_defence.getText().toString()), parseInt(ability_point.getText().toString()));
         Intent intent = new Intent(this, WarActivity.class);
         war_level_Layout.setVisibility(View.INVISIBLE);
         menuBtns.setVisibility(View.VISIBLE);
@@ -393,31 +396,31 @@ public class GameActivity extends Activity {
 
         switch (id){
             case R.id.easy:
-                if(Integer.parseInt(user.level) - 2 <= 0 ){
-                    intent.putExtra("difficulty_min", Integer.parseInt(user.level));
+                if(user.level - 2 <= 0 ){
+                    intent.putExtra("difficulty_min", user.level);
                 }
                 else
-                    intent.putExtra("difficulty_min", Integer.parseInt(user.level)-2);
-                intent.putExtra("difficulty_max", Integer.parseInt(user.level)+1);
+                    intent.putExtra("difficulty_min", user.level-2);
+                intent.putExtra("difficulty_max", user.level+1);
                 intent.putExtra("is_boss", 0);
                 break;
             case R.id.normal:
-                if(Integer.parseInt(user.level) - 1 <= 0 ){
-                    intent.putExtra("difficulty_min", Integer.parseInt(user.level));
+                if(user.level - 1 <= 0 ){
+                    intent.putExtra("difficulty_min", user.level);
                 }
                 else
-                    intent.putExtra("difficulty_min", Integer.parseInt(user.level)-1);
-                intent.putExtra("difficulty_max", Integer.parseInt(user.level)+3);
+                    intent.putExtra("difficulty_min", user.level-1);
+                intent.putExtra("difficulty_max", user.level+3);
                 intent.putExtra("is_boss", 0);
                 break;
             case R.id.hard:
-                intent.putExtra("difficulty_min", Integer.parseInt(user.level));
-                intent.putExtra("difficulty_max", Integer.parseInt(user.level)+5);
+                intent.putExtra("difficulty_min", user.level);
+                intent.putExtra("difficulty_max", user.level+5);
                 intent.putExtra("is_boss", 0);
                 break;
             case R.id.boss:
-                intent.putExtra("difficulty_min", Integer.parseInt(user.level));
-                intent.putExtra("difficulty_max", Integer.parseInt(user.level));
+                intent.putExtra("difficulty_min", user.level);
+                intent.putExtra("difficulty_max", user.level);
                 intent.putExtra("is_boss", 1);
                 break;
         }
@@ -443,22 +446,22 @@ public class GameActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         user = (User)data.getSerializableExtra("user");
-        level_txt.setText(user.level);
-        exp_txt.setText(user.exp);
-        currentHp_txt.setText(user.currentHp);
-        maxHp_txt.setText(user.maxHp);
-        currentMp_txt.setText(user.currentMp);
-        maxMp_txt.setText(user.maxMp);
-        gold_txt.setText(user.gold);
+        level_txt.setText(String.valueOf(user.level));
+        exp_txt.setText(String.valueOf(user.exp));
+        currentHp_txt.setText(String.valueOf(user.currentHp));
+        maxHp_txt.setText(String.valueOf(user.maxHp));
+        currentMp_txt.setText(String.valueOf(user.currentMp));
+        maxMp_txt.setText(String.valueOf(user.maxMp));
+        gold_txt.setText(String.valueOf(user.gold));
         ability_hp.setText(maxHp_txt.getText());
         ability_mp.setText(maxMp_txt.getText());
         add_attack = dbHelper.change_equipment_item(1, -1, dbHelper.equipment_item(1)).get("attack");
-        ability_attack.setText(String.valueOf(Integer.parseInt(user.attack) + add_attack));
+        ability_attack.setText(String.valueOf(user.attack + add_attack));
         add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
-        ability_defence.setText(String.valueOf(Integer.parseInt(user.defence) + add_defence));
-        ability_point.setText(user.addpoint);
-        now_exp = Integer.parseInt(exp_txt.getText().toString());
-        limit_exp = gameInfo.get_maxexp(Integer.parseInt(level_txt.getText().toString()));
+        ability_defence.setText(String.valueOf(user.defence + add_defence));
+        ability_point.setText(String.valueOf(user.addpoint));
+        now_exp = parseInt(exp_txt.getText().toString());
+        limit_exp = user.get_maxexp();
         setExp_bar(now_exp, limit_exp);
 
         super.onActivityResult(requestCode, resultCode, data);

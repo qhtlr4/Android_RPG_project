@@ -54,7 +54,7 @@ public class WarActivity extends Activity {
 
     HashMap<String, String> hashMap = new HashMap<String, String>();      //드롭 아이템을 검사하여 인벤토리에 저장
 
-    GameInfo gameInfo = new GameInfo(); //게임에 설정된 최대 경험치를 가져오기위한 클래스 객체
+    User user;
 
     Enemy enemy = new Enemy();      //적 정보
     TextView enemy_name;
@@ -84,24 +84,24 @@ public class WarActivity extends Activity {
 
         Intent intent = getIntent();
 
-        User user = (User)intent.getSerializableExtra("user");
+        user = (User)intent.getSerializableExtra("user");
 
-        level_txt.setText(user.level);
-        exp_txt.setText(user.exp);
-        currentHp_txt.setText(user.currentHp);
-        maxHp_txt.setText(user.maxHp);
-        currentMp_txt.setText(user.currentMp);
-        maxMp_txt.setText(user.maxMp);
-        gold_txt.setText(user.gold);
-        attack_txt.setText(user.attack);
-        defence_txt.setText(user.defence);
-        addpoint_txt.setText(user.addpoint);
+        level_txt.setText(String.valueOf(user.level));
+        exp_txt.setText(String.valueOf(user.exp));
+        currentHp_txt.setText(String.valueOf(user.currentHp));
+        maxHp_txt.setText(String.valueOf(user.maxHp));
+        currentMp_txt.setText(String.valueOf(user.currentMp));
+        maxMp_txt.setText(String.valueOf(user.maxMp));
+        gold_txt.setText(String.valueOf(user.gold));
+        attack_txt.setText(String.valueOf(user.attack));
+        defence_txt.setText(String.valueOf(user.defence));
+        addpoint_txt.setText(String.valueOf(user.addpoint));
         attack = Integer.parseInt(attack_txt.getText().toString());
         defence = Integer.parseInt(defence_txt.getText().toString());
         addpoint = Integer.parseInt(addpoint_txt.getText().toString());
 
         now_exp = Integer.parseInt(exp_txt.getText().toString());
-        limit_exp = gameInfo.get_maxexp(Integer.parseInt(level_txt.getText().toString()));
+        limit_exp = user.get_maxexp();
         setExp_bar(now_exp, limit_exp);
 
         enemy = enemy.getEnemy(dbHelper.get_enemy(intent.getIntExtra("difficulty_min", 1), intent.getIntExtra("difficulty_max", 1), intent.getIntExtra("is_boss", 0)));   //적 정보를 db에서 불러와서 enemy객체에 저장
@@ -243,7 +243,8 @@ public class WarActivity extends Activity {
                 attack_txt.setText(String.valueOf(Integer.parseInt(attack_txt.getText().toString()) + 1));
                 defence_txt.setText(String.valueOf(Integer.parseInt(defence_txt.getText().toString()) + 1));
                 addpoint_txt.setText(String.valueOf(Integer.parseInt(addpoint_txt.getText().toString()) + 5));
-                limit_exp = gameInfo.get_maxexp(Integer.parseInt(level_txt.getText().toString()));
+                user.level++;
+                limit_exp = user.get_maxexp();
                 setExp_bar(now_exp, limit_exp);
             }
             else{
@@ -261,7 +262,10 @@ public class WarActivity extends Activity {
     }
 
     public void moveActivity(){
-        User user = new User(level_txt.getText().toString(), exp_txt.getText().toString(), currentHp_txt.getText().toString(), maxHp_txt.getText().toString(), currentMp_txt.getText().toString(), maxMp_txt.getText().toString(), gold_txt.getText().toString(), String.valueOf(Integer.parseInt(attack_txt.getText().toString())-add_attack), String.valueOf(Integer.parseInt(defence_txt.getText().toString())-add_defence), addpoint_txt.getText().toString());
+        User user = new User(Integer.parseInt(level_txt.getText().toString()), Integer.parseInt(exp_txt.getText().toString()), Integer.parseInt(currentHp_txt.getText().toString()), Integer.parseInt(maxHp_txt.getText().toString()),
+                Integer.parseInt(currentMp_txt.getText().toString()), Integer.parseInt(maxMp_txt.getText().toString()), Integer.parseInt(gold_txt.getText().toString()),
+                Integer.parseInt(String.valueOf(Integer.parseInt(attack_txt.getText().toString())-add_attack)), Integer.parseInt(String.valueOf(Integer.parseInt(defence_txt.getText().toString())-add_defence)),
+                Integer.parseInt(addpoint_txt.getText().toString()));
         Intent intent = getIntent();
         intent.putExtra("user", user);
 

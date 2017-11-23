@@ -45,16 +45,16 @@ public class MainActivity extends Activity {
 
                             SharedPreferences user_status = getSharedPreferences("user_status", Service.MODE_PRIVATE);
                             SharedPreferences.Editor edit = user_status.edit();
-                            edit.putString("level", user.level);
-                            edit.putString("exp", user.exp);
-                            edit.putString("currentHp", user.currentHp);
-                            edit.putString("currentMp", user.currentMp);
-                            edit.putString("maxHp", user.maxHp);
-                            edit.putString("maxMp", user.maxMp);
-                            edit.putString("gold", user.gold);
-                            edit.putString("attack", user.attack);
-                            edit.putString("defence", user.defence);
-                            edit.putString("addpoint", user.addpoint);
+                            edit.putInt("level", user.level);
+                            edit.putInt("exp", user.exp);
+                            edit.putInt("currentHp", user.currentHp);
+                            edit.putInt("currentMp", user.currentMp);
+                            edit.putInt("maxHp", user.maxHp);
+                            edit.putInt("maxMp", user.maxMp);
+                            edit.putInt("gold", user.gold);
+                            edit.putInt("attack", user.attack);
+                            edit.putInt("defence", user.defence);
+                            edit.putInt("addpoint", user.addpoint);
                             edit.putBoolean("exist_data", true);
 
                             edit.commit();

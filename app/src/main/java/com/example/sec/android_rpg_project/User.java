@@ -9,43 +9,43 @@ import java.io.Serializable;
  */
 
 public class User implements Serializable{
-    String level;
-    String exp;
-    String currentHp;
-    String maxHp;
-    String currentMp;
-    String maxMp;
-    String gold;
-    String attack;
-    String defence;
-    String addpoint;
+    int level;
+    int exp;
+    int currentHp;
+    int maxHp;
+    int currentMp;
+    int maxMp;
+    int gold;
+    int attack;
+    int defence;
+    int addpoint;
 
     public User(){
-        level = "1";
-        exp = "0";
-        currentHp = "50";
-        maxHp = "50";
-        currentMp = "30";
-        maxMp = "30";
-        gold = "200";
-        attack = "3";
-        defence = "0";
-        addpoint = "5";
+        level = 1;
+        exp = 0;
+        currentHp = 50;
+        maxHp = 50;
+        currentMp = 30;
+        maxMp = 30;
+        gold = 200;
+        attack = 3;
+        defence = 0;
+        addpoint = 5;
     }
 
     public User(SharedPreferences sp){
-        level = sp.getString("level", "0");
-        exp = sp.getString("exp","0");
-        currentHp = sp.getString("currentHp", "0");
-        maxHp = sp.getString("maxHp", "0");
-        currentMp = sp.getString("currentMp", "0");
-        maxMp = sp.getString("maxMp", "0");
-        gold = sp.getString("gold", "0");
-        attack = sp.getString("attack", "0");
-        defence = sp.getString("defence", "0");
-        addpoint = sp.getString("addpoint", "0");
+        level = sp.getInt("level", 0);
+        exp = sp.getInt("exp",0);
+        currentHp = sp.getInt("currentHp", 0);
+        maxHp = sp.getInt("maxHp", 0);
+        currentMp = sp.getInt("currentMp", 0);
+        maxMp = sp.getInt("maxMp", 0);
+        gold = sp.getInt("gold", 0);
+        attack = sp.getInt("attack", 0);
+        defence = sp.getInt("defence", 0);
+        addpoint = sp.getInt("addpoint", 0);
     }
-    public User(String level, String exp, String currentHp, String maxHp, String currentMp, String maxMp, String gold, String attack, String defence, String addpoint){
+    public User(int level, int exp, int currentHp, int maxHp, int currentMp, int maxMp, int gold, int attack, int defence, int addpoint){
         this.level = level;
         this.exp = exp;
         this.currentHp = currentHp;
@@ -57,4 +57,30 @@ public class User implements Serializable{
         this.defence = defence;
         this.addpoint = addpoint;
     }
+    public int get_maxexp() {
+        switch (level) {
+            case 1:
+                return 10;
+            case 2:
+                return 30;
+            case 3:
+                return 50;
+            case 4:
+                return 80;
+            case 5:
+                return 120;
+            case 6:
+                return 160;
+            case 7:
+                return 210;
+            case 8:
+                return 260;
+            case 9:
+                return 330;
+            case 10:
+                return 1000;
+        }
+        return 9990;
+    }
+
 }
