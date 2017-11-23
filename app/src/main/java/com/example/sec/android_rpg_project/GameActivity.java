@@ -426,20 +426,6 @@ public class GameActivity extends Activity {
         }
 
         intent.putExtra("user", user);
-
-        /*
-        intent.putExtra("level", user.level);
-        intent.putExtra("exp", user.exp);
-        intent.putExtra("currentHp", user.currentHp);
-        intent.putExtra("maxHp", user.maxHp);
-        intent.putExtra("currentMp", user.currentMp);
-        intent.putExtra("maxMp", user.maxMp);
-        intent.putExtra("gold", user.gold);
-        intent.putExtra("attack", user.attack);
-        intent.putExtra("defence", user.defence);
-        intent.putExtra("addpoint", user.addpoint);
-        */
-
         startActivityForResult(intent, GAME_SETTING);
     }
 

@@ -204,7 +204,13 @@ public class WarActivity extends Activity {
         if(enemy.hp > 0) {
             make_toast(str);
             // enemy의 action
-            currentHp_txt.setText(String.valueOf(Integer.parseInt(currentHp_txt.getText().toString()) - (enemy.damage-Integer.parseInt(defence_txt.getText().toString()))));
+            int hurt;
+            if( enemy.damage <= Integer.parseInt(defence_txt.getText().toString())){
+                hurt = 1;
+            }
+            else
+                hurt = enemy.damage - Integer.parseInt(defence_txt.getText().toString());
+            currentHp_txt.setText(String.valueOf(Integer.parseInt(currentHp_txt.getText().toString()) - hurt));
             user_current_hp.setText(currentHp_txt.getText().toString());
             if(Integer.parseInt(user_current_hp.getText().toString()) <= 0){
                 str = "사망하였습니다.";
