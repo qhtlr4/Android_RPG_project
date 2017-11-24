@@ -6,12 +6,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -47,6 +51,12 @@ public class WarActivity extends Activity {
     TextView user_max_mp;
     TextView enemy_current_hp;      //몬스터 실시간 체력바 정보
     TextView enemy_max_hp;
+
+    ArrayList<String> potion_items;
+    ArrayAdapter<String> potion_adaptor;
+    ListView potion_view;
+    LinearLayout battle_main_layout;
+    LinearLayout inventory_layout;
 
     String str; //toast에 사용할 문자열
 
@@ -120,6 +130,10 @@ public class WarActivity extends Activity {
         enemy_current_hp.setText(String.valueOf(enemy.hp));
         enemy_max_hp.setText(String.valueOf(enemy.hp));
 
+        battle_main_layout = (LinearLayout)findViewById(R.id.battle_main_layout);
+        inventory_layout = (LinearLayout)findViewById(R.id.inventory_layout);
+        potion_view = (ListView)findViewById(R.id.potion_view);
+
         if(SDK_INT >= 22) {
             drawables[0] = getResources().getDrawable(R.drawable.mob_lv1, null);
             drawables[1] = getResources().getDrawable(R.drawable.mob_lv2, null);
@@ -165,20 +179,17 @@ public class WarActivity extends Activity {
                 battle();
                 break;
             case R.id.escape:
-                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString())-((int)(Integer.parseInt(gold_txt.getText().toString())*0.2))));
-                int minus_exp = (int)(limit_exp * 0.2);
-                now_exp -= minus_exp;
-                if(now_exp<=0){
-                    exp_txt.setText("0");
-                }
-                else
-                    exp_txt.setText(String.valueOf(Integer.parseInt(exp_txt.getText().toString())-minus_exp));
-                make_toast(String.valueOf((int)(Integer.parseInt(gold_txt.getText().toString())*0.2)) + "골드를 잃었습니다.");
+                int loss_gold = (int)(Integer.parseInt(gold_txt.getText().toString())*0.2);
+                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString())-loss_gold));
+                make_toast(String.valueOf(loss_gold) + "골드를 잃었습니다.");
                 moveActivity();
                 finish();
                 break;
             case R.id.potion:
-
+                potion_items = dbHelper.getInventoryResult(3);
+                potion_adaptor = new ArrayAdapter<String>(WarActivity.this, android.R.layout.simple_list_item_single_choice, potion_items);
+                battle_main_layout.setVisibility(View.INVISIBLE);
+                inventory_layout.setVisibility(View.VISIBLE);
                 break;
             case R.id.skill:
                 break;
@@ -289,11 +300,16 @@ public class WarActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
-            Button escape = (Button)findViewById(R.id.escape);
-            battle_action(escape);
-            moveActivity();
+            if(inventory_layout.getVisibility() == View.VISIBLE ){
+                inventory_layout.setVisibility(View.INVISIBLE);
+                battle_main_layout.setVisibility(View.VISIBLE);
+            }
+            else {
+                Button escape = (Button) findViewById(R.id.escape);
+                battle_action(escape);
+                moveActivity();
+            }
         }
         return super.onKeyDown(keyCode, event);
-        //KEYCODE_BACK이 아니면 액티비티에서 조작
     }
 }

@@ -483,11 +483,9 @@ public class GameActivity extends Activity {
             }
             else{
                 finish();
-                //activity 종료 시켜서 자동으로 전 화면으로 이동
             }
             return true;
         }
         return super.onKeyDown(keyCode, event);
-        //KEYCODE_BACK이 아니면 액티비티에서 조작
     }
 }
