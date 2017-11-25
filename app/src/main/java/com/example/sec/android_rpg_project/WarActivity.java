@@ -186,10 +186,11 @@ public class WarActivity extends Activity {
                 finish();
                 break;
             case R.id.potion:
-                potion_items = dbHelper.getInventoryResult(3);
-                potion_adaptor = new ArrayAdapter<String>(WarActivity.this, android.R.layout.simple_list_item_single_choice, potion_items);
                 battle_main_layout.setVisibility(View.INVISIBLE);
                 inventory_layout.setVisibility(View.VISIBLE);
+                potion_items = dbHelper.getInventoryResult(3);
+                potion_adaptor = new ArrayAdapter<String>(WarActivity.this, android.R.layout.simple_list_item_single_choice, potion_items);
+                potion_view.setAdapter(potion_adaptor);
                 break;
             case R.id.skill:
                 break;
@@ -303,6 +304,7 @@ public class WarActivity extends Activity {
             if(inventory_layout.getVisibility() == View.VISIBLE ){
                 inventory_layout.setVisibility(View.INVISIBLE);
                 battle_main_layout.setVisibility(View.VISIBLE);
+                return true;
             }
             else {
                 Button escape = (Button) findViewById(R.id.escape);
