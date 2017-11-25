@@ -27,7 +27,7 @@ public class User implements Serializable{
         maxHp = 50;
         currentMp = 30;
         maxMp = 30;
-        gold = 200;
+        gold = 2000;
         attack = 3;
         defence = 0;
         addpoint = 5;

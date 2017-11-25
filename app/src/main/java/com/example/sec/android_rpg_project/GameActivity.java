@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 import static com.example.sec.android_rpg_project.MainActivity.GAME_SETTING;
 import static com.example.sec.android_rpg_project.R.id.exp;
+import static com.example.sec.android_rpg_project.R.id.gold;
 import static java.lang.Integer.parseInt;
 
 public class GameActivity extends Activity {
@@ -83,7 +84,7 @@ public class GameActivity extends Activity {
         currentMp_txt = (TextView)findViewById(R.id.current_mp);
         maxHp_txt = (TextView)findViewById(R.id.max_hp);
         maxMp_txt = (TextView)findViewById(R.id.max_mp);
-        gold_txt = (TextView)findViewById(R.id.gold);
+        gold_txt = (TextView)findViewById(gold);
         exp_bar = (ProgressBar)findViewById(R.id.exp_bar);
         ability_attack = (TextView)findViewById(R.id.ability_attack);
         ability_defence = (TextView)findViewById(R.id.ability_defence);
@@ -126,27 +127,27 @@ public class GameActivity extends Activity {
                 menuBtns.setVisibility(View.INVISIBLE);
 
                 weapon_items = new ArrayList<String>();
-                armor_items = new ArrayList<String>();
-                potion_items = new ArrayList<String>();
-
                 weapon_items = dbHelper.getInventoryResult(1);
-                armor_items = dbHelper.getInventoryResult(2);
-                potion_items = dbHelper.getInventoryResult(3);
-
                 weapon_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, weapon_items);
-                armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, armor_items);
-                potion_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, potion_items);
-
                 weapon_view.setAdapter(weapon_adaptor);
                 weapon_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                 if(dbHelper.equipment_item(1) != -1) {
                     weapon_view.setItemChecked(dbHelper.equipment_item(1) - 1, true);
                 }
+
+                armor_items = new ArrayList<String>();
+                armor_items = dbHelper.getInventoryResult(2);
+                armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, armor_items);
                 armor_view.setAdapter(armor_adaptor);
                 armor_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                 if(dbHelper.equipment_item(2) != -1) {
                     armor_view.setItemChecked(dbHelper.equipment_item(2) - 1, true);
                 }
+
+                potion_items = new ArrayList<String>();
+                potion_items = dbHelper.getInventoryResult(3);
+                potion_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, potion_items);
+                potion_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                 potion_view.setAdapter(potion_adaptor);
             }
         });
@@ -184,7 +185,15 @@ public class GameActivity extends Activity {
                                 ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
                                 ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
                                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
-                                weapon_adaptor.notifyDataSetChanged();
+
+                                weapon_items = dbHelper.getInventoryResult(1);
+                                weapon_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, weapon_items);
+                                weapon_view.setAdapter(weapon_adaptor);
+                                weapon_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                                if(dbHelper.equipment_item(1) != -1) {
+                                    weapon_view.setItemChecked(dbHelper.equipment_item(1) - 1, true);
+                                }
+                                saveStatus();
                             }
                         })
                         .show();
@@ -225,7 +234,15 @@ public class GameActivity extends Activity {
                                 ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
                                 ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
                                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
-                                armor_adaptor.notifyDataSetChanged();
+
+                                armor_items = dbHelper.getInventoryResult(2);
+                                armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, armor_items);
+                                armor_view.setAdapter(armor_adaptor);
+                                armor_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                                if(dbHelper.equipment_item(2) != -1) {
+                                    armor_view.setItemChecked(dbHelper.equipment_item(2) - 1, true);
+                                }
+                                saveStatus();
                             }
                         })
                         .show();
@@ -237,8 +254,6 @@ public class GameActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final int index = i+1;
-                HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
-                hashMap = dbHelper.change_equipment_item(1, -1, i+1);
                 new AlertDialog.Builder(GameActivity.this)
                         .setTitle("사용알림")
                         .setMessage("선택된 아이템을 사용하겠습니까?")
@@ -255,7 +270,11 @@ public class GameActivity extends Activity {
                                 if(Integer.parseInt(currentMp_txt.getText().toString()) > Integer.parseInt(maxMp_txt.getText().toString())){
                                     currentMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString())));
                                 }
-                                potion_adaptor.notifyDataSetChanged();
+                                potion_items = dbHelper.getInventoryResult(3);
+                                potion_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, potion_items);
+                                potion_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                                potion_view.setAdapter(potion_adaptor);
+                                saveStatus();
                             }
                         })
                         .show();
@@ -298,6 +317,7 @@ public class GameActivity extends Activity {
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
                                     dbHelper.insert_item(index, "buy");
+                                    saveStatus();
                                     make_toast("정상적으로 구매하였습니다.");
                                 }
                             }).show();
@@ -322,23 +342,25 @@ public class GameActivity extends Activity {
         savebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int level = parseInt(level_txt.getText().toString());
-                int exp = Integer.parseInt(exp_txt.getText().toString());
-                int currentHp = Integer.parseInt(currentHp_txt.getText().toString());
-                int maxHp = Integer.parseInt(maxHp_txt.getText().toString());
-                int currentMp = Integer.parseInt(currentMp_txt.getText().toString());
-                int maxMp = Integer.parseInt(maxMp_txt.getText().toString());
-                int gold = Integer.parseInt(gold_txt.getText().toString());
-                int attack = Integer.parseInt(ability_attack.getText().toString()) - add_attack;
-                int defence = Integer.parseInt(ability_defence.getText().toString()) - add_defence;
-                int addpoint = Integer.parseInt(ability_point.getText().toString());
-
-                saveStatus(level, exp, currentHp, maxHp, currentMp, maxMp, gold, attack, defence, addpoint);
+                saveStatus();
+                String str = "저장되었습니다.";
+                make_toast(str);
             }
         });
     }
 
-    public void saveStatus(int level, int exp, int currentHp, int maxHp, int currentMp, int maxMp, int gold, int attack, int defence, int addpoint){
+    //저장 함수
+    public void saveStatus(){
+        int level = parseInt(level_txt.getText().toString());
+        int exp = Integer.parseInt(exp_txt.getText().toString());
+        int currentHp = Integer.parseInt(currentHp_txt.getText().toString());
+        int maxHp = Integer.parseInt(maxHp_txt.getText().toString());
+        int currentMp = Integer.parseInt(currentMp_txt.getText().toString());
+        int maxMp = Integer.parseInt(maxMp_txt.getText().toString());
+        int gold = Integer.parseInt(gold_txt.getText().toString());
+        int attack = Integer.parseInt(ability_attack.getText().toString()) - add_attack;
+        int defence = Integer.parseInt(ability_defence.getText().toString()) - add_defence;
+        int addpoint = Integer.parseInt(ability_point.getText().toString());
 
         SharedPreferences user_status = getSharedPreferences("user_status", Service.MODE_PRIVATE);
         SharedPreferences.Editor edit = user_status.edit();
@@ -355,9 +377,6 @@ public class GameActivity extends Activity {
         edit.putInt("addpoint", addpoint);
         edit.putBoolean("exist_data", true);
         edit.commit();
-
-        String str = "저장되었습니다.";
-        make_toast(str);
     }
 
     public void itemclass(View v){

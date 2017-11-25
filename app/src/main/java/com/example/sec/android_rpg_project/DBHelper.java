@@ -81,13 +81,19 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 0, 0, 1, 900);");  //목검
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 1, 0, 1, 900);");  //목검
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 2, 0, 1, 900);");  //목검
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 3, 0, 0, 1, 400);");  //목검
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 3, 1, 0, 1, 400);");  //목검
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 3, 2, 0, 1, 400);");  //목검
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 3, 3, 0, 1, 400);");  //목검
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 3, 4, 0, 1, 900);");  //목검
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 3, 5, 0, 1, 900);");  //목검
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 0, 0, 1, 900);");  //목검
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 1, 0, 1, 900);");  //목검
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 2, 0, 1, 900);");  //목검
 
         // 샵위치아이템번호, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 종류
         sqLiteDatabase.execSQL("CREATE TABLE SHOP (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, class INTEGER);");
         sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 2, '청동검', 7, 0, 0, 0, 5000, 1);");
-        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 2, '청동검', 7, 0, 0, 0, 5000, 1);");
-        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 11, 'HP 포션', 0, 0, 30, 0, 500, 3);");
-        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 11, 'HP 포션', 0, 0, 30, 0, 500, 3);");
         sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 11, 'HP 포션', 0, 0, 30, 0, 500, 3);");
 
         // 아이템idx, 인벤토리idx, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
@@ -194,10 +200,6 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM INVENTORY" + a + ";", null);
         while (cursor.moveToNext()) {
             if(clas == 1 || clas == 2)
-                /*
-                result += cursor.getInt(0) + " " + cursor.getInt(1) + " " + cursor.getInt(2) + " " + cursor.getString(3) + " " + cursor.getInt(4) + " " + cursor.getInt(5) + " " + cursor.getInt(6) + " " + cursor.getInt(7)
-                        + idx_weapon + " " + idx_armor + " " + idx_potion;
-                */
                 result += "이름 : " + cursor.getString(3)
                         + "\n공격력 : " + cursor.getInt(4)
                         + "\t\t\t방어력 : " + cursor.getInt(5)
@@ -325,11 +327,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 else if(clas == 2) {
                     db2.execSQL("INSERT INTO INVENTORY_2 VALUES(null, " + idx_armor + ", " + (item_id) + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
-                    idx_weapon++;
+                    idx_armor++;
                 }
                 else if(clas == 3) {
                     db2.execSQL("INSERT INTO INVENTORY_3 VALUES(null, " + idx_potion + ", " + (item_id) + ", '" + item_name + "', " + hp + ", " + mp + ", " + cost + ");");
-                    idx_weapon++;
+                    idx_potion++;
                 }
             }
         }
@@ -457,7 +459,6 @@ public class DBHelper extends SQLiteOpenHelper {
         while (cursor1.moveToNext()){
             db2.execSQL("UPDATE INVENTORY" + a + " SET idx="+ (cursor1.getInt(0)-1) +" WHERE idx=" + cursor1.getInt(0) + ";");
         }
-
         return hashMap;
     }
 
@@ -480,7 +481,6 @@ public class DBHelper extends SQLiteOpenHelper {
         while (cursor1.moveToNext()){
             db2.execSQL("UPDATE INVENTORY_3 SET idx="+ (cursor1.getInt(0)-1) +" WHERE idx=" + cursor1.getInt(0) + ";");
         }
-
         return heal_value;
     }
 
