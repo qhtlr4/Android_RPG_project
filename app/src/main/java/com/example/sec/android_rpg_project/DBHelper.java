@@ -72,9 +72,9 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 11, 'HP 포션', 0, 0, 30, 0, 500, 3);");
 
         // 아이템이위치한칸, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
-        sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_1 (slot INTEGER PRIMARY KEY, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
-        sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_2 (slot INTEGER PRIMARY KEY, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
-        sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_3 (slot INTEGER PRIMARY KEY, item_id INTEGER, item_name TEXT, addHp INTEGER, addMp INTEGER, cost INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격
+        sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_1 (slot INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
+        sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_2 (slot INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
+        sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_3 (slot INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, item_name TEXT, addHp INTEGER, addMp INTEGER, cost INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격
 
         //test value
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 8, '무적갑옷', 0, 9999, 5000000, 0);");
@@ -403,22 +403,34 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         db2.execSQL("DELETE FROM INVENTORY" + a + " WHERE slot=" + idx + ";");
 
+        Cursor cursor1 = db.rawQuery("SELECT slot FROM INVENTORY" + a + " WHERE slot>" + idx + ";", null);
+        while (cursor1.moveToNext()){
+            db2.execSQL("UPDATE INVENTORY" + a + " SET slot="+ (cursor1.getInt(0)-1) +" WHERE slot=" + cursor1.getInt(0) + ";");
+        }
+
         return hashMap;
     }
 
     //포션 사용시 사용할 함수
     public HashMap<String, Integer> use_potion(int idx){
-        int clas = 3;
         HashMap<String, Integer> heal_value = new HashMap<>();
 
         SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db2 = getWritableDatabase();
+
         Cursor cursor = db.rawQuery("SELECT addHp, addMp FROM INVENTORY_3 WHERE slot=" + idx + ";", null);
         cursor.moveToFirst();
         heal_value.put("hp", cursor.getInt(0));
         heal_value.put("mp", cursor.getInt(1));
 
-        return heal_value;
+        db2.execSQL("DELETE FROM INVENTORY_3 WHERE slot=" + idx + ";");
 
+        Cursor cursor1 = db.rawQuery("SELECT slot FROM INVENTORY_3 WHERE slot>" + idx + ";", null);
+        while (cursor1.moveToNext()){
+            db2.execSQL("UPDATE INVENTORY_3 SET slot="+ (cursor1.getInt(0)-1) +" WHERE slot=" + cursor1.getInt(0) + ";");
+        }
+
+        return heal_value;
     }
 
     //random
