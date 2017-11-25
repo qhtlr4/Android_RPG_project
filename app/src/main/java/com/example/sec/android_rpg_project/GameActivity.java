@@ -210,7 +210,7 @@ public class GameActivity extends Activity {
             }
         });
 
-        weapon_view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        armor_view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final int index = i+1;
@@ -230,6 +230,35 @@ public class GameActivity extends Activity {
                         })
                         .show();
                 return false;
+            }
+        });
+
+        potion_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final int index = i+1;
+                HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
+                hashMap = dbHelper.change_equipment_item(1, -1, i+1);
+                new AlertDialog.Builder(GameActivity.this)
+                        .setTitle("사용알림")
+                        .setMessage("선택된 아이템을 사용하겠습니까?")
+                        .setNegativeButton("아니오",null)
+                        .setPositiveButton("예", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                HashMap<String, Integer> hashMap = dbHelper.use_potion(index);
+                                currentHp_txt.setText(String.valueOf(parseInt(currentHp_txt.getText().toString()) + hashMap.get("hp")));
+                                currentMp_txt.setText(String.valueOf(parseInt(currentMp_txt.getText().toString()) + hashMap.get("mp")));
+                                if(Integer.parseInt(currentHp_txt.getText().toString()) > Integer.parseInt(maxHp_txt.getText().toString())){
+                                    currentHp_txt.setText(String.valueOf(parseInt(maxHp_txt.getText().toString())));
+                                }
+                                if(Integer.parseInt(currentMp_txt.getText().toString()) > Integer.parseInt(maxMp_txt.getText().toString())){
+                                    currentMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString())));
+                                }
+                                potion_adaptor.notifyDataSetChanged();
+                            }
+                        })
+                        .show();
             }
         });
 

@@ -406,6 +406,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return hashMap;
     }
 
+    //포션 사용시 사용할 함수
+    public HashMap<String, Integer> use_potion(int idx){
+        int clas = 3;
+        HashMap<String, Integer> heal_value = new HashMap<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT addHp, addMp FROM INVENTORY_3 WHERE slot=" + idx + ";", null);
+        cursor.moveToFirst();
+        heal_value.put("hp", cursor.getInt(0));
+        heal_value.put("mp", cursor.getInt(1));
+
+        return heal_value;
+
+    }
+
     //random
     public int start_rand(int max) {
         int rand_num;
