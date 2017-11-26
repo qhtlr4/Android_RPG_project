@@ -23,26 +23,17 @@ public class DBHelper extends SQLiteOpenHelper {
     public static int idx_weapon;
     public static int idx_armor;
     public static int idx_potion;
-    /*
-    // 판매/사용된 아이템의 수 저장
-    int del_weapon;
-    int del_armor;
-    int del_potion;
-*/
+
     public DBHelper(Context context){
         super(context, "MyDB.db", null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        idx_weapon = 1;
-        idx_armor = 1;
-        idx_potion = 1;
-        /*
-        del_weapon = 0;
-        del_armor = 0;
-        del_potion = 0;
-*/
+        idx_weapon = 2;
+        idx_armor = 2;
+        idx_potion = 2;
+
         //아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
         //item_id = 1부터 시작
         sqLiteDatabase.execSQL("CREATE TABLE ITEM (item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name TEXT, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, class INTEGER);");
@@ -146,8 +137,11 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_2 (slot INTEGER PRIMARY KEY AUTOINCREMENT, idx INTEGER, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
         sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_3 (slot INTEGER PRIMARY KEY AUTOINCREMENT, idx INTEGER, item_id INTEGER, item_name TEXT, addHp INTEGER, addMp INTEGER, cost INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격
 
-        //test value
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 1, 0, '기본무기', 2, 0, 1, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 1, 0, '기본방어구', 0, 2, 1, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, 0, 'HP 포션', 30, 0, 500);");
 
+        //test value
         /*
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 1, 8, '무적갑옷', 0, 9999, 5000000, 0);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 2, 4, '헌 가죽 옷', 0, 10, 5000, 0);");
@@ -169,9 +163,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //저장데이터 삭제 후 초기화
     public void init_db(){
-        idx_weapon = 1;
-        idx_armor = 1;
-        idx_potion = 1;
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS ITEM");
         db.execSQL("DROP TABLE IF EXISTS MOB");
