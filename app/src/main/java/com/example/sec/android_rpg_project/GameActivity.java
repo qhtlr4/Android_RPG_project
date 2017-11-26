@@ -52,6 +52,10 @@ public class GameActivity extends Activity {
     ListView weapon_view;
     ListView armor_view;
     ListView potion_view;
+    //select
+    Button weapon_btn;
+    Button armor_btn;
+    Button potion_btn;
 
     //shop
     ArrayAdapter<String> shop_adaptor;
@@ -78,6 +82,10 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+
+        weapon_btn = (Button) findViewById(R.id.weapon_btn);
+        armor_btn = (Button) findViewById(R.id.armor_btn);
+        potion_btn = (Button) findViewById(R.id.potion_btn);
         level_txt = (TextView)findViewById(R.id.level);
         exp_txt = (TextView)findViewById(exp);
         currentHp_txt = (TextView)findViewById(R.id.current_hp);
@@ -175,28 +183,37 @@ public class GameActivity extends Activity {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final int index = i+1;
                 new AlertDialog.Builder(GameActivity.this)
-                        .setTitle("판매알림")
-                        .setMessage("선택된 아이템을 판매하겠습니까?")
-                        .setNegativeButton("아니오",null)
-                        .setPositiveButton("예", new DialogInterface.OnClickListener(){
+                        .setTitle("메뉴")
+                        .setMessage("메뉴를 선택하세요")
+                        .setNegativeButton("취소", null)
+                        .setNeutralButton("판매하기", new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 1);
-                                ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
-                                ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
-                                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
+                                new AlertDialog.Builder(GameActivity.this)
+                                        .setTitle("판매알림")
+                                        .setMessage("선택된 아이템을 판매하겠습니까?")
+                                        .setNegativeButton("아니오", null)
+                                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 1);
+                                                ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
+                                                ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
+                                                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
 
-                                weapon_items = dbHelper.getInventoryResult(1);
-                                weapon_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, weapon_items);
-                                weapon_view.setAdapter(weapon_adaptor);
-                                weapon_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-                                if(dbHelper.equipment_item(1) != -1) {
-                                    weapon_view.setItemChecked(dbHelper.equipment_item(1) - 1, true);
-                                }
-                                saveStatus();
-                            }
-                        })
-                        .show();
+                                                weapon_items = dbHelper.getInventoryResult(1);
+                                                weapon_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, weapon_items);
+                                                weapon_view.setAdapter(weapon_adaptor);
+                                                weapon_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                                                if (dbHelper.equipment_item(1) != -1) {
+                                                    weapon_view.setItemChecked(dbHelper.equipment_item(1) - 1, true);
+                                                }
+                                                saveStatus();
+                                            }
+                                        })
+                                        .show();
+                            }})
+                        .setPositiveButton("강화하기", null).show();
                 return false;
             }
         });
@@ -224,28 +241,37 @@ public class GameActivity extends Activity {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final int index = i+1;
                 new AlertDialog.Builder(GameActivity.this)
-                        .setTitle("판매알림")
-                        .setMessage("선택된 아이템을 판매하겠습니까?")
-                        .setNegativeButton("아니오",null)
-                        .setPositiveButton("예", new DialogInterface.OnClickListener(){
+                        .setTitle("메뉴")
+                        .setMessage("메뉴를 선택하세요")
+                        .setNegativeButton("취소", null)
+                        .setNeutralButton("판매하기", new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 1);
-                                ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
-                                ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
-                                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
+                                new AlertDialog.Builder(GameActivity.this)
+                                        .setTitle("판매알림")
+                                        .setMessage("선택된 아이템을 판매하겠습니까?")
+                                        .setNegativeButton("아니오",null)
+                                        .setPositiveButton("예", new DialogInterface.OnClickListener(){
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 2);
+                                                ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
+                                                ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
+                                                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
 
-                                armor_items = dbHelper.getInventoryResult(2);
-                                armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, armor_items);
-                                armor_view.setAdapter(armor_adaptor);
-                                armor_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-                                if(dbHelper.equipment_item(2) != -1) {
-                                    armor_view.setItemChecked(dbHelper.equipment_item(2) - 1, true);
-                                }
-                                saveStatus();
-                            }
-                        })
-                        .show();
+                                                armor_items = dbHelper.getInventoryResult(2);
+                                                armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, armor_items);
+                                                armor_view.setAdapter(armor_adaptor);
+                                                armor_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                                                if(dbHelper.equipment_item(2) != -1) {
+                                                    armor_view.setItemChecked(dbHelper.equipment_item(2) - 1, true);
+                                                }
+                                                saveStatus();
+                                            }
+                                        })
+                                        .show();
+                            }})
+                        .setPositiveButton("강화하기", null).show();
                 return false;
             }
         });
@@ -385,16 +411,25 @@ public class GameActivity extends Activity {
                 weapon_view.setVisibility(View.VISIBLE);
                 armor_view.setVisibility(View.INVISIBLE);
                 potion_view.setVisibility(View.INVISIBLE);
+                weapon_btn.setEnabled(false);
+                armor_btn.setEnabled(true);
+                potion_btn.setEnabled(true);
                 break;
             case R.id.armor_btn:
                 weapon_view.setVisibility(View.INVISIBLE);
                 armor_view.setVisibility(View.VISIBLE);
                 potion_view.setVisibility(View.INVISIBLE);
+                weapon_btn.setEnabled(true);
+                armor_btn.setEnabled(false);
+                potion_btn.setEnabled(true);
                 break;
             case R.id.potion_btn:
                 weapon_view.setVisibility(View.INVISIBLE);
                 armor_view.setVisibility(View.INVISIBLE);
                 potion_view.setVisibility(View.VISIBLE);
+                weapon_btn.setEnabled(true);
+                armor_btn.setEnabled(true);
+                potion_btn.setEnabled(false);
                 break;
         }
     }

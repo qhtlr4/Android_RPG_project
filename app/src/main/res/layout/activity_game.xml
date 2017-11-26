@@ -117,6 +117,7 @@
                     android:id="@+id/weapon_btn"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:enabled="false"
                     android:text="무기"
                     android:layout_weight="1"
                     android:onClick="itemclass" />
