@@ -213,7 +213,39 @@ public class GameActivity extends Activity {
                                         })
                                         .show();
                             }})
-                        .setPositiveButton("강화하기", null).show();
+                        .setPositiveButton("강화하기", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                new AlertDialog.Builder(GameActivity.this)
+                                        .setTitle("강화알림")
+                                        .setMessage("선택된 아이템을 강화하겠습니까? \n성공률 : "+ dbHelper.enhance_info(index, 1).get("rate") +"\n비용 : "+dbHelper.enhance_info(index, 1).get("cost"))
+                                        .setNegativeButton("아니오", null)
+                                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                if(Integer.parseInt(gold_txt.getText().toString()) < dbHelper.enhance_info(index, 1).get("cost")){
+                                                    make_toast("골드가 부족합니다.");
+                                                    return;
+                                                }
+                                                else {
+                                                    gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - dbHelper.enhance_info(index, 1).get("cost")));
+                                                    HashMap<String, String> hashMap = dbHelper.enhancement(index, 1);
+                                                    make_toast(hashMap.get("result"));
+
+                                                    weapon_items = dbHelper.getInventoryResult(1);
+                                                    weapon_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, weapon_items);
+                                                    weapon_view.setAdapter(weapon_adaptor);
+                                                    weapon_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                                                    if (dbHelper.equipment_item(1) != -1) {
+                                                        weapon_view.setItemChecked(dbHelper.equipment_item(1) - 1, true);
+                                                    }
+                                                    saveStatus();
+                                                }
+                                            }
+                                        })
+                                        .show();
+                            }
+                        }).show();
                 return false;
             }
         });
@@ -271,7 +303,39 @@ public class GameActivity extends Activity {
                                         })
                                         .show();
                             }})
-                        .setPositiveButton("강화하기", null).show();
+                        .setPositiveButton("강화하기", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                new AlertDialog.Builder(GameActivity.this)
+                                    .setTitle("강화알림")
+                                    .setMessage("선택된 아이템을 강화하겠습니까? \n" + "성공률 : "+ dbHelper.enhance_info(index, 2).get("rate") +"\n비용 : "+dbHelper.enhance_info(index, 2).get("cost"))
+                                    .setNegativeButton("아니오",null)
+                                    .setPositiveButton("예", new DialogInterface.OnClickListener(){
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            if (Integer.parseInt(gold_txt.getText().toString()) < dbHelper.enhance_info(index, 2).get("cost")) {
+                                                make_toast("골드가 부족합니다.");
+                                                return;
+                                            }
+                                            else {
+                                                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - dbHelper.enhance_info(index, 2).get("cost")));
+                                                HashMap<String, String> hashMap = dbHelper.enhancement(index, 2);
+                                                make_toast(hashMap.get("result"));
+
+                                                armor_items = dbHelper.getInventoryResult(2);
+                                                armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, armor_items);
+                                                armor_view.setAdapter(armor_adaptor);
+                                                armor_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                                                if (dbHelper.equipment_item(2) != -1) {
+                                                    armor_view.setItemChecked(dbHelper.equipment_item(2) - 1, true);
+                                                }
+                                                saveStatus();
+                                            }
+                                        }
+                                    })
+                                    .show();
+                            }
+                        }).show();
                 return false;
             }
         });
