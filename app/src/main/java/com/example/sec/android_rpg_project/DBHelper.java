@@ -43,7 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
         del_armor = 0;
         del_potion = 0;
 */
-        //아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
+        //아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
         //item_id = 1부터 시작
         sqLiteDatabase.execSQL("CREATE TABLE ITEM (item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name TEXT, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, class INTEGER);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '골드', 0, 0, 0, 0, 0, 0);");
@@ -136,10 +136,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
         // 샵위치아이템번호, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 종류
-        sqLiteDatabase.execSQL("CREATE TABLE SHOP (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, class INTEGER);");
-        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 2, '목검', 5, 0, 0, 0, 500, 1);");
-        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 3, '청동검', 7, 0, 0, 0, 5000, 1);");
-        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 11, 'HP 포션', 0, 0, 30, 0, 500, 3);");
+        sqLiteDatabase.execSQL("CREATE TABLE SHOP (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER);");
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 2);");    //목검
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 3);");    //청동검
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 11);");   //hp포션
 
         // 아이템idx, 인벤토리idx, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
         sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_1 (slot INTEGER PRIMARY KEY AUTOINCREMENT, idx INTEGER, item_id INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
@@ -189,19 +189,19 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         String result = "";
 
-        // 샵위치아이템번호, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 종류
-        Cursor cursor = db.rawQuery("SELECT * FROM SHOP;", null);
+        //아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
+        Cursor cursor = db.rawQuery("SELECT * FROM ITEM, SHOP WHERE (ITEM.item_id = SHOP.item_id);", null);
         while (cursor.moveToNext()) {
-            if(cursor.getInt(8) == 1 || cursor.getInt(8) == 2)
-                result += "이름 : " + cursor.getString(2)
-                        + "\n공격력 : " + cursor.getInt(3)
-                        + "\t\t\t방어력 : " + cursor.getInt(4)
-                        + "\t\t\t가격 : " + cursor.getInt(7);
+            if(cursor.getInt(7) == 1 || cursor.getInt(7) == 2)
+                result += "이름 : " + cursor.getString(1)
+                        + "\n공격력 : " + cursor.getInt(2)
+                        + "\t\t\t방어력 : " + cursor.getInt(3)
+                        + "\t\t\t가격 : " + cursor.getInt(6);
             else
-                result += "이름 : " + cursor.getString(2)
-                        + "\t\t\t\tHP회복량 : " + cursor.getInt(5)
-                        + "\t\t\t\tMP회복량 : " + cursor.getInt(6)
-                        + "\n가격 : " + cursor.getInt(7);
+                result += "이름 : " + cursor.getString(1)
+                        + "\t\t\t\tHP회복량 : " + cursor.getInt(4)
+                        + "\t\t\t\tMP회복량 : " + cursor.getInt(5)
+                        + "\n가격 : " + cursor.getInt(6);
             result_array.add(result);
             result = "";
         }
@@ -210,7 +210,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getcost(int idx){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT cost FROM SHOP WHERE idx=" +idx + ";", null);
+        Cursor cursor = db.rawQuery("SELECT cost FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" +idx + ");", null);
 
         if(cursor.moveToFirst() != false) {
             cursor.moveToFirst();
@@ -356,16 +356,16 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
         else if(type == "buy") {
-            cursor = db.rawQuery("SELECT * FROM SHOP WHERE idx=" + param_item_id, null);
+            cursor = db.rawQuery("SELECT * FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" +param_item_id + ");", null);
             while (cursor.moveToNext()) {
-                int item_id = cursor.getInt(1);
-                String item_name = cursor.getString(2);
-                int attack = cursor.getInt(3);
-                int defence = cursor.getInt(4);
-                int hp = cursor.getInt(5);
-                int mp = cursor.getInt(6);
-                int cost = cursor.getInt(7);
-                int clas = cursor.getInt(8);
+                int item_id = cursor.getInt(0);
+                String item_name = cursor.getString(1);
+                int attack = cursor.getInt(2);
+                int defence = cursor.getInt(3);
+                int hp = cursor.getInt(4);
+                int mp = cursor.getInt(5);
+                int cost = cursor.getInt(6);
+                int clas = cursor.getInt(7);
                 if(clas == 1) {
                     db2.execSQL("INSERT INTO INVENTORY_1 VALUES(null, " + idx_weapon + ", " + (item_id) + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
                     idx_weapon++;
