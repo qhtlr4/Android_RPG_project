@@ -6,19 +6,29 @@
     android:layout_height="match_parent"
     tools:context="com.example.sec.android_rpg_project.MainActivity"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background_main">
 
-    <Button
+    <LinearLayout
+        android:paddingTop="40dp"
+        android:minWidth="300dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Game"
-        android:id="@+id/new_game"
-        android:onClick="newbtnOnClick"
-        android:layout_marginBottom="20px"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Load game"
-        android:onClick="loadbtnOnClick"
-        android:id="@+id/load_game"/>
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="새로하기"
+            android:id="@+id/new_game"
+            android:onClick="newbtnOnClick"
+            android:layout_marginBottom="20dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="이어하기"
+            android:onClick="loadbtnOnClick"
+            android:id="@+id/load_game"/>
+
+    </LinearLayout>
 </LinearLayout>

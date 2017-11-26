@@ -79,6 +79,8 @@ public class User implements Serializable{
                 return 330;
             case 10:
                 return 1000;
+            case 11:
+                return 1000;
         }
         return 9990;
     }

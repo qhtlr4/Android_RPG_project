@@ -125,7 +125,6 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 10, 0, 1, 50);");
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 11, 0, 1, 1000);");
 
-
         // 샵위치아이템번호, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 종류
         sqLiteDatabase.execSQL("CREATE TABLE SHOP (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER);");
         sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 2);");    //목검
@@ -151,9 +150,9 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 4, 2, '목검', 5, 0, 5000000, 0);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 5, 2, '목검', 5, 0, 5000000, 0);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, 9, 'HP 포션', 30, 0, 500);");
-        idx_weapon = 6;
-        idx_armor = 3;
-        idx_potion = 2;
+        idx_weapon = 7;
+        idx_armor = 4;
+        idx_potion = 3;
         */
     }
 
