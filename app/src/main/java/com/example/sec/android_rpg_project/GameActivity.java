@@ -218,7 +218,7 @@ public class GameActivity extends Activity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
                                         .setTitle("강화알림")
-                                        .setMessage("선택된 아이템을 강화하겠습니까? \n성공률 : "+ dbHelper.enhance_info(index, 1).get("rate") +"\n비용 : "+dbHelper.enhance_info(index, 1).get("cost"))
+                                        .setMessage("선택된 아이템을 강화하겠습니까? \n성공률 : "+ dbHelper.enhance_info(index, 1).get("rate") +"%\n비용 : "+dbHelper.enhance_info(index, 1).get("cost"))
                                         .setNegativeButton("아니오", null)
                                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                             @Override
@@ -231,6 +231,20 @@ public class GameActivity extends Activity {
                                                     gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - dbHelper.enhance_info(index, 1).get("cost")));
                                                     HashMap<String, String> hashMap = dbHelper.enhancement(index, 1);
                                                     make_toast(hashMap.get("result"));
+                                                    if(hashMap.get("result").equals("성공")){
+                                                        if(hashMap.get("is_equip").equals("1")){
+                                                            add_attack += Integer.parseInt(hashMap.get("attack"));
+                                                            add_defence += Integer.parseInt(hashMap.get("defence"));
+                                                            ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + Integer.parseInt(hashMap.get("attack"))));
+                                                            ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + Integer.parseInt(hashMap.get("defence"))));
+                                                        }
+                                                    }
+                                                    else{
+                                                        if(hashMap.get("is_equip").equals("1")){
+                                                            ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - Integer.parseInt(hashMap.get("attack"))));
+                                                            ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - Integer.parseInt(hashMap.get("defence"))));
+                                                        }
+                                                    }
 
                                                     weapon_items = dbHelper.getInventoryResult(1);
                                                     weapon_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, weapon_items);
@@ -308,7 +322,7 @@ public class GameActivity extends Activity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
                                     .setTitle("강화알림")
-                                    .setMessage("선택된 아이템을 강화하겠습니까? \n" + "성공률 : "+ dbHelper.enhance_info(index, 2).get("rate") +"\n비용 : "+dbHelper.enhance_info(index, 2).get("cost"))
+                                    .setMessage("선택된 아이템을 강화하겠습니까? \n" + "성공률 : "+ dbHelper.enhance_info(index, 2).get("rate") +"%\n비용 : "+dbHelper.enhance_info(index, 2).get("cost"))
                                     .setNegativeButton("아니오",null)
                                     .setPositiveButton("예", new DialogInterface.OnClickListener(){
                                         @Override
@@ -321,6 +335,20 @@ public class GameActivity extends Activity {
                                                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - dbHelper.enhance_info(index, 2).get("cost")));
                                                 HashMap<String, String> hashMap = dbHelper.enhancement(index, 2);
                                                 make_toast(hashMap.get("result"));
+                                                if(hashMap.get("result").equals("성공")){
+                                                    if(hashMap.get("is_equip").equals("1")){
+                                                        add_attack += Integer.parseInt(hashMap.get("attack"));
+                                                        add_defence += Integer.parseInt(hashMap.get("defence"));
+                                                        ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + Integer.parseInt(hashMap.get("attack"))));
+                                                        ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + Integer.parseInt(hashMap.get("defence"))));
+                                                    }
+                                                }
+                                                else{
+                                                    if(hashMap.get("is_equip").equals("1")){
+                                                        ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - Integer.parseInt(hashMap.get("attack"))));
+                                                        ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - Integer.parseInt(hashMap.get("defence"))));
+                                                    }
+                                                }
 
                                                 armor_items = dbHelper.getInventoryResult(2);
                                                 armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, armor_items);

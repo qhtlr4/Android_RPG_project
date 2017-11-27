@@ -31,8 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        //idx_weapon = 2;
-        idx_weapon = 3;
+        idx_weapon = 2;
         idx_armor = 2;
         idx_potion = 2;
 
@@ -139,7 +138,6 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_3 (slot INTEGER PRIMARY KEY AUTOINCREMENT, idx INTEGER, item_name TEXT, addHp INTEGER, addMp INTEGER, cost INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격
 
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 1, 0, '기본무기', 2, 0, 1, 1);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 2, 2, '기본무기', 2, 0, 1, 1);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 1, 0, '기본방어구', 0, 2, 1, 1);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, 'HP 포션', 30, 0, 500);");
 
@@ -536,6 +534,7 @@ public class DBHelper extends SQLiteOpenHelper {
         double value = start_rand(1000);
         int attack;
         int defence;
+        int equip_state;
         int rate;   // 10 -> 1%
 
         SQLiteDatabase db = getReadableDatabase();
@@ -548,19 +547,27 @@ public class DBHelper extends SQLiteOpenHelper {
             a = "_2";
         }
 
-        Cursor cursor = db.rawQuery("SELECT enhance, attack, defence FROM INVENTORY" + a + " WHERE idx=" + idx + ";", null);
+        Cursor cursor = db.rawQuery("SELECT enhance, attack, defence, is_equip FROM INVENTORY" + a + " WHERE idx=" + idx + ";", null);
         cursor.moveToFirst();
         now_level = cursor.getInt(0);
         attack = cursor.getInt(1);
         defence = cursor.getInt(2);
+        if(cursor.getInt(3) == 1){
+            equip_state = 1;
+        }
+        else
+            equip_state = 0;
 
-        attack += enhance_rate(now_level).get("attack");
-        defence += enhance_rate(now_level).get("defence");
         rate = enhance_rate(now_level).get("rate");
+        result.put("is_equip", String.valueOf(equip_state));
 
         if(value <= rate){
+            attack += enhance_rate(now_level).get("attack");        //성공시 공격력
+            defence += enhance_rate(now_level).get("defence");      //성공시 방어력
             db2.execSQL("UPDATE INVENTORY" + a + " SET enhance=" + (now_level + 1) + ", attack="+ attack +", defence="+ defence + " WHERE idx=" + idx + ";");
             result.put("result", "성공");
+            result.put("attack", String.valueOf(enhance_rate(now_level).get("attack")));            //성공시 공격력 증가량
+            result.put("defence", String.valueOf(enhance_rate(now_level).get("defence")));          //성공시 방어력 증가량
         }
         else {
             if(clas == 1) {
@@ -580,6 +587,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
             }
             result.put("result", "실패");
+            result.put("attack", String.valueOf(attack));            //실패시 공격력 감소량
+            result.put("defence", String.valueOf(defence));          //실패시 방어력 감소량
         }
         return result;
     }
