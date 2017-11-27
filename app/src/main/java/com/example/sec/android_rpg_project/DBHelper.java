@@ -527,6 +527,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return heal_value;
     }
 
+    //강화작업
     public HashMap<String, String> enhancement(int idx, int clas){
         HashMap<String, String> result = new HashMap<>();
         String a;
@@ -593,6 +594,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    //강화 비용, 확률 리턴
     public HashMap<String, Integer> enhance_info(int idx, int clas){
         HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
         String a;
@@ -613,6 +615,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return hashMap;
     }
 
+    //강화단계에 대한 비용, 확률, 능력치 증가량
     public HashMap<String, Integer> enhance_rate(int item_level){
         HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
         switch (item_level) {

@@ -68,7 +68,4 @@ public class Enemy {
     public Enemy getEnemy(Enemy enemy){
         return enemy;
     }
-    public HashMap<String, String> dieEnemy(HashMap<String, String> hashMap){
-        return hashMap;
-    }
 }

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,6 +58,10 @@ public class GameActivity extends Activity {
     Button armor_btn;
     Button potion_btn;
 
+    //help
+    TextView help_view;
+    Button help_btn;
+
     //shop
     ArrayAdapter<String> shop_adaptor;
     ArrayList<String> shop_items;
@@ -81,7 +86,6 @@ public class GameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
 
         weapon_btn = (Button) findViewById(R.id.weapon_btn);
         armor_btn = (Button) findViewById(R.id.armor_btn);
@@ -399,6 +403,17 @@ public class GameActivity extends Activity {
             }
         });
 
+        help_view = (TextView)findViewById(R.id.helpview);
+        help_view.setMovementMethod(new ScrollingMovementMethod());
+        help_btn = (Button)findViewById(R.id.helpview_btn);
+        help_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                help_view.setVisibility(View.VISIBLE);
+                menuBtns.setVisibility(View.INVISIBLE);
+            }
+        });
+
         shop_view = (ListView)findViewById(R.id.shop_view);
         Button shop = (Button)findViewById(R.id.shop);
         shop.setOnClickListener(new View.OnClickListener() {
@@ -654,6 +669,10 @@ public class GameActivity extends Activity {
             }
             else if (shop_view.getVisibility() == View.VISIBLE){
                 shop_view.setVisibility(View.INVISIBLE);
+                menuBtns.setVisibility(View.VISIBLE);
+            }
+            else if (help_view.getVisibility() == View.VISIBLE){
+                help_view.setVisibility(View.INVISIBLE);
                 menuBtns.setVisibility(View.VISIBLE);
             }
             else{

@@ -98,6 +98,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/helpview"
+            android:background="#ffffff"
+            android:visibility="invisible"
+            android:textColor="#000000"
+            android:maxLines="100"
+            android:verticalScrollbarPosition="right"
+            android:scrollbars="vertical"
+            android:text="@string/help" />
+
         <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
@@ -377,12 +389,20 @@
                     android:text="상점"
                     android:layout_weight="1"/>
             </TableRow>
+            <TableRow>
+                <TextView />
+            </TableRow>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/save_data"
                 android:text="저장"
                 android:layout_weight="1"/>
+            <TableRow>
+                <Button
+                    android:id="@+id/helpview_btn"
+                    android:text="게임 설명"/>
+            </TableRow>
         </TableLayout>
         <ListView
             android:layout_width="match_parent"
