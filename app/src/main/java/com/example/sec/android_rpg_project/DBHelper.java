@@ -54,20 +54,20 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, 'MP 포션', 0, 0, 0, 10, 300, 3);");
 
         sqLiteDatabase.execSQL("CREATE TABLE MOB (mob_id INTEGER PRIMARY KEY AUTOINCREMENT, mob_name TEXT, hp INTEGER, damage INTEGER, exp INTEGER, is_boss INTEGER);");  //
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨1 몬스터', 25, 3, 3, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨2 몬스터', 35, 5, 7, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨3 몬스터', 45, 8, 11, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨4 몬스터', 50, 11, 17, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨5 몬스터', 55, 16, 25, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨6 몬스터', 75, 23, 37, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨7 몬스터', 99, 31, 52, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨8 몬스터', 116, 42, 73, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨9 몬스터', 148, 53, 94, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨10 몬스터', 153, 66, 115, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨11 몬스터', 170, 70, 250, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨12 몬스터', 200, 75, 330, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨13 몬스터', 240, 80, 400, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨14 몬스터', 270, 85, 500, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨1 몬스터', 25, 8, 3, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨2 몬스터', 35, 10, 7, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨3 몬스터', 45, 13, 11, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨4 몬스터', 50, 16, 17, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨5 몬스터', 55, 21, 25, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨6 몬스터', 75, 28, 37, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨7 몬스터', 99, 32, 52, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨8 몬스터', 116, 35, 73, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨9 몬스터', 148, 48, 94, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨10 몬스터', 153, 52, 115, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨11 몬스터', 170, 61, 250, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨12 몬스터', 200, 70, 330, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨13 몬스터', 240, 75, 400, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨14 몬스터', 270, 80, 500, 0);");
         sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '제 1 보스', 300, 100, 700, 1);");
 
         //index, 아이템번호, 몬스터번호, 최소개수, 최대개수, 드롭률
