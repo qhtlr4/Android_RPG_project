@@ -1,11 +1,16 @@
 package com.example.sec.android_rpg_project;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,6 +26,7 @@ import java.util.Random;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static com.example.sec.android_rpg_project.MainActivity.GAME_SETTING;
+import static java.lang.Integer.parseInt;
 
 public class WarActivity extends Activity {
 
@@ -106,11 +112,11 @@ public class WarActivity extends Activity {
         attack_txt.setText(String.valueOf(user.attack));
         defence_txt.setText(String.valueOf(user.defence));
         addpoint_txt.setText(String.valueOf(user.addpoint));
-        attack = Integer.parseInt(attack_txt.getText().toString());
-        defence = Integer.parseInt(defence_txt.getText().toString());
-        addpoint = Integer.parseInt(addpoint_txt.getText().toString());
+        attack = parseInt(attack_txt.getText().toString());
+        defence = parseInt(defence_txt.getText().toString());
+        addpoint = parseInt(addpoint_txt.getText().toString());
 
-        now_exp = Integer.parseInt(exp_txt.getText().toString());
+        now_exp = parseInt(exp_txt.getText().toString());
         limit_exp = user.get_maxexp();
         setExp_bar(now_exp, limit_exp);
 
@@ -179,8 +185,8 @@ public class WarActivity extends Activity {
                 battle(0);
                 break;
             case R.id.escape:
-                int loss_gold = (int)(Integer.parseInt(gold_txt.getText().toString())*0.2);
-                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString())-loss_gold));
+                int loss_gold = (int)(parseInt(gold_txt.getText().toString())*0.2);
+                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString())-loss_gold));
                 make_toast(String.valueOf(loss_gold) + "골드를 잃었습니다.");
                 moveActivity();
                 finish();
@@ -196,14 +202,49 @@ public class WarActivity extends Activity {
                 battle(1);
                 break;
         }
+        potion_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final int index = i+1;
+                new AlertDialog.Builder(WarActivity.this)
+                        .setTitle("사용알림")
+                        .setMessage("선택된 아이템을 사용하겠습니까?")
+                        .setNegativeButton("아니오",null)
+                        .setPositiveButton("예", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                HashMap<String, Integer> hashMap = dbHelper.use_potion(index);
+                                currentHp_txt.setText(String.valueOf(parseInt(currentHp_txt.getText().toString()) + hashMap.get("hp")));
+                                currentMp_txt.setText(String.valueOf(parseInt(currentMp_txt.getText().toString()) + hashMap.get("mp")));
+                                if(parseInt(currentHp_txt.getText().toString()) > parseInt(maxHp_txt.getText().toString())){
+                                    currentHp_txt.setText(String.valueOf(parseInt(maxHp_txt.getText().toString())));
+                                }
+                                if(parseInt(currentMp_txt.getText().toString()) > parseInt(maxMp_txt.getText().toString())){
+                                    currentMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString())));
+                                }
+                                potion_items = dbHelper.getInventoryResult(3);
+                                potion_adaptor = new ArrayAdapter<String>(WarActivity.this, android.R.layout.simple_list_item_single_choice, potion_items);
+                                potion_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                                potion_view.setAdapter(potion_adaptor);
+                                saveStatus();
+                            }
+                        })
+                        .show();
+            }
+        });
     }
+
 
     public void battle(int skill){
         int real_attack = attack;
-        
+        str = "";   //toast해줄 문자열 초기화
         //스킬 사용시 공격력 증가
         if(skill == 1) {
-            real_attack = attack + Integer.parseInt(user_current_mp.getText().toString());
+            if(user_current_mp.getText().toString() == "0"){
+                make_toast("mp가 부족합니다.");
+                return;
+            }
+            real_attack = attack + parseInt(user_current_mp.getText().toString());
             currentMp_txt.setText("0");
             user_current_mp.setText("0");
         }
@@ -223,11 +264,11 @@ public class WarActivity extends Activity {
         }
         //스킬 사용을 안했으면 mp+1
         if(skill == 0) {
-            currentMp_txt.setText(String.valueOf(Integer.parseInt(currentMp_txt.getText().toString()) + 1));
-            user_current_mp.setText(String.valueOf(Integer.parseInt(user_current_hp.getText().toString()) + 1));
-            if (Integer.parseInt(user_current_mp.getText().toString()) > Integer.parseInt(user_max_mp.getText().toString())) {
-                currentMp_txt.setText(String.valueOf(Integer.parseInt(maxMp_txt.getText().toString())));
-                user_current_mp.setText(String.valueOf(Integer.parseInt(user_max_mp.getText().toString())));
+            currentMp_txt.setText(String.valueOf(parseInt(currentMp_txt.getText().toString()) + 1));
+            user_current_mp.setText(String.valueOf(parseInt(user_current_mp.getText().toString()) + 1));
+            if (parseInt(user_current_mp.getText().toString()) > parseInt(user_max_mp.getText().toString())) {
+                currentMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString())));
+                user_current_mp.setText(String.valueOf(parseInt(user_max_mp.getText().toString())));
             }
         }
 
@@ -235,27 +276,27 @@ public class WarActivity extends Activity {
             make_toast(str);
             // enemy의 action
             int hurt;
-            if( enemy.damage <= Integer.parseInt(defence_txt.getText().toString())){
+            if( enemy.damage <= parseInt(defence_txt.getText().toString())){
                 hurt = 1;
             }
             else
-                hurt = enemy.damage - Integer.parseInt(defence_txt.getText().toString());
-            currentHp_txt.setText(String.valueOf(Integer.parseInt(currentHp_txt.getText().toString()) - hurt));
+                hurt = enemy.damage - parseInt(defence_txt.getText().toString());
+            currentHp_txt.setText(String.valueOf(parseInt(currentHp_txt.getText().toString()) - hurt));
             user_current_hp.setText(currentHp_txt.getText().toString());
-            if(Integer.parseInt(user_current_hp.getText().toString()) <= 0){
-                str = "사망하였습니다.";
-                make_toast(str);
+            if(parseInt(user_current_hp.getText().toString()) <= 0){
+                str = "----------사망----------\n";
+                //make_toast(str);
                 int minus_exp = (int)(limit_exp * 0.1);
-                exp_txt.setText(String.valueOf(Integer.parseInt(exp_txt.getText().toString())-minus_exp));
-                if(Integer.parseInt(exp_txt.getText().toString()) < 0){
-                    str = "경험치 " + (Integer.parseInt(exp_txt.getText().toString()) * (-1)) + "\n";
+                exp_txt.setText(String.valueOf(parseInt(exp_txt.getText().toString())-minus_exp));
+                if(parseInt(exp_txt.getText().toString()) < 0){
+                    str += "경험치 " + (parseInt(exp_txt.getText().toString()) * (-1)) + "\n";
                     exp_txt.setText("0");
                 }
                 else
                     str = "경험치 " + (minus_exp * (-1)) + "\n";
 
-                int minus_gold = (int)(Integer.parseInt(gold_txt.getText().toString())*0.4);
-                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString())-minus_gold));
+                int minus_gold = (int)(parseInt(gold_txt.getText().toString())*0.4);
+                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString())-minus_gold));
                 str += String.valueOf(minus_gold) + "골드를 잃었습니다.";
                 make_toast(str);
                 user_current_hp.setText("0");
@@ -265,20 +306,20 @@ public class WarActivity extends Activity {
             }
         }
         else if (enemy.hp <= 0){
-            make_toast("적 처치 !");
+            //make_toast("적 처치 !");
             enemy_current_hp.setText("0");
-            exp_txt.setText(String.valueOf(Integer.parseInt(exp_txt.getText().toString()) + enemy.exp));
+            exp_txt.setText(String.valueOf(parseInt(exp_txt.getText().toString()) + enemy.exp));
             now_exp += enemy.exp;
             if(now_exp >= limit_exp){
                 make_toast("레벨업");
-                level_txt.setText(String.valueOf(Integer.parseInt(level_txt.getText().toString()) + 1));
-                exp_txt.setText(String.valueOf(Integer.parseInt(exp_txt.getText().toString()) - limit_exp));
+                level_txt.setText(String.valueOf(parseInt(level_txt.getText().toString()) + 1));
+                exp_txt.setText(String.valueOf(parseInt(exp_txt.getText().toString()) - limit_exp));
                 now_exp = now_exp-limit_exp;
-                maxHp_txt.setText(String.valueOf(Integer.parseInt(maxHp_txt.getText().toString()) + 3));
-                maxMp_txt.setText(String.valueOf(Integer.parseInt(maxMp_txt.getText().toString()) + 1));
-                attack_txt.setText(String.valueOf(Integer.parseInt(attack_txt.getText().toString()) + 1));
-                defence_txt.setText(String.valueOf(Integer.parseInt(defence_txt.getText().toString()) + 1));
-                addpoint_txt.setText(String.valueOf(Integer.parseInt(addpoint_txt.getText().toString()) + 5));
+                maxHp_txt.setText(String.valueOf(parseInt(maxHp_txt.getText().toString()) + 3));
+                maxMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString()) + 1));
+                attack_txt.setText(String.valueOf(parseInt(attack_txt.getText().toString()) + 1));
+                defence_txt.setText(String.valueOf(parseInt(defence_txt.getText().toString()) + 1));
+                addpoint_txt.setText(String.valueOf(parseInt(addpoint_txt.getText().toString()) + 5));
                 user.level++;
                 limit_exp = user.get_maxexp();
                 setExp_bar(now_exp, limit_exp);
@@ -290,7 +331,7 @@ public class WarActivity extends Activity {
             make_toast(hashMap.get("result"));
 
             if(hashMap.get("gold") != null)
-                gold_txt.setText(String.valueOf(Integer.parseInt(gold_txt.getText().toString())+Integer.parseInt(hashMap.get("gold"))));
+                gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString())+ parseInt(hashMap.get("gold"))));
 
             //GameActivity로 이동
             moveActivity();
@@ -298,10 +339,10 @@ public class WarActivity extends Activity {
     }
 
     public void moveActivity(){
-        User user = new User(Integer.parseInt(level_txt.getText().toString()), Integer.parseInt(exp_txt.getText().toString()), Integer.parseInt(currentHp_txt.getText().toString()), Integer.parseInt(maxHp_txt.getText().toString()),
-                Integer.parseInt(currentMp_txt.getText().toString()), Integer.parseInt(maxMp_txt.getText().toString()), Integer.parseInt(gold_txt.getText().toString()),
-                Integer.parseInt(String.valueOf(Integer.parseInt(attack_txt.getText().toString())-add_attack)), Integer.parseInt(String.valueOf(Integer.parseInt(defence_txt.getText().toString())-add_defence)),
-                Integer.parseInt(addpoint_txt.getText().toString()));
+        User user = new User(parseInt(level_txt.getText().toString()), parseInt(exp_txt.getText().toString()), parseInt(currentHp_txt.getText().toString()), parseInt(maxHp_txt.getText().toString()),
+                parseInt(currentMp_txt.getText().toString()), parseInt(maxMp_txt.getText().toString()), parseInt(gold_txt.getText().toString()),
+                parseInt(String.valueOf(parseInt(attack_txt.getText().toString())-add_attack)), parseInt(String.valueOf(parseInt(defence_txt.getText().toString())-add_defence)),
+                parseInt(addpoint_txt.getText().toString()));
         Intent intent = getIntent();
         intent.putExtra("user", user);
 
@@ -315,6 +356,31 @@ public class WarActivity extends Activity {
     public void make_toast(String str){
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
+
+    //저장 함수
+    public void saveStatus(){
+        int level = parseInt(level_txt.getText().toString());
+        int exp = Integer.parseInt(exp_txt.getText().toString());
+        int currentHp = Integer.parseInt(currentHp_txt.getText().toString());
+        int maxHp = Integer.parseInt(maxHp_txt.getText().toString());
+        int currentMp = Integer.parseInt(currentMp_txt.getText().toString());
+        int maxMp = Integer.parseInt(maxMp_txt.getText().toString());
+        int gold = Integer.parseInt(gold_txt.getText().toString());
+
+        SharedPreferences user_status = getSharedPreferences("user_status", Service.MODE_PRIVATE);
+        SharedPreferences.Editor edit = user_status.edit();
+
+        edit.putInt("level", level);
+        edit.putInt("exp", exp);
+        edit.putInt("currentHp", currentHp);
+        edit.putInt("currentMp", currentMp);
+        edit.putInt("maxHp", maxHp);
+        edit.putInt("maxMp", maxMp);
+        edit.putInt("gold", gold);
+        edit.putBoolean("exist_data", true);
+        edit.commit();
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

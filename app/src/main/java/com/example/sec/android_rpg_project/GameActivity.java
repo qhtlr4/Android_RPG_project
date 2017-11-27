@@ -557,12 +557,12 @@ public class GameActivity extends Activity {
                     ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
                 case R.id.add_hp:
-                    maxHp_txt.setText(String.valueOf(parseInt(maxHp_txt.getText().toString())+5));
+                    maxHp_txt.setText(String.valueOf(parseInt(maxHp_txt.getText().toString())+3));
                     ability_hp.setText(maxHp_txt.getText());
                     ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
                 case R.id.add_mp:
-                    maxMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString())+3));
+                    maxMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString())+2));
                     ability_mp.setText(maxMp_txt.getText());
                     ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
@@ -639,6 +639,8 @@ public class GameActivity extends Activity {
         now_exp = parseInt(exp_txt.getText().toString());
         limit_exp = user.get_maxexp();
         setExp_bar(now_exp, limit_exp);
+
+        saveStatus();
 
         super.onActivityResult(requestCode, resultCode, data);
     }
