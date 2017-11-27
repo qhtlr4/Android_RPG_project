@@ -176,7 +176,7 @@ public class WarActivity extends Activity {
         int id = v.getId();
         switch (id){
             case R.id.enemy_view:
-                battle();
+                battle(0);
                 break;
             case R.id.escape:
                 int loss_gold = (int)(Integer.parseInt(gold_txt.getText().toString())*0.2);
@@ -193,24 +193,42 @@ public class WarActivity extends Activity {
                 potion_view.setAdapter(potion_adaptor);
                 break;
             case R.id.skill:
+                battle(1);
                 break;
         }
     }
 
-    public void battle(){
+    public void battle(int skill){
+        int real_attack = attack;
+        
+        //스킬 사용시 공격력 증가
+        if(skill == 1) {
+            real_attack = attack + Integer.parseInt(user_current_mp.getText().toString());
+            currentMp_txt.setText("0");
+            user_current_mp.setText("0");
+        }
         //크리티컬 판단을 위한 식
         int critical_rate = 10;
         //적 hp 감소
         if(critical_rate >= rand(100)){
             //크리티컬
             str = "크리티컬 !! ";
-            enemy.hp = enemy.hp - ((int)(attack*1.3));
+            enemy.hp = enemy.hp - ((int)(real_attack*1.3));
             enemy_current_hp.setText(String.valueOf(enemy.hp));
         }
         else {
             str = "공격";
-            enemy.hp -= attack;
+            enemy.hp -= real_attack;
             enemy_current_hp.setText(String.valueOf(enemy.hp));
+        }
+        //스킬 사용을 안했으면 mp+1
+        if(skill == 0) {
+            currentMp_txt.setText(String.valueOf(Integer.parseInt(currentMp_txt.getText().toString()) + 1));
+            user_current_mp.setText(String.valueOf(Integer.parseInt(user_current_hp.getText().toString()) + 1));
+            if (Integer.parseInt(user_current_mp.getText().toString()) > Integer.parseInt(user_max_mp.getText().toString())) {
+                currentMp_txt.setText(String.valueOf(Integer.parseInt(maxMp_txt.getText().toString())));
+                user_current_mp.setText(String.valueOf(Integer.parseInt(user_max_mp.getText().toString())));
+            }
         }
 
         if(enemy.hp > 0) {

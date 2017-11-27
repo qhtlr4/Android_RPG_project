@@ -166,8 +166,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 1, 0, '기본무기', 2, 0, 1, 1);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 1, 0, '기본방어구', 0, 2, 1, 1);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, '초보자용 HP 포션', 20, 0, 500);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 2, '초보자용 MP 포션', 0, 5, 500);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, '약한 HP 포션', 20, 0, 500);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 2, '약한 MP 포션', 0, 5, 500);");
     }
 
     @Override
