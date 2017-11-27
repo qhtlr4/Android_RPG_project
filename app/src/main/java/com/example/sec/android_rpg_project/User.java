@@ -25,11 +25,11 @@ public class User implements Serializable{
         exp = 0;
         currentHp = 50;
         maxHp = 50;
-        currentMp = 30;
-        maxMp = 30;
-        gold = 100000;
-        attack = 3;
-        defence = 0;
+        currentMp = 1;
+        maxMp = 1;
+        gold = 10000000;
+        attack = 5;
+        defence = 5;
         addpoint = 5;
     }
 
@@ -60,27 +60,31 @@ public class User implements Serializable{
     public int get_maxexp() {
         switch (level) {
             case 1:
-                return 10;
-            case 2:
                 return 30;
+            case 2:
+                return 70;
             case 3:
-                return 50;
+                return 110;
             case 4:
-                return 80;
+                return 170;
             case 5:
-                return 120;
+                return 250;
             case 6:
-                return 160;
+                return 370;
             case 7:
-                return 210;
+                return 520;
             case 8:
-                return 260;
+                return 730;
             case 9:
-                return 330;
+                return 940;
             case 10:
-                return 1000;
+                return 1150;
             case 11:
-                return 1000;
+                return 2500;
+            case 12:
+                return 3300;
+            case 13:
+                return 4000;
         }
         return 9990;
     }

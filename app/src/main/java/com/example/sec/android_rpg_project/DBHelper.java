@@ -33,7 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         idx_weapon = 2;
         idx_armor = 2;
-        idx_potion = 2;
+        idx_potion = 3;
 
         //아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
         //item_id = 1부터 시작
@@ -51,19 +51,24 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '무적갑옷', 0, 9999, 0, 0, 5000000, 2);");
 
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, 'HP 포션', 0, 0, 30, 0, 500, 3);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, 'MP 포션', 0, 0, 0, 10, 300, 3);");
 
         sqLiteDatabase.execSQL("CREATE TABLE MOB (mob_id INTEGER PRIMARY KEY AUTOINCREMENT, mob_name TEXT, hp INTEGER, damage INTEGER, exp INTEGER, is_boss INTEGER);");  //
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨1 몬스터', 20, 3, 3, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨2 몬스터', 30, 5, 7, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨3 몬스터', 40, 8, 11, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨4 몬스터', 45, 11, 17, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨5 몬스터', 50, 16, 25, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨6 몬스터', 70, 23, 37, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨7 몬스터', 94, 31, 52, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨8 몬스터', 111, 42, 73, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨9 몬스터', 143, 53, 94, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨10 몬스터', 165, 66, 115, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '제 1 보스', 300, 50, 600, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨1 몬스터', 25, 3, 3, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨2 몬스터', 35, 5, 7, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨3 몬스터', 45, 8, 11, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨4 몬스터', 50, 11, 17, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨5 몬스터', 55, 16, 25, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨6 몬스터', 75, 23, 37, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨7 몬스터', 99, 31, 52, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨8 몬스터', 116, 42, 73, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨9 몬스터', 148, 53, 94, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨10 몬스터', 153, 66, 115, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨11 몬스터', 170, 70, 250, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨12 몬스터', 200, 75, 330, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨13 몬스터', 240, 80, 400, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨14 몬스터', 270, 85, 500, 0);");
+        sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '제 1 보스', 300, 100, 700, 1);");
 
         //index, 아이템번호, 몬스터번호, 최소개수, 최대개수, 드롭률
         sqLiteDatabase.execSQL("CREATE TABLE DROP_ITEM (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, mob_id INTEGER, min INTEGER, max INTEGER, ratio INTEGER);");  //ratio -> 10 = 1%
@@ -114,23 +119,45 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 8, 9, 0, 1, 170);");
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 8, 10, 0, 1, 190);");
 
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 1, 0, 1, 50);"); //포션
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 2, 0, 1, 50);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 3, 0, 1, 50);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 4, 0, 1, 50);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 5, 0, 1, 50);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 6, 0, 1, 50);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 7, 0, 1, 50);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 8, 0, 1, 50);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 9, 0, 1, 50);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 10, 0, 1, 50);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 1, 0, 1, 100);"); //포션
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 2, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 3, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 4, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 5, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 6, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 7, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 8, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 9, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 10, 0, 1, 100);");
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 11, 11, 0, 1, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 1, 0, 1, 100);"); //포션
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 2, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 3, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 4, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 5, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 6, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 7, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 8, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 9, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 10, 0, 1, 100);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 12, 11, 0, 1, 1000);");
 
         // 샵위치아이템번호, 아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 종류
         sqLiteDatabase.execSQL("CREATE TABLE SHOP (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER);");
         sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 2);");    //목검
         sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 3);");    //청동검
+
+        // test
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 4);");    //청동검
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 5);");    //청동검
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 6);");    //청동검
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 7);");    //청동검
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 8);");    //청동검
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 9);");    //청동검
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 10);");    //청동검
+
         sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 11);");   //hp포션
+        sqLiteDatabase.execSQL("INSERT INTO SHOP VALUES(null, 12);");   //mp포션
 
         // 아이템idx, 인벤토리idx, 이름, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
         sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_1 (slot INTEGER PRIMARY KEY AUTOINCREMENT, idx INTEGER, enhance INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
@@ -139,22 +166,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 1, 0, '기본무기', 2, 0, 1, 1);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 1, 0, '기본방어구', 0, 2, 1, 1);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, 'HP 포션', 30, 0, 500);");
-
-        //test value
-        /*
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 1, 0, '무적갑옷', 0, 9999, 5000000, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 2, 0, '헌 가죽 옷', 0, 10, 5000, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 1, 0, '목검', 5, 0, 5000000, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 2, 0, '목검', 5, 0, 5000000, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 3, 0, '목검', 5, 0, 5000000, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 4, 0, '목검', 5, 0, 5000000, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 5, 0, '목검', 5, 0, 5000000, 0);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, 'HP 포션', 30, 0, 500);");
-        idx_weapon = 7;
-        idx_armor = 4;
-        idx_potion = 3;
-        */
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, '초보자용 HP 포션', 20, 0, 500);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 2, '초보자용 MP 포션', 0, 5, 500);");
     }
 
     @Override
