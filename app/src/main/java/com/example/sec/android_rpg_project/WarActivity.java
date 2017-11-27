@@ -41,7 +41,6 @@ public class WarActivity extends Activity {
     TextView currentMp_txt;
     TextView maxMp_txt;
     TextView gold_txt;
-    int now_exp;
     int limit_exp;
     ProgressBar exp_bar;
     TextView attack_txt;
@@ -116,9 +115,8 @@ public class WarActivity extends Activity {
         defence = parseInt(defence_txt.getText().toString());
         addpoint = parseInt(addpoint_txt.getText().toString());
 
-        now_exp = parseInt(exp_txt.getText().toString());
         limit_exp = user.get_maxexp();
-        setExp_bar(now_exp, limit_exp);
+        setExp_bar(user.exp, limit_exp);
 
         enemy = enemy.getEnemy(dbHelper.get_enemy(intent.getIntExtra("difficulty_min", 1), intent.getIntExtra("difficulty_max", 1), intent.getIntExtra("is_boss", 0)));   //적 정보를 db에서 불러와서 enemy객체에 저장
 
@@ -309,12 +307,12 @@ public class WarActivity extends Activity {
             //make_toast("적 처치 !");
             enemy_current_hp.setText("0");
             exp_txt.setText(String.valueOf(parseInt(exp_txt.getText().toString()) + enemy.exp));
-            now_exp += enemy.exp;
-            if(now_exp >= limit_exp){
+            user.exp += enemy.exp;
+            if(user.exp >= limit_exp){
                 make_toast("레벨업");
                 level_txt.setText(String.valueOf(parseInt(level_txt.getText().toString()) + 1));
                 exp_txt.setText(String.valueOf(parseInt(exp_txt.getText().toString()) - limit_exp));
-                now_exp = now_exp-limit_exp;
+                user.exp = user.exp-limit_exp;
                 maxHp_txt.setText(String.valueOf(parseInt(maxHp_txt.getText().toString()) + 3));
                 maxMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString()) + 1));
                 attack_txt.setText(String.valueOf(parseInt(attack_txt.getText().toString()) + 1));
@@ -322,10 +320,10 @@ public class WarActivity extends Activity {
                 addpoint_txt.setText(String.valueOf(parseInt(addpoint_txt.getText().toString()) + 5));
                 user.level++;
                 limit_exp = user.get_maxexp();
-                setExp_bar(now_exp, limit_exp);
+                setExp_bar(user.exp, limit_exp);
             }
             else{
-                setExp_bar(now_exp, limit_exp);
+                setExp_bar(user.exp, limit_exp);
             }
             hashMap = dbHelper.get_item(enemy);
             make_toast(hashMap.get("result"));
