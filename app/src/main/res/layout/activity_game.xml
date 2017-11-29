@@ -85,6 +85,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/exp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" / "/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/maxexp"/>
     </LinearLayout>
     <ProgressBar
         android:layout_width="match_parent"
@@ -356,7 +364,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/menuBtns">
 
             <TableRow>
@@ -390,26 +398,27 @@
                     android:layout_weight="1"/>
             </TableRow>
             <TableRow>
-                <TextView />
-            </TableRow>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/save_data"
-                android:text="저장"
-                android:layout_weight="1"/>
-            <TableRow>
                 <Button
                     android:id="@+id/helpview_btn"
-                    android:text="게임 설명"/>
+                    android:text="게임 매뉴얼"
+                    android:layout_weight="1"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/save_data"
+                    android:text="저장"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"/>
             </TableRow>
         </TableLayout>
+
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="invisible"
             android:id="@+id/shop_view">
         </ListView>
+
     </FrameLayout>
 
 </LinearLayout>

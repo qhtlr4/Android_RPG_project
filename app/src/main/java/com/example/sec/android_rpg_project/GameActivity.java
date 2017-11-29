@@ -33,6 +33,7 @@ public class GameActivity extends Activity {
 
     TextView level_txt;
     TextView exp_txt;
+    TextView maxexp_txt;    // = limit_exp
     TextView currentHp_txt;
     TextView maxHp_txt;
     TextView currentMp_txt;
@@ -92,6 +93,7 @@ public class GameActivity extends Activity {
         potion_btn = (Button) findViewById(R.id.potion_btn);
         level_txt = (TextView)findViewById(R.id.level);
         exp_txt = (TextView)findViewById(exp);
+        maxexp_txt = (TextView)findViewById(R.id.maxexp);
         currentHp_txt = (TextView)findViewById(R.id.current_hp);
         currentMp_txt = (TextView)findViewById(R.id.current_mp);
         maxHp_txt = (TextView)findViewById(R.id.max_hp);
@@ -124,6 +126,7 @@ public class GameActivity extends Activity {
         ability_point.setText(String.valueOf(user.addpoint));
         now_exp = parseInt(exp_txt.getText().toString());
         limit_exp = user.get_maxexp();
+        maxexp_txt.setText(String.valueOf(limit_exp));
         setExp_bar(now_exp, limit_exp);
 
         menuBtns = (TableLayout)findViewById(R.id.menuBtns);
@@ -598,6 +601,9 @@ public class GameActivity extends Activity {
         switch (id){
             case R.id.easy:
                 if(user.level - 2 <= 0 ){
+                    if(user.level == 2){
+                        intent.putExtra("difficulty_min", user.level-1);
+                    }
                     intent.putExtra("difficulty_min", user.level);
                 }
                 else
@@ -606,7 +612,7 @@ public class GameActivity extends Activity {
                 intent.putExtra("is_boss", 0);
                 break;
             case R.id.normal:
-                if(user.level - 1 <= 0 ){
+                if(user.level == 1 ){
                     intent.putExtra("difficulty_min", user.level);
                 }
                 else
@@ -649,6 +655,7 @@ public class GameActivity extends Activity {
         ability_point.setText(String.valueOf(user.addpoint));
         now_exp = parseInt(exp_txt.getText().toString());
         limit_exp = user.get_maxexp();
+        maxexp_txt.setText(String.valueOf(limit_exp));
         setExp_bar(now_exp, limit_exp);
 
         saveStatus();
@@ -689,7 +696,18 @@ public class GameActivity extends Activity {
                 menuBtns.setVisibility(View.VISIBLE);
             }
             else{
-                finish();
+                new AlertDialog.Builder(GameActivity.this)
+                        .setTitle("게임 종료")
+                        .setMessage("메인화면으로 돌아가겠습니까?\n저장되지 않은 정보는 되돌릴 수 없습니다.")
+                        .setCancelable(false)
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("아니오", null)
+                        .show();
             }
             return true;
         }

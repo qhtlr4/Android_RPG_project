@@ -36,6 +36,7 @@ public class WarActivity extends Activity {
     DBHelper dbHelper;
     TextView level_txt;
     TextView exp_txt;
+    TextView maxexp_txt;
     TextView currentHp_txt;
     TextView maxHp_txt;
     TextView currentMp_txt;
@@ -87,6 +88,7 @@ public class WarActivity extends Activity {
 
         level_txt = (TextView)findViewById(R.id.level);
         exp_txt = (TextView)findViewById(R.id.exp);
+        maxexp_txt = (TextView)findViewById(R.id.maxexp);
         currentHp_txt = (TextView)findViewById(R.id.current_hp);
         currentMp_txt = (TextView)findViewById(R.id.current_mp);
         maxHp_txt = (TextView)findViewById(R.id.max_hp);
@@ -116,6 +118,7 @@ public class WarActivity extends Activity {
         addpoint = parseInt(addpoint_txt.getText().toString());
 
         limit_exp = user.get_maxexp();
+        maxexp_txt.setText(String.valueOf(limit_exp));
         setExp_bar(user.exp, limit_exp);
 
         enemy = enemy.getEnemy(dbHelper.get_enemy(intent.getIntExtra("difficulty_min", 1), intent.getIntExtra("difficulty_max", 1), intent.getIntExtra("is_boss", 0)));   //적 정보를 db에서 불러와서 enemy객체에 저장
