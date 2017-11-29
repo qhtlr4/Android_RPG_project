@@ -169,6 +169,9 @@ public class GameActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
                 if(dbHelper.equipment_item(1) != -1) {  //착용체크가 있었을때
+                    if(dbHelper.equipment_item(1) == i + 1){
+                        return;
+                    }
                     hashMap = dbHelper.change_equipment_item(1, dbHelper.equipment_item(1), i+1);
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
@@ -189,12 +192,14 @@ public class GameActivity extends Activity {
                 new AlertDialog.Builder(GameActivity.this)
                         .setTitle("메뉴")
                         .setMessage("메뉴를 선택하세요")
+                        .setIcon(getResources().getDrawable(R.drawable.icon))
                         .setNegativeButton("취소", null)
+                        .setCancelable(false)
                         .setNeutralButton("판매하기", new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
-                                        .setTitle("판매알림")
+                                        .setTitle("판매알림").setCancelable(false)
                                         .setMessage("선택된 아이템을 판매하겠습니까?")
                                         .setNegativeButton("아니오", null)
                                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
@@ -221,7 +226,7 @@ public class GameActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
-                                        .setTitle("강화알림")
+                                        .setTitle("강화알림").setCancelable(false)
                                         .setMessage("선택된 아이템을 강화하겠습니까? \n성공률 : "+ dbHelper.enhance_info(index, 1).get("rate") +"%\n비용 : "+dbHelper.enhance_info(index, 1).get("cost"))
                                         .setNegativeButton("아니오", null)
                                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
@@ -264,7 +269,7 @@ public class GameActivity extends Activity {
                                         .show();
                             }
                         }).show();
-                return false;
+                return true;
             }
         });
 
@@ -273,6 +278,9 @@ public class GameActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
                 if(dbHelper.equipment_item(2) != -1) {
+                    if(dbHelper.equipment_item(2) == i + 1){
+                        return;
+                    }
                     hashMap = dbHelper.change_equipment_item(2, dbHelper.equipment_item(2), i+1);
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
@@ -293,6 +301,8 @@ public class GameActivity extends Activity {
                 new AlertDialog.Builder(GameActivity.this)
                         .setTitle("메뉴")
                         .setMessage("메뉴를 선택하세요")
+                        .setIcon(getResources().getDrawable(R.drawable.icon))
+                        .setCancelable(false)
                         .setNegativeButton("취소", null)
                         .setNeutralButton("판매하기", new DialogInterface.OnClickListener(){
                             @Override
@@ -300,6 +310,7 @@ public class GameActivity extends Activity {
                                 new AlertDialog.Builder(GameActivity.this)
                                         .setTitle("판매알림")
                                         .setMessage("선택된 아이템을 판매하겠습니까?")
+                                        .setCancelable(false)
                                         .setNegativeButton("아니오",null)
                                         .setPositiveButton("예", new DialogInterface.OnClickListener(){
                                             @Override
@@ -325,7 +336,7 @@ public class GameActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
-                                    .setTitle("강화알림")
+                                    .setTitle("강화알림").setCancelable(false)
                                     .setMessage("선택된 아이템을 강화하겠습니까? \n" + "성공률 : "+ dbHelper.enhance_info(index, 2).get("rate") +"%\n비용 : "+dbHelper.enhance_info(index, 2).get("cost"))
                                     .setNegativeButton("아니오",null)
                                     .setPositiveButton("예", new DialogInterface.OnClickListener(){
@@ -368,7 +379,7 @@ public class GameActivity extends Activity {
                                     .show();
                             }
                         }).show();
-                return false;
+                return true;
             }
         });
 
@@ -377,7 +388,7 @@ public class GameActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final int index = i+1;
                 new AlertDialog.Builder(GameActivity.this)
-                        .setTitle("사용알림")
+                        .setTitle("사용알림").setCancelable(false)
                         .setMessage("선택된 아이템을 사용하겠습니까?")
                         .setNegativeButton("아니오",null)
                         .setPositiveButton("예", new DialogInterface.OnClickListener(){
@@ -437,7 +448,7 @@ public class GameActivity extends Activity {
                 final int index = i+1;
                 if(parseInt(gold_txt.getText().toString()) >= cost) {
                     new AlertDialog.Builder(GameActivity.this)
-                            .setTitle("알림")
+                            .setTitle("알림").setCancelable(false)
                             .setMessage("선택된 아이템을 구매하겠습니까?")
                             .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                                 @Override
