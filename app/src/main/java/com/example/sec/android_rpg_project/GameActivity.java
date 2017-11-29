@@ -230,7 +230,8 @@ public class GameActivity extends Activity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
                                         .setTitle("강화알림").setCancelable(false)
-                                        .setMessage("선택된 아이템을 강화하겠습니까? \n성공률 : "+ dbHelper.enhance_info(index, 1).get("rate") +"%\n비용 : "+dbHelper.enhance_info(index, 1).get("cost"))
+                                        .setMessage("선택된 아이템을 강화하겠습니까? \n\n성공률 : "+ dbHelper.enhance_info(index, 1).get("rate")/10 +"%\n비용 : "+ dbHelper.enhance_info(index, 1).get("cost") + "\n공격력 +"
+                                                + dbHelper.enhance_info(index, 1).get("attack") + "  방어력 + " + dbHelper.enhance_info(index, 1).get("defence"))
                                         .setNegativeButton("아니오", null)
                                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                             @Override
@@ -340,8 +341,9 @@ public class GameActivity extends Activity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
                                     .setTitle("강화알림").setCancelable(false)
-                                    .setMessage("선택된 아이템을 강화하겠습니까? \n" + "성공률 : "+ dbHelper.enhance_info(index, 2).get("rate") +"%\n비용 : "+dbHelper.enhance_info(index, 2).get("cost"))
-                                    .setNegativeButton("아니오",null)
+                                    .setMessage("선택된 아이템을 강화하겠습니까? \n\n" + "성공률 : "+ dbHelper.enhance_info(index, 2).get("rate")/10 +"%\n비용 : "+dbHelper.enhance_info(index, 2).get("cost") + "\n공격력 +"
+                                            + dbHelper.enhance_info(index, 2).get("attack") + "  방어력 + " + dbHelper.enhance_info(index, 2).get("defence"))
+                                    .setNegativeButton("아니오", null)
                                     .setPositiveButton("예", new DialogInterface.OnClickListener(){
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {

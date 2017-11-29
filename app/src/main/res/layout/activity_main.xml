@@ -10,25 +10,33 @@
     android:background="@drawable/background_main">
 
     <LinearLayout
-        android:paddingTop="40dp"
+        android:paddingTop="70dp"
         android:minWidth="300dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="새로하기"
             android:id="@+id/new_game"
-            android:onClick="newbtnOnClick"
-            android:layout_marginBottom="20dp"/>
-        <Button
+            android:text="새로하기"
+            android:textColor="#12F093"
+            android:textSize="25sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="newbtnOnClick"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/main_activity_btn" />
+
+        <Button
+            android:id="@+id/load_game"
             android:text="이어하기"
+            android:textColor="#12F093"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:onClick="loadbtnOnClick"
-            android:id="@+id/load_game"/>
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/main_activity_btn" />
 
     </LinearLayout>
 </LinearLayout>

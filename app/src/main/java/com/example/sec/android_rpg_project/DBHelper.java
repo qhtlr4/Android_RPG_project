@@ -53,6 +53,31 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, 'HP 포션', 0, 0, 30, 0, 500, 3);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, 'MP 포션', 0, 0, 0, 10, 300, 3);");
 
+        //강화 확률 가격 정보 입력 테이블 ( level-1 = 0)
+        sqLiteDatabase.execSQL("CREATE TABLE ENHANCEMENT (level INTEGER PRIMARY KEY AUTOINCREMENT, attack INTEGER, defence INTEGER, rate INTEGER, cost INTEGER)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 1, 0, 1000, 1000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 0, 1, 1000, 1200)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 1, 1, 950, 1700)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 1, 1, 900, 2000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 2, 0, 850, 2000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 0, 2, 850, 2300)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 2, 1, 800, 2800)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 1, 2, 750, 3200)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 3, 0, 700, 4500)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 3, 1, 650, 5000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 3, 2, 600, 5300)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 5, 3, 500, 7000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 6, 4, 500, 7400)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 7, 5, 500, 7900)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 10, 8, 450, 8250)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 15, 12, 400, 8700)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 30, 30, 300, 10000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 30, 30, 300, 10000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 30, 30, 300, 10000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 30, 30, 300, 10000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 30, 30, 300, 10000)");
+        sqLiteDatabase.execSQL("INSERT INTO ENHANCEMENT VALUES(null, 30, 30, 300, 10000)");
+
         sqLiteDatabase.execSQL("CREATE TABLE MOB (mob_id INTEGER PRIMARY KEY AUTOINCREMENT, mob_name TEXT, hp INTEGER, damage INTEGER, exp INTEGER, is_boss INTEGER);");  //
         sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨1 몬스터', 25, 8, 3, 0);");
         sqLiteDatabase.execSQL("INSERT INTO MOB VALUES(null, '레벨2 몬스터', 35, 10, 7, 0);");
@@ -184,6 +209,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS INVENTORY_1");
         db.execSQL("DROP TABLE IF EXISTS INVENTORY_2");
         db.execSQL("DROP TABLE IF EXISTS INVENTORY_3");
+        db.execSQL("DROP TABLE IF EXISTS ENHANCEMENT");
         onCreate(db);
     }
 
@@ -549,6 +575,7 @@ public class DBHelper extends SQLiteOpenHelper {
         int attack;
         int defence;
         int equip_state;
+        int cost;
         int rate;   // 10 -> 1%
 
         SQLiteDatabase db = getReadableDatabase();
@@ -561,11 +588,12 @@ public class DBHelper extends SQLiteOpenHelper {
             a = "_2";
         }
 
-        Cursor cursor = db.rawQuery("SELECT enhance, attack, defence, is_equip FROM INVENTORY" + a + " WHERE idx=" + idx + ";", null);
+        Cursor cursor = db.rawQuery("SELECT enhance, attack, defence, is_equip, cost FROM INVENTORY" + a + " WHERE idx=" + idx + ";", null);
         cursor.moveToFirst();
         now_level = cursor.getInt(0);
         attack = cursor.getInt(1);
         defence = cursor.getInt(2);
+        cost = cursor.getInt(4);
         if(cursor.getInt(3) == 1){
             equip_state = 1;
         }
@@ -578,7 +606,8 @@ public class DBHelper extends SQLiteOpenHelper {
         if(value <= rate){
             attack += enhance_rate(now_level).get("attack");        //성공시 공격력
             defence += enhance_rate(now_level).get("defence");      //성공시 방어력
-            db2.execSQL("UPDATE INVENTORY" + a + " SET enhance=" + (now_level + 1) + ", attack="+ attack +", defence="+ defence + " WHERE idx=" + idx + ";");
+            cost += (int)(enhance_rate(now_level).get("cost")/2);       //성공시 아이템 판매가격 상승 (등급에 따른 가치 상승)
+            db2.execSQL("UPDATE INVENTORY" + a + " SET enhance=" + (now_level + 1) + ", attack="+ attack +", defence="+ defence + ", cost="+ cost +" WHERE idx=" + idx + ";");
             result.put("result", "성공");
             result.put("attack", String.valueOf(enhance_rate(now_level).get("attack")));            //성공시 공격력 증가량
             result.put("defence", String.valueOf(enhance_rate(now_level).get("defence")));          //성공시 방어력 증가량
@@ -607,7 +636,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    //강화 비용, 확률 리턴
+    //강화 비용, 확률을 사용자가 볼 수 있게 리턴
     public HashMap<String, Integer> enhance_info(int idx, int clas){
         HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
         String a;
@@ -622,65 +651,26 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         Cursor cursor = db.rawQuery("SELECT enhance FROM INVENTORY" + a + " WHERE idx=" + idx + ";", null);
         cursor.moveToFirst();
-        hashMap.put("rate",enhance_rate(cursor.getInt(0)).get("rate")/10);
-        hashMap.put("cost",enhance_rate(cursor.getInt(0)).get("cost"));
+        int number = cursor.getInt(0);
+        hashMap = enhance_rate(number);
 
         return hashMap;
     }
 
     //강화단계에 대한 비용, 확률, 능력치 증가량
-    public HashMap<String, Integer> enhance_rate(int item_level){
+    public HashMap<String, Integer> enhance_rate(int item_level) {
         HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
-        switch (item_level) {
-            case 0:
-                hashMap.put("attack", 1);
-                hashMap.put("defence", 1);
-                hashMap.put("cost", 1000);
-                hashMap.put("rate", 1000);
-                return hashMap;
-            case 1:
-            case 2:
-                hashMap.put("attack", 1);
-                hashMap.put("defence", 1);
-                hashMap.put("cost", 1500);
-                hashMap.put("rate", 900);
-                return hashMap;
-            case 3:
-            case 4:
-                hashMap.put("attack", 1);
-                hashMap.put("defence", 1);
-                hashMap.put("cost", 2000);
-                hashMap.put("rate", 850);
-                return hashMap;
-            case 5:
-            case 6:
-                hashMap.put("attack", 1);
-                hashMap.put("defence", 1);
-                hashMap.put("cost", 2500);
-                hashMap.put("rate", 800);
-                return hashMap;
-            case 7:
-            case 8:
-                hashMap.put("attack", 1);
-                hashMap.put("defence", 1);
-                hashMap.put("cost", 3000);
-                hashMap.put("rate", 750);
-                return hashMap;
-            case 9:
-            case 10:
-                hashMap.put("attack", 1);
-                hashMap.put("defence", 1);
-                hashMap.put("cost", 3500);
-                hashMap.put("rate", 700);
-                return hashMap;
-            case 11:
-            default:
-                hashMap.put("attack", 1);
-                hashMap.put("defence", 1);
-                hashMap.put("cost", 100000);
-                hashMap.put("rate", 0);
-                return hashMap;
-        }
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT attack, defence, cost, rate FROM ENHANCEMENT WHERE level=" + (item_level + 1) + ";", null);
+        cursor.moveToFirst();
+
+        hashMap.put("attack", cursor.getInt(0));
+        hashMap.put("defence", cursor.getInt(1));
+        hashMap.put("cost", cursor.getInt(2));
+        hashMap.put("rate", cursor.getInt(3));
+
+        return hashMap;
     }
 
     //random
