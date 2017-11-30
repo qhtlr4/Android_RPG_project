@@ -96,9 +96,8 @@
     </LinearLayout>
     <ProgressBar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
+        android:layout_height="7dp"
+        android:progressDrawable="@drawable/custom_progressbar"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:id="@+id/exp_bar" />
 
