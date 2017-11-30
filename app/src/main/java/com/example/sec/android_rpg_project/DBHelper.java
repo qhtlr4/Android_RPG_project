@@ -440,6 +440,45 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    //장착 아이템으로 상승된 능력치
+    public HashMap<String, Integer> equipment_ability(){
+        HashMap<String, Integer> hashMap = new HashMap<>();
+
+        int attack = 0;
+        int defence = 0;
+        int temp;
+
+        hashMap.put("weapon_attack", 0);
+        hashMap.put("weapon_defence", 0);
+        hashMap.put("armor_attack", 0);
+        hashMap.put("armor_defence", 0);
+        hashMap.put("attack", 0);
+        hashMap.put("defence", 0);
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT attack, defence FROM INVENTORY_1 WHERE is_equip=1;", null);
+        while (cursor.moveToNext()){
+            attack = cursor.getInt(0);
+            defence = cursor.getInt(1);
+            hashMap.put("weapon_attack", attack);
+            hashMap.put("weapon_defence", defence);
+        }
+        cursor = db.rawQuery("SELECT attack, defence FROM INVENTORY_2 WHERE is_equip=1;", null);
+        while (cursor.moveToNext()){
+            temp = cursor.getInt(0);
+            attack += temp;
+            hashMap.put("armor_attack", temp);
+            temp = cursor.getInt(1);
+            defence += temp;
+            hashMap.put("armor_defence", temp);
+        }
+
+        hashMap.put("attack", attack);
+        hashMap.put("defence", defence);
+
+        return hashMap;
+    }
+
     //장착 아이템 변경함수 (변경 능력치값 리턴)
     public HashMap<String, Integer> change_equipment_item(int clas, int a_itemslot, int b_itemslot) {
         SQLiteDatabase db = getWritableDatabase();  //장착변수(is_equip) 변경

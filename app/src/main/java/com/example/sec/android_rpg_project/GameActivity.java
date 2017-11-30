@@ -119,9 +119,9 @@ public class GameActivity extends Activity {
         gold_txt.setText(String.valueOf(user.gold));
         ability_hp.setText(String.valueOf(maxHp_txt.getText()));
         ability_mp.setText(String.valueOf(maxMp_txt.getText()));
-        add_attack = dbHelper.change_equipment_item(1, -1, dbHelper.equipment_item(1)).get("attack");
+        add_attack = dbHelper.equipment_ability().get("attack");
         ability_attack.setText(String.valueOf(user.attack + add_attack));
-        add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
+        add_defence = dbHelper.equipment_ability().get("defence");
         ability_defence.setText(String.valueOf(user.defence + add_defence));
         ability_point.setText(String.valueOf(user.addpoint));
         now_exp = parseInt(exp_txt.getText().toString());
@@ -176,11 +176,15 @@ public class GameActivity extends Activity {
                         return;
                     }
                     hashMap = dbHelper.change_equipment_item(1, dbHelper.equipment_item(1), i+1);
+                    add_attack = dbHelper.equipment_ability().get("attack");
+                    add_defence = dbHelper.equipment_ability().get("defence");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
                 else{   //착용체크가 없었을때
                     hashMap = dbHelper.change_equipment_item(1, -1, i+1);
+                    add_attack = dbHelper.equipment_ability().get("attack");
+                    add_defence = dbHelper.equipment_ability().get("defence");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
@@ -286,11 +290,15 @@ public class GameActivity extends Activity {
                         return;
                     }
                     hashMap = dbHelper.change_equipment_item(2, dbHelper.equipment_item(2), i+1);
+                    add_attack = dbHelper.equipment_ability().get("attack");
+                    add_defence = dbHelper.equipment_ability().get("defence");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
                 else{
                     hashMap = dbHelper.change_equipment_item(2, -1, i+1);
+                    add_attack = dbHelper.equipment_ability().get("attack");
+                    add_defence = dbHelper.equipment_ability().get("defence");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
