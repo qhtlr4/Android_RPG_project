@@ -436,6 +436,7 @@ public class GameActivity extends Activity {
                 final int index = i+1;
                 new AlertDialog.Builder(GameActivity.this)
                         .setTitle("사용알림").setCancelable(false)
+                        .setIcon(R.drawable.potion)
                         .setMessage("선택된 아이템을 사용하겠습니까?")
                         .setNegativeButton("아니오",null)
                         .setPositiveButton("예", new DialogInterface.OnClickListener(){
@@ -496,6 +497,7 @@ public class GameActivity extends Activity {
                 if(parseInt(gold_txt.getText().toString()) >= cost) {
                     new AlertDialog.Builder(GameActivity.this)
                             .setTitle("알림").setCancelable(false)
+                            .setIcon(R.drawable.gold)
                             .setMessage("선택된 아이템을 구매하겠습니까?")
                             .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                                 @Override
