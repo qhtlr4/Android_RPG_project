@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Lite RPG</string>
-    <string name="help" formatted="false">1. 게임 시작 후 새로하기 버튼을 눌러서 게임을 하려면 저장된 데이터를 삭제하게 됩니다.\n
+    <string name="help_main" formatted="false">1. 게임 시작 후 새로하기 버튼을 눌러서 게임을 하려면 저장된 데이터를 삭제하게 됩니다.\n
 이어하기 클릭시 이전에 저장된 데이터를 불러와서 시작하게 됩니다.\n\n
 
 2. 수동저장/자동저장이 있으며 자동저장은 인벤토리의 아이템정보가 변경된 경우 해당됩니다.\n\n
