@@ -71,7 +71,9 @@ public class GameActivity extends Activity {
     //ability
     LinearLayout ability_layout;
     TextView ability_attack;
+    TextView attack_detail;
     int add_attack;
+    TextView defence_detail;
     TextView ability_defence;
     int add_defence;
     TextView ability_point;
@@ -101,7 +103,9 @@ public class GameActivity extends Activity {
         gold_txt = (TextView)findViewById(gold);
         exp_bar = (ProgressBar)findViewById(R.id.exp_bar);
         ability_attack = (TextView)findViewById(R.id.ability_attack);
+        attack_detail = (TextView)findViewById(R.id.attack_detail);
         ability_defence = (TextView)findViewById(R.id.ability_defence);
+        defence_detail = (TextView)findViewById(R.id.defence_detail);
         ability_hp = (TextView)findViewById(R.id.ability_max_hp);
         ability_mp = (TextView)findViewById(R.id.ability_max_mp);
         ability_point = (TextView)findViewById(R.id.ability_point);
@@ -121,8 +125,10 @@ public class GameActivity extends Activity {
         ability_mp.setText(String.valueOf(maxMp_txt.getText()));
         add_attack = dbHelper.equipment_ability().get("attack");
         ability_attack.setText(String.valueOf(user.attack + add_attack));
+        attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
         add_defence = dbHelper.equipment_ability().get("defence");
         ability_defence.setText(String.valueOf(user.defence + add_defence));
+        defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
         ability_point.setText(String.valueOf(user.addpoint));
         now_exp = parseInt(exp_txt.getText().toString());
         limit_exp = user.get_maxexp();
@@ -178,6 +184,8 @@ public class GameActivity extends Activity {
                     hashMap = dbHelper.change_equipment_item(1, dbHelper.equipment_item(1), i+1);
                     add_attack = dbHelper.equipment_ability().get("attack");
                     add_defence = dbHelper.equipment_ability().get("defence");
+                    attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
+                    defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
@@ -185,6 +193,8 @@ public class GameActivity extends Activity {
                     hashMap = dbHelper.change_equipment_item(1, -1, i+1);
                     add_attack = dbHelper.equipment_ability().get("attack");
                     add_defence = dbHelper.equipment_ability().get("defence");
+                    attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
+                    defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
@@ -212,7 +222,11 @@ public class GameActivity extends Activity {
                                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 1);
+                                                HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 1);    //능력치 변화량, 판매한가격
+                                                if(hashMap.get("is_equip") == 1) {
+                                                    attack_detail.setText(" (" + user.attack + " + " + dbHelper.equipment_ability().get("armor_attack") + ")");
+                                                    defence_detail.setText(" (" + user.defence + " + " + dbHelper.equipment_ability().get("armor_defence") + ")");
+                                                }
                                                 ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
                                                 ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
                                                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
@@ -252,12 +266,18 @@ public class GameActivity extends Activity {
                                                         if(hashMap.get("is_equip").equals("1")){
                                                             add_attack += Integer.parseInt(hashMap.get("attack"));
                                                             add_defence += Integer.parseInt(hashMap.get("defence"));
+                                                            attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
+                                                            defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                                                             ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + Integer.parseInt(hashMap.get("attack"))));
                                                             ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + Integer.parseInt(hashMap.get("defence"))));
                                                         }
                                                     }
                                                     else{
                                                         if(hashMap.get("is_equip").equals("1")){
+                                                            add_attack = dbHelper.equipment_ability().get("armor_attack");
+                                                            add_defence = dbHelper.equipment_ability().get("armor_defence");
+                                                            attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
+                                                            defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                                                             ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - Integer.parseInt(hashMap.get("attack"))));
                                                             ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - Integer.parseInt(hashMap.get("defence"))));
                                                         }
@@ -292,6 +312,8 @@ public class GameActivity extends Activity {
                     hashMap = dbHelper.change_equipment_item(2, dbHelper.equipment_item(2), i+1);
                     add_attack = dbHelper.equipment_ability().get("attack");
                     add_defence = dbHelper.equipment_ability().get("defence");
+                    attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
+                    defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
@@ -299,6 +321,8 @@ public class GameActivity extends Activity {
                     hashMap = dbHelper.change_equipment_item(2, -1, i+1);
                     add_attack = dbHelper.equipment_ability().get("attack");
                     add_defence = dbHelper.equipment_ability().get("defence");
+                    attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
+                    defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
@@ -328,6 +352,10 @@ public class GameActivity extends Activity {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 HashMap<String, Integer> hashMap = dbHelper.sell_item(index, 2);
+                                                if(hashMap.get("is_equip") == 1) {
+                                                    attack_detail.setText(" (" + user.attack + " + " + dbHelper.equipment_ability().get("weapon_attack") + ")");
+                                                    defence_detail.setText(" (" + user.defence + " + " + dbHelper.equipment_ability().get("weapon_defence") + ")");
+                                                }
                                                 ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
                                                 ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
                                                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
@@ -367,12 +395,18 @@ public class GameActivity extends Activity {
                                                     if(hashMap.get("is_equip").equals("1")){
                                                         add_attack += Integer.parseInt(hashMap.get("attack"));
                                                         add_defence += Integer.parseInt(hashMap.get("defence"));
+                                                        attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
+                                                        defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                                                         ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + Integer.parseInt(hashMap.get("attack"))));
                                                         ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + Integer.parseInt(hashMap.get("defence"))));
                                                     }
                                                 }
                                                 else{
                                                     if(hashMap.get("is_equip").equals("1")){
+                                                        add_attack = dbHelper.equipment_ability().get("weapon_attack");
+                                                        add_defence = dbHelper.equipment_ability().get("weapon_defence");
+                                                        attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
+                                                        defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                                                         ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - Integer.parseInt(hashMap.get("attack"))));
                                                         ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - Integer.parseInt(hashMap.get("defence"))));
                                                     }
@@ -573,10 +607,14 @@ public class GameActivity extends Activity {
         else{
             switch (v.getId()){
                 case R.id.add_attack:
+                    user.attack++;
+                    attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString())+1));
                     ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
                 case R.id.add_defence:
+                    user.defence++;
+                    defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString())+1));
                     ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;

@@ -558,16 +558,19 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         Cursor cursor = db.rawQuery("SELECT attack, defence, cost, is_equip FROM INVENTORY" + a + " WHERE idx=" + idx + ";", null);
         cursor.moveToFirst();
+        //장착됨
         if(cursor.getInt(3) == 1) {
             hashMap.put("attack", cursor.getInt(0));
             hashMap.put("defence", cursor.getInt(1));
             hashMap.put("cost", cursor.getInt(2) / 2);
         }
+        //장착되지는 않음
         else{
             hashMap.put("attack", 0);
             hashMap.put("defence", 0);
             hashMap.put("cost", cursor.getInt(2) / 2);
         }
+        hashMap.put("is_equip", cursor.getInt(3));
         db2.execSQL("DELETE FROM INVENTORY" + a + " WHERE idx=" + idx + ";");
         if(a.equals("_1")){
             idx_weapon--;
