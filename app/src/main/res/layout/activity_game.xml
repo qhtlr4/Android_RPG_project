@@ -498,12 +498,73 @@
             </LinearLayout>
         </LinearLayout>
 
-        <ListView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="invisible"
-            android:id="@+id/shop_view">
-        </ListView>
+            android:orientation="horizontal"
+            android:background="#000000"
+            android:id="@+id/shop_layout">
+            <!-- 인벤토리에서 보여줄 항목을 표시 무기 방어구 포션 3개의 layout이 프레임에 들어감 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="7"
+                android:id="@+id/shop_button_layout">
+
+                <Button
+                    android:id="@+id/shop_weapon_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:enabled="false"
+                    android:text="무기"
+                    android:layout_weight="1"
+                    android:onClick="itemclass" />
+
+                <Button
+                    android:id="@+id/shop_armor_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="방어구"
+                    android:onClick="itemclass" />
+
+                <Button
+                    android:id="@+id/shop_potion_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="포션"
+                    android:layout_weight="1"
+                    android:onClick="itemclass" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <!-- 무기 -->
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:id="@+id/shop_weapon_view"/>
+
+                <!-- 방어구 -->
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"
+                    android:id="@+id/shop_armor_view"/>
+
+                <!-- 포션 -->
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"
+                    android:id="@+id/shop_potion_view"/>
+            </FrameLayout>
+        </LinearLayout>
 
     </FrameLayout>
 

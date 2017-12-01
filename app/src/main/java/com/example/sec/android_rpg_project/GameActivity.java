@@ -63,9 +63,20 @@ public class GameActivity extends Activity {
     Button help_btn;
 
     //shop
-    ArrayAdapter<String> shop_adaptor;
-    ArrayList<String> shop_items;
-    ListView shop_view;
+    ArrayAdapter<String> shop_weapon_adaptor;
+    ArrayAdapter<String> shop_armor_adaptor;
+    ArrayAdapter<String> shop_potion_adaptor;
+    ArrayList<String> shop_weapon_items;
+    ArrayList<String> shop_armor_items;
+    ArrayList<String> shop_potion_items;
+    LinearLayout shop_layout;
+    ListView shop_weapon_view;
+    ListView shop_armor_view;
+    ListView shop_potion_view;
+    //select
+    Button shop_weapon_btn;
+    Button shop_armor_btn;
+    Button shop_potion_btn;
 
     //ability
     LinearLayout ability_layout;
@@ -92,6 +103,9 @@ public class GameActivity extends Activity {
         weapon_btn = (Button) findViewById(R.id.weapon_btn);
         armor_btn = (Button) findViewById(R.id.armor_btn);
         potion_btn = (Button) findViewById(R.id.potion_btn);
+        shop_weapon_btn = (Button) findViewById(R.id.shop_weapon_btn);
+        shop_armor_btn = (Button) findViewById(R.id.shop_armor_btn);
+        shop_potion_btn = (Button) findViewById(R.id.shop_potion_btn);
         level_txt = (TextView)findViewById(R.id.level);
         exp_txt = (TextView)findViewById(exp);
         maxexp_txt = (TextView)findViewById(R.id.maxexp);
@@ -477,23 +491,38 @@ public class GameActivity extends Activity {
             }
         });
 
-        shop_view = (ListView)findViewById(R.id.shop_view);
+        shop_layout = (LinearLayout)findViewById(R.id.shop_layout);
         Button shop = (Button)findViewById(R.id.shop);
+        shop_weapon_view = (ListView)findViewById(R.id.shop_weapon_view);
+        shop_armor_view = (ListView)findViewById(R.id.shop_armor_view);
+        shop_potion_view = (ListView)findViewById(R.id.shop_potion_view);
         shop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                shop_view.setVisibility(View.VISIBLE);
+                shop_layout.setVisibility(View.VISIBLE);
                 menuBtns.setVisibility(View.INVISIBLE);
+
+                shop_weapon_items = new ArrayList<String>();
+                shop_weapon_items = dbHelper.getShopInfo(1);
+                shop_weapon_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, shop_weapon_items);
+                shop_weapon_view.setAdapter(shop_weapon_adaptor);
+                shop_weapon_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+                shop_armor_items = new ArrayList<String>();
+                shop_armor_items = dbHelper.getShopInfo(2);
+                shop_armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, shop_armor_items);
+                shop_armor_view.setAdapter(shop_armor_adaptor);
+                shop_armor_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+                shop_potion_items = new ArrayList<String>();
+                shop_potion_items = dbHelper.getShopInfo(3);
+                shop_potion_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, shop_potion_items);
+                shop_potion_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                shop_potion_view.setAdapter(shop_potion_adaptor);
             }
         });
 
-        shop_items = new ArrayList<String>();
-        shop_items = dbHelper.getShopInfo();
-        shop_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, shop_items);
-        shop_view.setAdapter(shop_adaptor);
-        shop_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        shop_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        shop_weapon_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final int cost = dbHelper.getcost(i+1);
@@ -513,7 +542,69 @@ public class GameActivity extends Activity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
-                                    dbHelper.insert_item(index, "buy");
+                                    dbHelper.insert_item(index, 1);
+                                    saveStatus();
+                                    make_toast("정상적으로 구매하였습니다.");
+                                }
+                            }).show();
+                }
+                else{
+                    make_toast("금액이 부족합니다.");
+                }
+            }
+        });
+        shop_armor_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final int cost = dbHelper.getcost(i+1);
+                final int index = i+1;
+                if(parseInt(gold_txt.getText().toString()) >= cost) {
+                    new AlertDialog.Builder(GameActivity.this)
+                            .setTitle("구매").setCancelable(false)
+                            .setIcon(R.drawable.gold)
+                            .setMessage("선택된 아이템을 구매하겠습니까?")
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    return;
+                                }
+                            })
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
+                                    dbHelper.insert_item(index, 2);
+                                    saveStatus();
+                                    make_toast("정상적으로 구매하였습니다.");
+                                }
+                            }).show();
+                }
+                else{
+                    make_toast("금액이 부족합니다.");
+                }
+            }
+        });
+        shop_potion_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final int cost = dbHelper.getcost(i+1);
+                final int index = i+1;
+                if(parseInt(gold_txt.getText().toString()) >= cost) {
+                    new AlertDialog.Builder(GameActivity.this)
+                            .setTitle("구매").setCancelable(false)
+                            .setIcon(R.drawable.gold)
+                            .setMessage("선택된 아이템을 구매하겠습니까?")
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    return;
+                                }
+                            })
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
+                                    dbHelper.insert_item(index, 3);
                                     saveStatus();
                                     make_toast("정상적으로 구매하였습니다.");
                                 }
@@ -601,6 +692,30 @@ public class GameActivity extends Activity {
                 weapon_btn.setEnabled(true);
                 armor_btn.setEnabled(true);
                 potion_btn.setEnabled(false);
+                break;
+            case R.id.shop_weapon_btn:
+                shop_weapon_view.setVisibility(View.VISIBLE);
+                shop_armor_view.setVisibility(View.INVISIBLE);
+                shop_potion_view.setVisibility(View.INVISIBLE);
+                shop_weapon_btn.setEnabled(false);
+                shop_armor_btn.setEnabled(true);
+                shop_potion_btn.setEnabled(true);
+                break;
+            case R.id.shop_armor_btn:
+                shop_weapon_view.setVisibility(View.INVISIBLE);
+                shop_armor_view.setVisibility(View.VISIBLE);
+                shop_potion_view.setVisibility(View.INVISIBLE);
+                shop_weapon_btn.setEnabled(true);
+                shop_armor_btn.setEnabled(false);
+                shop_potion_btn.setEnabled(true);
+                break;
+            case R.id.shop_potion_btn:
+                shop_weapon_view.setVisibility(View.INVISIBLE);
+                shop_armor_view.setVisibility(View.INVISIBLE);
+                shop_potion_view.setVisibility(View.VISIBLE);
+                shop_weapon_btn.setEnabled(true);
+                shop_armor_btn.setEnabled(true);
+                shop_potion_btn.setEnabled(false);
                 break;
         }
     }
@@ -741,8 +856,8 @@ public class GameActivity extends Activity {
                 war_level_Layout.setVisibility(View.INVISIBLE);
                 menuBtns.setVisibility(View.VISIBLE);
             }
-            else if (shop_view.getVisibility() == View.VISIBLE){
-                shop_view.setVisibility(View.INVISIBLE);
+            else if (shop_layout.getVisibility() == View.VISIBLE){
+                shop_layout.setVisibility(View.INVISIBLE);
                 menuBtns.setVisibility(View.VISIBLE);
             }
             else if (help_view.getVisibility() == View.VISIBLE){

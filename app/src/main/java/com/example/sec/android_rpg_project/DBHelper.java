@@ -24,6 +24,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public static int idx_armor;
     public static int idx_potion;
 
+    //상점에 판매하는 장비의 수
+    public static int weapon_num;
+    public static int armor_num;
+
     public DBHelper(Context context){
         super(context, "MyDB.db", null, DATABASE_VERSION);
     }
@@ -34,6 +38,8 @@ public class DBHelper extends SQLiteOpenHelper {
         idx_weapon = 2;
         idx_armor = 2;
         idx_potion = 3;
+        weapon_num = 0;
+        armor_num = 0;
 
         //아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
         //item_id = 1부터 시작
@@ -214,29 +220,44 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //shop에서 판매하는 항목을 return
-    public ArrayList<String> getShopInfo(){
+    public ArrayList<String> getShopInfo(int clas){
         ArrayList<String> result_array = new ArrayList<String>();
         SQLiteDatabase db = getReadableDatabase();
         String result = "";
+        weapon_num = 0;
+        armor_num = 0;
 
         //아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
         Cursor cursor = db.rawQuery("SELECT * FROM ITEM, SHOP WHERE (ITEM.item_id = SHOP.item_id);", null);
         while (cursor.moveToNext()) {
-            if(cursor.getInt(7) == 1 || cursor.getInt(7) == 2)
+            if(cursor.getInt(7) == 1) {
+                weapon_num++;
+            }
+            else if (cursor.getInt(7) == 2) {
+                armor_num++;
+            }
+
+            if(cursor.getInt(7) == clas && clas != 3){
                 result += "이름 : " + cursor.getString(1)
                         + "\n공격력 : " + cursor.getInt(2)
                         + "\t\t\t방어력 : " + cursor.getInt(3)
                         + "\t\t\t가격 : " + cursor.getInt(6);
-            else
+                result_array.add(result);
+                result = "";
+            }
+            else if (cursor.getInt(7) == clas && clas == 3){
                 result += "이름 : " + cursor.getString(1)
                         + "\t\t\t\tHP회복량 : " + cursor.getInt(4)
                         + "\t\t\t\tMP회복량 : " + cursor.getInt(5)
                         + "\n가격 : " + cursor.getInt(6);
-            result_array.add(result);
-            result = "";
+                result_array.add(result);
+                result = "";
+            }
         }
         return result_array;
     }
+
+
 
     public int getcost(int idx){
         SQLiteDatabase db = getReadableDatabase();
@@ -351,7 +372,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 else {                          //아이템인 경우
                     hashMap.put("gold", "0");
-                    insert_item(item_id, "get");
+                    insert_item(item_id);
                     count++;
                 }
             }
@@ -363,58 +384,66 @@ public class DBHelper extends SQLiteOpenHelper {
         return hashMap;
     }
 
-    //전리품을 db에 저장 하기위한 함수, type = get
-    //shop에서 구매한 아이템을 db에 저장, type = buy
-    public void insert_item(int param_item_id, String type) {
+    //shop에서 구매한 아이템을 db에 저장,
+    public void insert_item(int param_item_id, int clas){
         SQLiteDatabase db = getReadableDatabase();
         SQLiteDatabase db2 = getWritableDatabase();
         Cursor cursor = null;
-        if(type == "get") {
-            cursor = db.rawQuery("SELECT * FROM ITEM WHERE item_id=" + param_item_id, null);
-            while (cursor.moveToNext()) {
-                String item_name = cursor.getString(1);
-                int attack = cursor.getInt(2);
-                int defence = cursor.getInt(3);
-                int hp = cursor.getInt(4);
-                int mp = cursor.getInt(5);
-                int cost = cursor.getInt(6);
-                int clas = cursor.getInt(7);
-                if(clas == 1) {
-                    db2.execSQL("INSERT INTO INVENTORY_1 VALUES(null, " + idx_weapon + ", "+ 0 + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
-                    idx_weapon++;
-                }
-                else if(clas == 2) {
-                    db2.execSQL("INSERT INTO INVENTORY_2 VALUES(null, " + idx_armor + ", " + 0 + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
-                    idx_armor++;
-                }
-                else if(clas == 3) {
-                    db2.execSQL("INSERT INTO INVENTORY_3 VALUES(null, " + idx_potion  + ", '" + item_name + "', " + hp + ", " + mp + ", " + cost + ");");
-                    idx_potion++;
-                }
+        if(clas == 1)
+            cursor = db.rawQuery("SELECT * FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" + param_item_id + ");", null);
+        else if(clas == 2) {
+            cursor = db.rawQuery("SELECT * FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" + (param_item_id + weapon_num) + ");", null);
+        }
+        else if(clas == 3) {
+            cursor = db.rawQuery("SELECT * FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" + (param_item_id + weapon_num + armor_num) + ");", null);
+        }
+        while (cursor.moveToNext()) {
+            String item_name = cursor.getString(1);
+            int attack = cursor.getInt(2);
+            int defence = cursor.getInt(3);
+            int hp = cursor.getInt(4);
+            int mp = cursor.getInt(5);
+            int cost = cursor.getInt(6);
+            if(clas == 1) {
+                db2.execSQL("INSERT INTO INVENTORY_1 VALUES(null, " + idx_weapon + ", " + 0 + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
+                idx_weapon++;
+            }
+            else if(clas == 2) {
+                db2.execSQL("INSERT INTO INVENTORY_2 VALUES(null, " + idx_armor + ", " + 0 + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
+                idx_armor++;
+            }
+            else if(clas == 3) {
+                db2.execSQL("INSERT INTO INVENTORY_3 VALUES(null, " + idx_potion + ", '" + item_name + "', " + hp + ", " + mp + ", " + cost + ");");
+                idx_potion++;
             }
         }
-        else if(type == "buy") {
-            cursor = db.rawQuery("SELECT * FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" +param_item_id + ");", null);
-            while (cursor.moveToNext()) {
-                String item_name = cursor.getString(1);
-                int attack = cursor.getInt(2);
-                int defence = cursor.getInt(3);
-                int hp = cursor.getInt(4);
-                int mp = cursor.getInt(5);
-                int cost = cursor.getInt(6);
-                int clas = cursor.getInt(7);
-                if(clas == 1) {
-                    db2.execSQL("INSERT INTO INVENTORY_1 VALUES(null, " + idx_weapon + ", " + 0 + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
-                    idx_weapon++;
-                }
-                else if(clas == 2) {
-                    db2.execSQL("INSERT INTO INVENTORY_2 VALUES(null, " + idx_armor + ", " + 0 + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
-                    idx_armor++;
-                }
-                else if(clas == 3) {
-                    db2.execSQL("INSERT INTO INVENTORY_3 VALUES(null, " + idx_potion + ", '" + item_name + "', " + hp + ", " + mp + ", " + cost + ");");
-                    idx_potion++;
-                }
+    }
+
+    //전리품을 db에 저장 하기위한 함수.
+    public void insert_item(int param_item_id) {
+        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db2 = getWritableDatabase();
+        Cursor cursor = null;
+        cursor = db.rawQuery("SELECT * FROM ITEM WHERE item_id=" + param_item_id, null);
+        while (cursor.moveToNext()) {
+            String item_name = cursor.getString(1);
+            int attack = cursor.getInt(2);
+            int defence = cursor.getInt(3);
+            int hp = cursor.getInt(4);
+            int mp = cursor.getInt(5);
+            int cost = cursor.getInt(6);
+            int clas = cursor.getInt(7);
+            if(clas == 1) {
+                db2.execSQL("INSERT INTO INVENTORY_1 VALUES(null, " + idx_weapon + ", "+ 0 + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
+                idx_weapon++;
+            }
+            else if(clas == 2) {
+                db2.execSQL("INSERT INTO INVENTORY_2 VALUES(null, " + idx_armor + ", " + 0 + ", '" + item_name + "', " + attack + ", " + defence + ", " + cost + ", 0);");
+                idx_armor++;
+            }
+            else if(clas == 3) {
+                db2.execSQL("INSERT INTO INVENTORY_3 VALUES(null, " + idx_potion  + ", '" + item_name + "', " + hp + ", " + mp + ", " + cost + ");");
+                idx_potion++;
             }
         }
     }
