@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,7 +79,7 @@ public class GameActivity extends Activity {
     TextView ability_hp;
     TextView ability_mp;
 
-    TableLayout menuBtns;
+    LinearLayout menuBtns;
     LinearLayout war_level_Layout;
 
     User user = new User();
@@ -135,7 +134,7 @@ public class GameActivity extends Activity {
         maxexp_txt.setText(String.valueOf(limit_exp));
         setExp_bar(now_exp, limit_exp);
 
-        menuBtns = (TableLayout)findViewById(R.id.menuBtns);
+        menuBtns = (LinearLayout)findViewById(R.id.menuBtns);
         inventory_layout = (LinearLayout)findViewById(R.id.inventory_layout);
         weapon_view = (ListView)findViewById(R.id.weapon_view);
         armor_view = (ListView)findViewById(R.id.armor_view);
@@ -198,7 +197,8 @@ public class GameActivity extends Activity {
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
-                make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
+                if(hashMap.get("attack") != 0 || hashMap.get("defence") != 0)
+                    make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
             }
         });
 
@@ -208,8 +208,8 @@ public class GameActivity extends Activity {
                 final int index = i+1;
                 new AlertDialog.Builder(GameActivity.this)
                         .setTitle("메뉴")
-                        .setMessage("메뉴 선택")
-                        .setIcon(getResources().getDrawable(R.drawable.icon))
+                        .setMessage("무기 메뉴선택")
+                        .setIcon(R.drawable.icon)
                         .setNegativeButton("취소", null)
                         .setCancelable(false)
                         .setNeutralButton("판매하기", new DialogInterface.OnClickListener(){
@@ -218,6 +218,7 @@ public class GameActivity extends Activity {
                                 new AlertDialog.Builder(GameActivity.this)
                                         .setTitle("판매").setCancelable(false)
                                         .setMessage("선택된 아이템을 판매하겠습니까?")
+                                        .setIcon(R.drawable.gold)
                                         .setNegativeButton("아니오", null)
                                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                             @Override
@@ -248,6 +249,7 @@ public class GameActivity extends Activity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
                                         .setTitle("강화").setCancelable(false)
+                                        .setIcon(R.drawable.enhance)
                                         .setMessage("선택된 아이템을 강화하겠습니까? \n\n성공률 : "+ dbHelper.enhance_info(index, 1).get("rate")/10 +"%\n비용 : "+ dbHelper.enhance_info(index, 1).get("cost") + "\n공격력 +"
                                                 + dbHelper.enhance_info(index, 1).get("attack") + "  방어력 + " + dbHelper.enhance_info(index, 1).get("defence"))
                                         .setNegativeButton("아니오", null)
@@ -326,7 +328,8 @@ public class GameActivity extends Activity {
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
-                make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
+                if(hashMap.get("attack") != 0 || hashMap.get("defence") != 0)
+                    make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
             }
         });
 
@@ -336,8 +339,8 @@ public class GameActivity extends Activity {
                 final int index = i+1;
                 new AlertDialog.Builder(GameActivity.this)
                         .setTitle("메뉴")
-                        .setMessage("메뉴를 선택하세요")
-                        .setIcon(getResources().getDrawable(R.drawable.icon))
+                        .setMessage("방어구 메뉴선택")
+                        .setIcon(R.drawable.icon)
                         .setCancelable(false)
                         .setNegativeButton("취소", null)
                         .setNeutralButton("판매하기", new DialogInterface.OnClickListener(){
@@ -345,6 +348,7 @@ public class GameActivity extends Activity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
                                         .setTitle("판매")
+                                        .setIcon(R.drawable.gold)
                                         .setMessage("선택된 아이템을 판매하겠습니까?")
                                         .setCancelable(false)
                                         .setNegativeButton("아니오",null)
@@ -376,7 +380,7 @@ public class GameActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new AlertDialog.Builder(GameActivity.this)
-                                    .setTitle("강화").setCancelable(false)
+                                    .setTitle("강화").setCancelable(false).setIcon(R.drawable.enhance)
                                     .setMessage("선택된 아이템을 강화하겠습니까? \n\n" + "성공률 : "+ dbHelper.enhance_info(index, 2).get("rate")/10 +"%\n비용 : "+dbHelper.enhance_info(index, 2).get("cost") + "\n공격력 +"
                                             + dbHelper.enhance_info(index, 2).get("attack") + "  방어력 + " + dbHelper.enhance_info(index, 2).get("defence"))
                                     .setNegativeButton("아니오", null)

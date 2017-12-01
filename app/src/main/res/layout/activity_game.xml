@@ -209,6 +209,7 @@
                     android:textSize="30dp"
                     android:background="#55ff00"
                     android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
                     android:onClick="warClick"/>
                 <Button
                     android:layout_width="match_parent"
@@ -219,6 +220,7 @@
                     android:textSize="30dp"
                     android:background="#fffb00"
                     android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
                     android:onClick="warClick"/>
                 <Button
                     android:layout_width="match_parent"
@@ -229,6 +231,7 @@
                     android:textSize="30dp"
                     android:background="#ff7300"
                     android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
                     android:onClick="warClick"/>
                 <Button
                     android:layout_width="match_parent"
@@ -238,7 +241,7 @@
                     android:id="@+id/boss"
                     android:textSize="30dp"
                     android:background="#ff0008"
-                    android:verticalScrollbarPosition="right"
+                    android:layout_weight="1"
                     android:onClick="warClick"/>
 
             </LinearLayout>
@@ -428,55 +431,72 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:id="@+id/menuBtns">
 
-            <TableRow>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/war"
                     android:text="사냥"
+                    android:drawableTop="@drawable/war"
                     android:onClick="level_select"
                     android:layout_weight="1"/>
 
                 <Button
                     android:id="@+id/inventory"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:drawableTop="@drawable/inventory"
                     android:text="인벤토리" />
-            </TableRow>
-            <TableRow>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/ability"
-                    android:text="능력치"
+                    android:drawableTop="@drawable/ability"
+                    android:text="능력치 확인"
                     android:layout_weight="1"/>
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/shop"
+                    android:drawableTop="@drawable/store"
                     android:text="상점"
                     android:layout_weight="1"/>
-            </TableRow>
-            <TableRow>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
                 <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/helpview_btn"
                     android:text="게임 매뉴얼 보기"
+                    android:drawableTop="@drawable/help"
                     android:layout_weight="1"/>
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/save_data"
                     android:text="저장"
-                    android:layout_gravity="bottom"
+                    android:drawableTop="@drawable/save"
                     android:layout_weight="1"/>
-            </TableRow>
-        </TableLayout>
+            </LinearLayout>
+        </LinearLayout>
 
         <ListView
             android:layout_width="match_parent"
