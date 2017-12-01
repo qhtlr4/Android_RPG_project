@@ -1,7 +1,5 @@
 package com.example.sec.android_rpg_project;
 
-import android.graphics.drawable.Drawable;
-
 /**
  * Created by USER on 2017-11-02.
  */
@@ -13,18 +11,18 @@ public class Enemy {
     int damage;
     int exp;
     int is_boss;
-    Drawable image;
+    int image_id;
 
-    public Drawable getImage() {
-        return image;
+    public int getImage() {
+        return image_id;
     }
 
-    public void setImage(Drawable[] drawable) {
+    public void setImage(int[] drawable) {
         if(is_boss == 0){
-            image = drawable[mob_num - 1];
+            image_id = drawable[mob_num - 1];
         }
         else if(is_boss == 1){
-            image = drawable[10];
+            image_id = drawable[10];
         }
     }
 

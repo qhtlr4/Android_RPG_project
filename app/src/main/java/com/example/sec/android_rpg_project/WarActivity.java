@@ -6,7 +6,6 @@ import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,11 +19,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import static android.os.Build.VERSION.SDK_INT;
 import static com.example.sec.android_rpg_project.MainActivity.GAME_SETTING;
 import static java.lang.Integer.parseInt;
 
@@ -75,7 +75,7 @@ public class WarActivity extends Activity {
     Enemy enemy = new Enemy();      //적 정보
     TextView enemy_name;
     ImageView enemy_image;
-    Drawable[] drawables = new Drawable[11];
+    int[] drawables = new int[20];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,34 +141,25 @@ public class WarActivity extends Activity {
         inventory_layout = (LinearLayout)findViewById(R.id.inventory_layout);
         potion_view = (ListView)findViewById(R.id.potion_view);
 
-        if(SDK_INT >= 22) {
-            drawables[0] = getResources().getDrawable(R.drawable.mob_lv1, null);
-            drawables[1] = getResources().getDrawable(R.drawable.mob_lv2, null);
-            drawables[2] = getResources().getDrawable(R.drawable.mob_lv3, null);
-            drawables[3] = getResources().getDrawable(R.drawable.mob_lv4, null);
-            drawables[4] = getResources().getDrawable(R.drawable.mob_lv2, null);
-            drawables[5] = getResources().getDrawable(R.drawable.mob_lv4, null);
-            drawables[6] = getResources().getDrawable(R.drawable.mob_lv2, null);
-            drawables[7] = getResources().getDrawable(R.drawable.mob_lv4, null);
-            drawables[8] = getResources().getDrawable(R.drawable.mob_lv2, null);
-            drawables[9] = getResources().getDrawable(R.drawable.mob_lv4, null);
-            drawables[10] = getResources().getDrawable(R.drawable.boss_1, null);
-        } else {
-            drawables[0] = getResources().getDrawable(R.drawable.mob_lv1);
-            drawables[1] = getResources().getDrawable(R.drawable.mob_lv2);
-            drawables[2] = getResources().getDrawable(R.drawable.mob_lv3);
-            drawables[3] = getResources().getDrawable(R.drawable.mob_lv4);
-            drawables[4] = getResources().getDrawable(R.drawable.mob_lv1);
-            drawables[5] = getResources().getDrawable(R.drawable.mob_lv4);
-            drawables[6] = getResources().getDrawable(R.drawable.mob_lv2);
-            drawables[7] = getResources().getDrawable(R.drawable.mob_lv4);
-            drawables[8] = getResources().getDrawable(R.drawable.mob_lv2);
-            drawables[9] = getResources().getDrawable(R.drawable.mob_lv4);
-            drawables[10] = getResources().getDrawable(R.drawable.boss_1);
-        }
+        drawables[0] = R.drawable.mob_1;
+        drawables[1] = R.drawable.mob_2;
+        drawables[2] = R.drawable.mob_3;
+        drawables[3] = R.drawable.mob_4;
+        drawables[4] = R.drawable.mob_5;
+        drawables[5] = R.drawable.mob_6;
+        drawables[6] = R.drawable.mob_7;
+        drawables[7] = R.drawable.mob_8;
+        drawables[8] = R.drawable.mob_9;
+        drawables[9] = R.drawable.mob_10;
+        drawables[10] = R.drawable.mob_11;
+        drawables[11] = R.drawable.mob_12;
+        drawables[12] = R.drawable.mob_13;
+        drawables[13] = R.drawable.boss_1;
+
         enemy.setImage(drawables);
         enemy_image = (ImageView)findViewById(R.id.enemy_view);
-        enemy_image.setImageDrawable(enemy.getImage());
+
+        Glide.with(this).load(enemy.getImage()).into(enemy_image);
         enemy_name = (TextView)findViewById(R.id.enemy_name);
         enemy_name.setText(enemy.name);
     }
@@ -245,7 +236,7 @@ public class WarActivity extends Activity {
                 make_toast("mp가 부족합니다.");
                 return;
             }
-            real_attack = attack + parseInt(user_current_mp.getText().toString());
+            real_attack = attack + (parseInt(user_current_mp.getText().toString()) * 2 );
             currentMp_txt.setText("0");
             user_current_mp.setText("0");
         }
