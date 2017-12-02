@@ -321,7 +321,7 @@ public class GameActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
-                if(dbHelper.equipment_item(2) != -1) {
+                if(dbHelper.equipment_item(2) != -1) { //착용체크가 있었을때
                     if(dbHelper.equipment_item(2) == i + 1){
                         return;
                     }
@@ -333,7 +333,7 @@ public class GameActivity extends Activity {
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
-                else{
+                else{   //처음 착용할 때
                     hashMap = dbHelper.change_equipment_item(2, -1, i+1);
                     add_attack = dbHelper.equipment_ability().get("attack");
                     add_defence = dbHelper.equipment_ability().get("defence");
@@ -816,6 +816,8 @@ public class GameActivity extends Activity {
         ability_attack.setText(String.valueOf(user.attack + add_attack));
         add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
         ability_defence.setText(String.valueOf(user.defence + add_defence));
+        attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
+        defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
         ability_point.setText(String.valueOf(user.addpoint));
         now_exp = parseInt(exp_txt.getText().toString());
         limit_exp = user.get_maxexp();

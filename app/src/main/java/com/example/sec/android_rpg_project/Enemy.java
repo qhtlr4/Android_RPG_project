@@ -22,7 +22,7 @@ public class Enemy {
             image_id = drawable[mob_num - 1];
         }
         else if(is_boss == 1){
-            image_id = drawable[10];
+            image_id = drawable[13];
         }
     }
 

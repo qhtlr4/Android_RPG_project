@@ -177,7 +177,7 @@ public class WarActivity extends Activity {
                 battle(0);
                 break;
             case R.id.escape:
-                int loss_gold = (int)(parseInt(gold_txt.getText().toString())*0.2);
+                int loss_gold = (int)(parseInt(gold_txt.getText().toString())*0.05);
                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString())-loss_gold));
                 make_toast(String.valueOf(loss_gold) + "골드를 잃었습니다.");
                 moveActivity();
@@ -294,7 +294,7 @@ public class WarActivity extends Activity {
                 else
                     str = "경험치 " + (minus_exp * (-1)) + "\n";
                 */
-                int minus_gold = (int)(parseInt(gold_txt.getText().toString())*0.4);
+                int minus_gold = (int)(parseInt(gold_txt.getText().toString())*0.1);
                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString())-minus_gold));
                 str += String.valueOf(minus_gold) + "골드를 잃었습니다.";
                 make_toast(str);
@@ -314,12 +314,14 @@ public class WarActivity extends Activity {
                 level_txt.setText(String.valueOf(parseInt(level_txt.getText().toString()) + 1));
                 exp_txt.setText(String.valueOf(parseInt(exp_txt.getText().toString()) - limit_exp));
                 user.exp = user.exp-limit_exp;
+
+                //레벨업으로 유저 정보 업데이트
                 maxHp_txt.setText(String.valueOf(parseInt(maxHp_txt.getText().toString()) + 3));
                 maxMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString()) + 1));
                 attack_txt.setText(String.valueOf(parseInt(attack_txt.getText().toString()) + 1));
                 defence_txt.setText(String.valueOf(parseInt(defence_txt.getText().toString()) + 1));
                 addpoint_txt.setText(String.valueOf(parseInt(addpoint_txt.getText().toString()) + 5));
-                user.level++;
+
                 limit_exp = user.get_maxexp();
                 setExp_bar(user.exp, limit_exp);
             }
