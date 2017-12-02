@@ -762,21 +762,13 @@ public class GameActivity extends Activity {
         User user = new User(parseInt(level_txt.getText().toString()), parseInt(exp_txt.getText().toString()), parseInt(currentHp_txt.getText().toString()),
                 parseInt(maxHp_txt.getText().toString()), parseInt(currentMp_txt.getText().toString()), parseInt(maxMp_txt.getText().toString()),
                 parseInt(gold_txt.getText().toString()), parseInt(ability_attack.getText().toString()), parseInt(ability_defence.getText().toString()), parseInt(ability_point.getText().toString()));
-        Intent intent = new Intent(this, WarActivity.class);
         war_level_Layout.setVisibility(View.INVISIBLE);
         menuBtns.setVisibility(View.VISIBLE);
-        int id = v.getId();
 
-        switch (id){
+        Intent intent = new Intent(this, WarActivity.class);
+        switch (v.getId()){
             case R.id.easy:
-                if(user.level - 2 <= 0 ){
-                    if(user.level == 2){
-                        intent.putExtra("difficulty_min", user.level-1);
-                    }
-                    intent.putExtra("difficulty_min", user.level);
-                }
-                else
-                    intent.putExtra("difficulty_min", user.level-2);
+                intent.putExtra("difficulty_min", 1);
                 intent.putExtra("difficulty_max", user.level+1);
                 intent.putExtra("is_boss", 0);
                 break;
@@ -791,7 +783,10 @@ public class GameActivity extends Activity {
                 break;
             case R.id.hard:
                 intent.putExtra("difficulty_min", user.level);
-                intent.putExtra("difficulty_max", user.level+5);
+                if(user.level+5 > 13)
+                    intent.putExtra("difficulty_max", 13);
+                else
+                    intent.putExtra("difficulty_max", user.level+5);
                 intent.putExtra("is_boss", 0);
                 break;
             case R.id.boss:
@@ -833,8 +828,8 @@ public class GameActivity extends Activity {
     }
 
     public void setExp_bar(int current_exp, int max_exp){
-        exp_bar.setProgress(current_exp);
         exp_bar.setMax(max_exp);
+        exp_bar.setProgress(current_exp);
     }
 
     public void make_toast(String str){

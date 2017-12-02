@@ -214,6 +214,8 @@ public class WarActivity extends Activity {
                                 if(parseInt(currentMp_txt.getText().toString()) > parseInt(maxMp_txt.getText().toString())){
                                     currentMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString())));
                                 }
+                                user_current_hp.setText(currentHp_txt.getText().toString());
+                                user_current_mp.setText(currentMp_txt.getText().toString());
                                 potion_items = dbHelper.getInventoryResult(3);
                                 potion_adaptor = new ArrayAdapter<String>(WarActivity.this, android.R.layout.simple_list_item_single_choice, potion_items);
                                 potion_view.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -279,14 +281,19 @@ public class WarActivity extends Activity {
                 str = "----------사망----------\n";
                 //make_toast(str);
                 int minus_exp = (int)(limit_exp * 0.1);
+                if(Integer.parseInt(exp_txt.getText().toString()) < minus_exp){
+                    minus_exp = Integer.parseInt(exp_txt.getText().toString());
+                }
                 exp_txt.setText(String.valueOf(parseInt(exp_txt.getText().toString())-minus_exp));
+                str = "경험치 " + (minus_exp * (-1)) + "\n";
+                /*
                 if(parseInt(exp_txt.getText().toString()) < 0){
                     str += "경험치 " + (parseInt(exp_txt.getText().toString()) * (-1)) + "\n";
                     exp_txt.setText("0");
                 }
                 else
                     str = "경험치 " + (minus_exp * (-1)) + "\n";
-
+                */
                 int minus_gold = (int)(parseInt(gold_txt.getText().toString())*0.4);
                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString())-minus_gold));
                 str += String.valueOf(minus_gold) + "골드를 잃었습니다.";
@@ -342,8 +349,8 @@ public class WarActivity extends Activity {
         finish();
     }
     public void setExp_bar(int current_exp, int max_exp){
-        exp_bar.setProgress(current_exp);
         exp_bar.setMax(max_exp);
+        exp_bar.setProgress(current_exp);
     }
     public void make_toast(String str){
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
