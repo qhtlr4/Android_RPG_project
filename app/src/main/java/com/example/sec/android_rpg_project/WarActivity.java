@@ -55,6 +55,8 @@ public class WarActivity extends Activity {
     TextView user_max_hp;
     TextView user_current_mp;
     TextView user_max_mp;
+
+    TextView enemy_level;
     TextView enemy_current_hp;      //몬스터 실시간 체력바 정보
     TextView enemy_max_hp;
 
@@ -127,6 +129,7 @@ public class WarActivity extends Activity {
         user_max_hp = (TextView)findViewById(R.id.user_max_hp);
         user_current_mp = (TextView)findViewById(R.id.user_current_mp);
         user_max_mp = (TextView)findViewById(R.id.user_max_mp);
+        enemy_level = (TextView)findViewById(R.id.enemy_level);
         enemy_current_hp = (TextView)findViewById(R.id.enemy_current_hp);
         enemy_max_hp = (TextView)findViewById(R.id.enemy_max_hp);
 
@@ -134,6 +137,7 @@ public class WarActivity extends Activity {
         user_max_hp.setText(maxHp_txt.getText().toString());
         user_current_mp.setText(currentMp_txt.getText().toString());
         user_max_mp.setText(maxMp_txt.getText().toString());
+        enemy_level.setText(String.valueOf(enemy.mob_num));
         enemy_current_hp.setText(String.valueOf(enemy.hp));
         enemy_max_hp.setText(String.valueOf(enemy.hp));
 
