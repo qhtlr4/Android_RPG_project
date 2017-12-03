@@ -443,7 +443,7 @@
                 android:layout_weight="1">
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/war"
                     android:text="사냥"
                     android:textSize="10sp"
@@ -454,7 +454,7 @@
                 <Button
                     android:id="@+id/inventory"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textSize="10sp"
                     android:drawableTop="@drawable/inventory"
@@ -466,19 +466,19 @@
                 android:layout_weight="1">
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/ability"
+                    android:textSize="10sp"
                     android:drawableTop="@drawable/ability"
                     android:text="능력치 확인"
-                    android:textSize="10sp"
                     android:layout_weight="1"/>
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/shop"
+                    android:textSize="10sp"
                     android:drawableTop="@drawable/store"
                     android:text="상점"
-                    android:textSize="10sp"
                     android:layout_weight="1"/>
             </LinearLayout>
             <LinearLayout
@@ -487,7 +487,7 @@
                 android:layout_weight="1">
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/helpview_btn"
                     android:text="게임 매뉴얼 보기"
                     android:textSize="10sp"
@@ -495,10 +495,10 @@
                     android:layout_weight="1"/>
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/save_data"
-                    android:text="저장"
                     android:textSize="10sp"
+                    android:text="저장"
                     android:drawableTop="@drawable/save"
                     android:layout_weight="1"/>
             </LinearLayout>

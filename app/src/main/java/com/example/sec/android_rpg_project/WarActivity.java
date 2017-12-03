@@ -33,6 +33,8 @@ public class WarActivity extends Activity {
     int add_attack;
     int add_defence;
 
+    Toast mToast;
+
     DBHelper dbHelper;
     TextView level_txt;
     TextView exp_txt;
@@ -181,6 +183,9 @@ public class WarActivity extends Activity {
                 battle(0);
                 break;
             case R.id.escape:
+                if(mToast != null){
+                    mToast.cancel();
+                }
                 int loss_gold = (int)(parseInt(gold_txt.getText().toString())*0.05);
                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString())-loss_gold));
                 make_toast(String.valueOf(loss_gold) + "골드를 잃었습니다.");
@@ -234,14 +239,18 @@ public class WarActivity extends Activity {
 
 
     public void battle(int skill){
+        if(mToast != null){
+            mToast.cancel();
+        }
         int real_attack = attack;
         str = "";   //toast해줄 문자열 초기화
         //스킬 사용시 공격력 증가
         if(skill == 1) {
-            if(user_current_mp.getText().toString() == "0"){
+            if(user_current_mp.getText().toString().equals("0")){
                 make_toast("mp가 부족합니다.");
                 return;
             }
+            str = "스킬사용\n";
             real_attack = attack + (parseInt(user_current_mp.getText().toString()) * 2 );
             currentMp_txt.setText("0");
             user_current_mp.setText("0");
@@ -251,12 +260,12 @@ public class WarActivity extends Activity {
         //적 hp 감소
         if(critical_rate >= rand(100)){
             //크리티컬
-            str = "크리티컬 !! ";
+            str += "크리티컬 !! ";
             enemy.hp = enemy.hp - ((int)(real_attack*1.3));
             enemy_current_hp.setText(String.valueOf(enemy.hp));
         }
         else {
-            str = "공격";
+            str += "공격";
             enemy.hp -= real_attack;
             enemy_current_hp.setText(String.valueOf(enemy.hp));
         }
@@ -314,6 +323,9 @@ public class WarActivity extends Activity {
             exp_txt.setText(String.valueOf(parseInt(exp_txt.getText().toString()) + enemy.exp));
             user.exp += enemy.exp;
             if(user.exp >= limit_exp){
+                if(mToast != null){
+                    mToast.cancel();
+                }
                 make_toast("레벨업");
                 level_txt.setText(String.valueOf(parseInt(level_txt.getText().toString()) + 1));
                 exp_txt.setText(String.valueOf(parseInt(exp_txt.getText().toString()) - limit_exp));
@@ -358,8 +370,10 @@ public class WarActivity extends Activity {
         exp_bar.setMax(max_exp);
         exp_bar.setProgress(current_exp);
     }
+
     public void make_toast(String str){
-        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+        mToast = Toast.makeText(WarActivity.this, str, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     //저장 함수

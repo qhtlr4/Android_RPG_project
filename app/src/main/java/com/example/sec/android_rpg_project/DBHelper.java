@@ -38,13 +38,12 @@ public class DBHelper extends SQLiteOpenHelper {
         idx_weapon = 2;
         idx_armor = 2;
         idx_potion = 3;
-        weapon_num = 0;
-        armor_num = 0;
 
         //아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
         //item_id = 1부터 시작
         sqLiteDatabase.execSQL("CREATE TABLE ITEM (item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name TEXT, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, class INTEGER);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '골드', 0, 0, 0, 0, 0, 0);");
+
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '목검', 5, 0, 0, 0, 500, 1);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '청동검', 7, 0, 0, 0, 4000, 1);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '강철검', 9, 0, 0, 0, 50000, 1);");
@@ -54,7 +53,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '가죽 옷', 0, 7, 0, 0, 4000, 2);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '청동 갑옷', 0, 9, 0, 0, 50000, 2);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '강철 갑옷', 0, 11, 0, 0, 500000, 2);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '무적 갑옷', 0, 9999, 0, 0, 5000000, 2);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '무적 갑옷', 0, 200, 0, 0, 5000000, 2);");
 
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, 'HP 포션', 0, 0, 30, 0, 500, 3);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, 'MP 포션', 0, 0, 0, 10, 300, 3);");
@@ -102,17 +101,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
         //index, 아이템번호, 몬스터번호, 최소개수, 최대개수, 드롭률
         sqLiteDatabase.execSQL("CREATE TABLE DROP_ITEM (idx INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER, mob_id INTEGER, min INTEGER, max INTEGER, ratio INTEGER);");  //ratio -> 10 = 1%
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 1, 10, 20, 1000);");  //골드
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 2, 10, 24, 1000);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 3, 10, 40, 1000);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 4, 10, 50, 1000);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 5, 10, 80, 1000);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 6, 10, 100, 1000);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 7, 10, 125, 1000);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 8, 10, 140, 1000);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 9, 10, 150, 1000);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 10, 10, 180, 1000);");
-        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 11, 3000, 5000, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 1, 10, 40, 1000);");  //골드
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 2, 10, 60, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 3, 10, 110, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 4, 10, 190, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 5, 10, 340, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 6, 100, 300, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 7, 150, 450, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 8, 170, 600, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 9, 300, 800, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 10, 500, 1080, 1000);");
+        sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 1, 11, 10000, 50000, 1000);");
 
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 1, 0, 1, 100);");  //목검
         sqLiteDatabase.execSQL("INSERT INTO DROP_ITEM VALUES(null, 2, 2, 0, 1, 120);");
@@ -196,8 +195,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 1, 0, '기본무기', 2, 0, 1, 1);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 1, 0, '기본방어구', 0, 2, 1, 1);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, '약한 HP 포션', 20, 0, 500);");
-        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 2, '약한 MP 포션', 0, 5, 500);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, '초보용 HP 포션', 20, 0, 500);");
+        sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 2, '초보용 MP 포션', 0, 5, 500);");
     }
 
     @Override
@@ -246,8 +245,8 @@ public class DBHelper extends SQLiteOpenHelper {
             }
             else if (cursor.getInt(7) == clas && clas == 3){
                 result += "이름 : " + cursor.getString(1)
-                        + "\t\t\t\tHP회복량 : " + cursor.getInt(4)
-                        + "\t\t\t\tMP회복량 : " + cursor.getInt(5)
+                        + "\t\t\t\tHP : " + cursor.getInt(4)
+                        + "\t\t\t\tMP : " + cursor.getInt(5)
                         + "\n가격 : " + cursor.getInt(6);
                 result_array.add(result);
                 result = "";
@@ -258,9 +257,21 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
-    public int getcost(int idx){
+    public int getcost(int idx, int clas){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT cost FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" +idx + ");", null);
+        Cursor cursor;
+
+        if(clas == 1){
+            cursor = db.rawQuery("SELECT cost FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" +idx + ");", null);
+        }
+        else if (clas == 2){
+            cursor = db.rawQuery("SELECT cost FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" +(idx + weapon_num) + ");", null);
+        }
+        else{
+            cursor = db.rawQuery("SELECT cost FROM ITEM WHERE item_id=(SELECT item_id FROM SHOP WHERE idx=" +(idx + weapon_num + armor_num) + ");", null);
+        }
+
+
 
         if(cursor.moveToFirst() != false) {
             cursor.moveToFirst();
@@ -300,18 +311,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 if(enhance != 0)
                     result += "이름 : " + cursor.getString(3) + " (+ " + enhance
                             + ")\n공격력 : " + cursor.getInt(4)
-                            + "\t\t\t방어력 : " + cursor.getInt(5)
-                            + "\t\t\t가격 : " + (int) (cursor.getInt(6) / 2);
+                            + "\t\t방어력 : " + cursor.getInt(5)
+                            + "\t\t가격 : " + (int) (cursor.getInt(6) / 2);
                 else
                     result += "이름 : " + cursor.getString(3)
                             + "\n공격력 : " + cursor.getInt(4)
-                            + "\t\t\t방어력 : " + cursor.getInt(5)
-                            + "\t\t\t가격 : " + (int) (cursor.getInt(6) / 2);
+                            + "\t\t방어력 : " + cursor.getInt(5)
+                            + "\t\t가격 : " + (int) (cursor.getInt(6) / 2);
             }
             else
                 result += "이름 : " + cursor.getString(2)
-                        + "\t\t\t\tHP회복량 : " + cursor.getInt(3)
-                        + "\t\t\t\tMP회복량 : " + cursor.getInt(4)
+                        + "\t\tHP + " + cursor.getInt(3)
+                        + "\t\tMP + " + cursor.getInt(4)
                         + "\n가격 : " + (int)(cursor.getInt(5)/2);
             result_array.add(result);
             result = "";
@@ -323,7 +334,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Enemy get_enemy(int min_level, int max_level, int is_boss){
         SQLiteDatabase db = getReadableDatabase();
         int level;
-        Cursor cursor = null;
+        Cursor cursor;
 
         if(is_boss == 0) {
             level = start_rand(max_level, min_level);
@@ -556,7 +567,8 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor3 = db3.rawQuery(str, null);
             cursor2.moveToFirst();
             cursor3.moveToFirst();
-            attack = cursor3.getInt(0) - cursor2.getInt(0);
+            attack = cursor3.getInt(0)
+                    - cursor2.getInt(0);
             defence = cursor3.getInt(1) - cursor2.getInt(1);
             hashMap.put("attack", attack);
             hashMap.put("defence", defence);

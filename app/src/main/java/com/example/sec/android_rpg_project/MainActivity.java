@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,6 +17,8 @@ public class MainActivity extends Activity {
     DBHelper dbHelper;
     Intent intent;
     String str;
+
+    double inittime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,23 @@ public class MainActivity extends Activity {
         onPause();
         startActivity(intent);
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if(System.currentTimeMillis() - inittime > 3000){
+                Toast toast = Toast.makeText(this, "종료하려면 한번 더 누르세요", Toast.LENGTH_SHORT);
+                toast.show();
+                inittime=System.currentTimeMillis();
+            }
+            else{
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     public void make_toast(String str){
         Toast.makeText(this, str, Toast.LENGTH_LONG).show();
     }

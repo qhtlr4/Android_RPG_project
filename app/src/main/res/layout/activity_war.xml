@@ -80,7 +80,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="현재 경험치 : "/>
+            android:text="경험치 : "/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

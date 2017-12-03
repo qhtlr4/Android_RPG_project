@@ -30,6 +30,8 @@ import static java.lang.Integer.parseInt;
 public class GameActivity extends Activity {
     final DBHelper dbHelper = new DBHelper(this);
 
+    Toast mToast = null;
+
     TextView level_txt;
     TextView exp_txt;
     TextView maxexp_txt;    // = limit_exp
@@ -211,8 +213,12 @@ public class GameActivity extends Activity {
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) + hashMap.get("attack")));
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) + hashMap.get("defence")));
                 }
-                if(hashMap.get("attack") != 0 || hashMap.get("defence") != 0)
+                if(hashMap.get("attack") != 0 || hashMap.get("defence") != 0) {
+                    if (mToast != null) {
+                        mToast.cancel();
+                    }
                     make_toast("공격력 " + hashMap.get("attack") + "\n방어력 " + hashMap.get("defence"));
+                }
             }
         });
 
@@ -270,6 +276,9 @@ public class GameActivity extends Activity {
                                         .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
+                                                if(mToast != null){
+                                                    mToast.cancel();
+                                                }
                                                 if(Integer.parseInt(gold_txt.getText().toString()) < dbHelper.enhance_info(index, 1).get("cost")){
                                                     make_toast("골드가 부족합니다.");
                                                     return;
@@ -401,6 +410,9 @@ public class GameActivity extends Activity {
                                     .setPositiveButton("예", new DialogInterface.OnClickListener(){
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
+                                            if(mToast != null){
+                                                mToast.cancel();
+                                            }
                                             if (Integer.parseInt(gold_txt.getText().toString()) < dbHelper.enhance_info(index, 2).get("cost")) {
                                                 make_toast("골드가 부족합니다.");
                                                 return;
@@ -525,7 +537,7 @@ public class GameActivity extends Activity {
         shop_weapon_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final int cost = dbHelper.getcost(i+1);
+                final int cost = dbHelper.getcost(i+1, 1);
                 final int index = i+1;
                 if(parseInt(gold_txt.getText().toString()) >= cost) {
                     new AlertDialog.Builder(GameActivity.this)
@@ -544,11 +556,17 @@ public class GameActivity extends Activity {
                                     gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
                                     dbHelper.insert_item(index, 1);
                                     saveStatus();
+                                    if(mToast != null){
+                                        mToast.cancel();
+                                    }
                                     make_toast("정상적으로 구매하였습니다.");
                                 }
                             }).show();
                 }
                 else{
+                    if(mToast != null){
+                        mToast.cancel();
+                    }
                     make_toast("금액이 부족합니다.");
                 }
             }
@@ -556,7 +574,7 @@ public class GameActivity extends Activity {
         shop_armor_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final int cost = dbHelper.getcost(i+1);
+                final int cost = dbHelper.getcost(i+1, 2);
                 final int index = i+1;
                 if(parseInt(gold_txt.getText().toString()) >= cost) {
                     new AlertDialog.Builder(GameActivity.this)
@@ -575,11 +593,17 @@ public class GameActivity extends Activity {
                                     gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
                                     dbHelper.insert_item(index, 2);
                                     saveStatus();
+                                    if(mToast != null){
+                                        mToast.cancel();
+                                    }
                                     make_toast("정상적으로 구매하였습니다.");
                                 }
                             }).show();
                 }
                 else{
+                    if(mToast != null){
+                        mToast.cancel();
+                    }
                     make_toast("금액이 부족합니다.");
                 }
             }
@@ -587,7 +611,7 @@ public class GameActivity extends Activity {
         shop_potion_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final int cost = dbHelper.getcost(i+1);
+                final int cost = dbHelper.getcost(i+1, 3);
                 final int index = i+1;
                 if(parseInt(gold_txt.getText().toString()) >= cost) {
                     new AlertDialog.Builder(GameActivity.this)
@@ -611,6 +635,9 @@ public class GameActivity extends Activity {
                             }).show();
                 }
                 else{
+                    if(mToast != null){
+                        mToast.cancel();
+                    }
                     make_toast("금액이 부족합니다.");
                 }
             }
@@ -632,6 +659,9 @@ public class GameActivity extends Activity {
             public void onClick(View view) {
                 saveStatus();
                 String str = "저장되었습니다.";
+                if(mToast != null){
+                    mToast.cancel();
+                }
                 make_toast(str);
             }
         });
@@ -722,6 +752,9 @@ public class GameActivity extends Activity {
 
     public void ability_up(View v){
         if(parseInt(ability_point.getText().toString()) == 0){
+            if(mToast != null){
+                mToast.cancel();
+            }
             make_toast("더이상 남은 포인트가 없습니다.");
             return;
         }
@@ -835,7 +868,8 @@ public class GameActivity extends Activity {
     }
 
     public void make_toast(String str){
-        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+        mToast = Toast.makeText(GameActivity.this, str, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     @Override
