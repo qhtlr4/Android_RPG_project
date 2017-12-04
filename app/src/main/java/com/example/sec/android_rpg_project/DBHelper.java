@@ -43,12 +43,12 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '목검', 5, 0, 0, 0, 500, 1);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '청동검', 7, 0, 0, 0, 4000, 1);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '강철검', 9, 0, 0, 0, 50000, 1);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '다이아몬드검', 11, 0, 0, 0, 500000, 1);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '다이아몬드검', 14, 0, 0, 0, 500000, 1);");
 
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '낡은 옷', 0, 5, 0, 0, 500, 2);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '가죽 옷', 0, 7, 0, 0, 4000, 2);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '청동 갑옷', 0, 9, 0, 0, 50000, 2);");
-        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '강철 갑옷', 0, 11, 0, 0, 500000, 2);");
+        sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '강철 갑옷', 0, 14, 0, 0, 500000, 2);");
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, '무적 갑옷', 0, 200, 0, 0, 5000000, 2);");
 
         sqLiteDatabase.execSQL("INSERT INTO ITEM VALUES(null, 'HP 포션', 0, 0, 30, 0, 500, 3);");
