@@ -87,8 +87,8 @@ public class WarActivity extends Activity {
         dbHelper = new DBHelper(this);
         setContentView(R.layout.activity_war);
 
-        add_attack = dbHelper.change_equipment_item(1, -1, dbHelper.equipment_item(1)).get("attack");
-        add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
+        add_attack = dbHelper.equipment_ability().get("attack");
+        add_defence = dbHelper.equipment_ability().get("defence");
 
         level_txt = (TextView)findViewById(R.id.level);
         exp_txt = (TextView)findViewById(R.id.exp);
@@ -114,8 +114,8 @@ public class WarActivity extends Activity {
         currentMp_txt.setText(String.valueOf(user.currentMp));
         maxMp_txt.setText(String.valueOf(user.maxMp));
         gold_txt.setText(String.valueOf(user.gold));
-        attack_txt.setText(String.valueOf(user.attack));
-        defence_txt.setText(String.valueOf(user.defence));
+        attack_txt.setText(String.valueOf(user.attack + add_attack));
+        defence_txt.setText(String.valueOf(user.defence + add_defence));
         addpoint_txt.setText(String.valueOf(user.addpoint));
         attack = parseInt(attack_txt.getText().toString());
         defence = parseInt(defence_txt.getText().toString());

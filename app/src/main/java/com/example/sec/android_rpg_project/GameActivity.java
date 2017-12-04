@@ -251,6 +251,7 @@ public class GameActivity extends Activity {
                                                 ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
                                                 ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
                                                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
+                                                user.gold += hashMap.get("cost");
 
                                                 weapon_items = dbHelper.getInventoryResult(1);
                                                 weapon_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, weapon_items);
@@ -285,6 +286,7 @@ public class GameActivity extends Activity {
                                                 }
                                                 else {
                                                     gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - dbHelper.enhance_info(index, 1).get("cost")));
+                                                    user.gold -= dbHelper.enhance_info(index, 1).get("cost");
                                                     HashMap<String, String> hashMap = dbHelper.enhancement(index, 1);
                                                     make_toast(hashMap.get("result"));
                                                     if(hashMap.get("result").equals("성공")){
@@ -386,6 +388,7 @@ public class GameActivity extends Activity {
                                                 ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString()) - hashMap.get("attack")));
                                                 ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString()) - hashMap.get("defence")));
                                                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) + hashMap.get("cost")));
+                                                user.gold += hashMap.get("cost");
 
                                                 armor_items = dbHelper.getInventoryResult(2);
                                                 armor_adaptor = new ArrayAdapter<String>(GameActivity.this, android.R.layout.simple_list_item_single_choice, armor_items);
@@ -419,6 +422,7 @@ public class GameActivity extends Activity {
                                             }
                                             else {
                                                 gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - dbHelper.enhance_info(index, 2).get("cost")));
+                                                user.gold -= dbHelper.enhance_info(index, 1).get("cost");
                                                 HashMap<String, String> hashMap = dbHelper.enhancement(index, 2);
                                                 make_toast(hashMap.get("result"));
                                                 if(hashMap.get("result").equals("성공")){
@@ -554,6 +558,7 @@ public class GameActivity extends Activity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
+                                    user.gold -= cost;
                                     dbHelper.insert_item(index, 1);
                                     saveStatus();
                                     if(mToast != null){
@@ -591,6 +596,7 @@ public class GameActivity extends Activity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
+                                    user.gold -= cost;
                                     dbHelper.insert_item(index, 2);
                                     saveStatus();
                                     if(mToast != null){
@@ -628,6 +634,7 @@ public class GameActivity extends Activity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     gold_txt.setText(String.valueOf(parseInt(gold_txt.getText().toString()) - cost));
+                                    user.gold -= cost;
                                     dbHelper.insert_item(index, 3);
                                     saveStatus();
                                     make_toast("정상적으로 구매하였습니다.");
@@ -764,22 +771,28 @@ public class GameActivity extends Activity {
                     user.attack++;
                     attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
                     ability_attack.setText(String.valueOf(parseInt(ability_attack.getText().toString())+1));
+                    user.addpoint--;
                     ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
                 case R.id.add_defence:
                     user.defence++;
                     defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
                     ability_defence.setText(String.valueOf(parseInt(ability_defence.getText().toString())+1));
+                    user.addpoint--;
                     ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
                 case R.id.add_hp:
+                    user.maxHp += 3;
                     maxHp_txt.setText(String.valueOf(parseInt(maxHp_txt.getText().toString())+3));
                     ability_hp.setText(maxHp_txt.getText());
+                    user.addpoint--;
                     ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
                 case R.id.add_mp:
+                    user.maxMp += 2;
                     maxMp_txt.setText(String.valueOf(parseInt(maxMp_txt.getText().toString())+2));
                     ability_mp.setText(maxMp_txt.getText());
+                    user.addpoint--;
                     ability_point.setText(String.valueOf(parseInt(ability_point.getText().toString())-1));
                     break;
             }
@@ -792,9 +805,7 @@ public class GameActivity extends Activity {
     }
 
     public void warClick(View v) {
-        User user = new User(parseInt(level_txt.getText().toString()), parseInt(exp_txt.getText().toString()), parseInt(currentHp_txt.getText().toString()),
-                parseInt(maxHp_txt.getText().toString()), parseInt(currentMp_txt.getText().toString()), parseInt(maxMp_txt.getText().toString()),
-                parseInt(gold_txt.getText().toString()), parseInt(ability_attack.getText().toString()), parseInt(ability_defence.getText().toString()), parseInt(ability_point.getText().toString()));
+        //User temp_user = new User(user.level, user.exp, user.currentHp, user.maxHp, user.currentMp, user.maxMp, user.gold, user.attack, user.defence, user.addpoint);
         war_level_Layout.setVisibility(View.INVISIBLE);
         menuBtns.setVisibility(View.VISIBLE);
 
@@ -845,9 +856,9 @@ public class GameActivity extends Activity {
         gold_txt.setText(String.valueOf(user.gold));
         ability_hp.setText(maxHp_txt.getText());
         ability_mp.setText(maxMp_txt.getText());
-        add_attack = dbHelper.change_equipment_item(1, -1, dbHelper.equipment_item(1)).get("attack");
+        add_attack = dbHelper.equipment_ability().get("attack");
         ability_attack.setText(String.valueOf(user.attack + add_attack));
-        add_defence = dbHelper.change_equipment_item(2, -1, dbHelper.equipment_item(2)).get("defence");
+        add_defence = dbHelper.equipment_ability().get("defence");
         ability_defence.setText(String.valueOf(user.defence + add_defence));
         attack_detail.setText(" ("+ user.attack + " + " + add_attack + ")");
         defence_detail.setText(" ("+ user.defence + " + " + add_defence + ")");
