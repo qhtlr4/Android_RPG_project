@@ -35,10 +35,6 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        idx_weapon = 2;
-        idx_armor = 2;
-        idx_potion = 3;
-
         //아이템번호, 이름, 공, 방어, 피회복, 마나회복, 가격, 아이템클래스(0, 1, 2, 3)
         //item_id = 1부터 시작
         sqLiteDatabase.execSQL("CREATE TABLE ITEM (item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name TEXT, attack INTEGER, defence INTEGER, addHp INTEGER, addMp INTEGER, cost INTEGER, class INTEGER);");
@@ -193,8 +189,14 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_2 (slot INTEGER PRIMARY KEY AUTOINCREMENT, idx INTEGER, enhance INTEGER, item_name TEXT, attack INTEGER, defence INTEGER, cost INTEGER, is_equip INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격, 착용여부(0 or 1)
         sqLiteDatabase.execSQL("CREATE TABLE INVENTORY_3 (slot INTEGER PRIMARY KEY AUTOINCREMENT, idx INTEGER, item_name TEXT, addHp INTEGER, addMp INTEGER, cost INTEGER);");  //아이템이위치한칸, 아이템번호, 이름, 레벨제헌, 공, 방어, 피회복, 마나회복, 가격
 
+        idx_weapon = 2;
+        idx_armor = 2;
+        idx_potion = 3;
+
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_1 VALUES(null, 1, 0, '기본무기', 2, 0, 1, 1);");
+
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_2 VALUES(null, 1, 0, '기본방어구', 0, 2, 1, 1);");
+
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 1, '초보용 HP 포션', 20, 0, 500);");
         sqLiteDatabase.execSQL("INSERT INTO INVENTORY_3 VALUES(null, 2, '초보용 MP 포션', 0, 5, 500);");
     }
@@ -491,8 +493,6 @@ public class DBHelper extends SQLiteOpenHelper {
         hashMap.put("weapon_defence", 0);
         hashMap.put("armor_attack", 0);
         hashMap.put("armor_defence", 0);
-        hashMap.put("attack", 0);
-        hashMap.put("defence", 0);
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT attack, defence FROM INVENTORY_1 WHERE is_equip=1;", null);
